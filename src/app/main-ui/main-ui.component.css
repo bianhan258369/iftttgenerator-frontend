@@ -1,0 +1,184 @@
+.topbar {
+  border-radius: 0;
+  align-items: stretch;
+  display: flex;
+  width: 100%;
+  background-color: #34495e;
+  position: relative;
+  font-size: 2rem;
+  font-weight: 400;
+  min-height: 4rem;
+}
+
+.tab {
+  position: absolute;
+  width: 100%;
+  height: 0px;
+  background: white;
+  z-index: 3;
+  overflow: visible;
+}
+
+.tab #refined {
+  display: none;
+}
+
+.tab #problemdiagram {
+  display: none;
+}
+
+.tab #droolsrules {
+  display: none;
+}
+
+ul {
+  position: relative;
+  margin-left: -40px;
+  margin-top: 0px;
+}
+
+#tablabel li {
+  position: relative;
+  /* width: 20%; */
+  height: 4%;
+  padding: 0 12px 0 12px;
+  text-align: center;
+  list-style-type: none;
+  float: left;
+  display: block;
+
+  /* line-height: 20px; */
+  list-style-type: none;
+  cursor: pointer;
+  color: white;
+  background: #62a0cc;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  z-index: 1;
+  font-size: 12px;
+}
+
+#tablabel li:hover {
+  opacity: 0.5;
+  display: block;
+}
+
+#tablabel li:focus {
+  background-color: #36648B;
+}
+
+#requirementsPanel {
+  position: absolute;
+  margin-top: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 98%;
+  height: 580px;
+  resize: none;
+  display: block;
+}
+
+#requirementsPanel #templates {
+  width: 20%;
+  height: 100%;
+}
+
+#requirementsPanel .textarea {
+  position: absolute;
+  margin-left: 20%;
+  width: 80%;
+  height: 100%;
+  resize: none;
+}
+
+#requirementsPanel #templates ul li{
+  font-size: .78vw;
+}
+
+#refinedPanel {
+  position: absolute;
+  margin-top: 20px;
+  overflow: auto;
+  border: 1px solid #000;
+  border-radius: 5px;
+  width: 98%;
+  height: 580px;
+  display: block;
+}
+
+#refinedPanel .textarea {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  resize: none;
+}
+
+#problemdiagramPanel {
+  position: absolute;
+  margin-top: 20px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  width: 98%;
+  height: 580px;
+  display: block;
+}
+
+#problemdiagramPanel #content {
+  position: absolute;
+  width: 80%;
+  height: 100%;
+  display: block;
+}
+
+#problemdiagramPanel #informationPanel {
+  position: absolute;
+  overflow: auto;
+  width: 20%;
+  margin-left: 80%;
+  height: 100%;
+  display: block;
+}
+
+#problemdiagramPanel #informationPanel .title {
+  position: relative;
+  width: 100%;
+  background: #36648B;
+  cursor: pointer;
+}
+
+#droolsrulesPanel {
+  position: absolute;
+  margin-top: 20px;
+  overflow: auto;
+  border: 1px solid #000;
+  border-radius: 5px;
+  width: 98%;
+  height: 580px;
+  display: block;
+}
+
+#errorsPanel {
+  overflow: auto;
+  width: 99%;
+  height: 200px;
+  margin-top: 610px;
+  border: 1px solid #000;
+  border-radius: 5px;
+}
+
+.upload{
+  position: relative;
+}
+
+.change{
+  position: absolute;
+  overflow: hidden;
+  right: 0;
+  top: 0;
+  opacity: 0;
+}
+
+.button{
+  margin-left: 10px;
+}

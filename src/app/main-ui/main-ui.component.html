@@ -1,0 +1,136 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div class="main">
+  <div class="topbar">
+    <nav>
+      <div class="name">Drools Generator</div>
+    </nav>
+  </div>
+
+  <div class="tab">
+    <ul id="tablabel">
+      <li id="requirements" (click)="change_Menu('requirements')">Requirements</li>
+      <li id="refined" (click)="change_Menu('refined')">Refined</li>
+      <li id="problemdiagram" (click)="change_Menu('problemdiagram')">ProblemDiagram</li>
+      <li id="droolsrules" (click)="change_Menu('droolsrules')">Drools Rules</li>
+    </ul>
+  </div>
+
+  <div id="requirementsPanel">
+    <textarea class="textarea" [(ngModel)]='requirementTexts' placeholder="please enter the requirements..." cols="30"
+      rows="10" name="requirements"></textarea>
+    <div id="templates">
+      <ul>
+        <li>Templates</li>
+        <li>state SHOULD ALWAYS BE ACTIVE</li>
+        <li>state SHOULD NEVER BE ACTIVE</li>
+        <li>event SHOULD NEVER HAPPEN</li>
+        <li>PREFERRED entity.attribute IS value</li>
+        <li>IF trigger (FOR TIME) THEN event</li>
+        <li>IF trigger (FOR TIME) THEN state</li>
+        <li>IF trigger THEN entity.attribute SHOULD INCREASE</li>
+        <li>IF trigger THEN entity.attribute SHOULD DECREASE</li>
+        <li></li>
+        <li>Example</li>
+        <li>ac.coldOn SHOULD ALWAYS BE ACTIVE</li>
+        <li>ac.coldOn SHOULD NEVER BE ACTIVE</li>
+        <li>bulb.bturnoff SHOULD NEVER HAPPEN</li>
+        <li>PREFERRED air.temperature IS 30</li>
+        <li>IF air.temperature>30 (FOR 10m) THEN ac.turnoncold</li>
+        <li>IF air.temperature>30 (FOR 10m) THEN ac.coldOn</li>
+        <li>IF air.temperature>30 THEN air.temperature SHOULD DECREASE</li>
+      </ul>
+    </div>
+  </div>
+  <div id="refinedPanel">
+    <textarea class="textarea" [(ngModel)]='refindeRequirements' cols="30" rows="10" name="requirements"></textarea>
+  </div>
+  <div id="problemdiagramPanel">
+    <div class="content" id="content"></div>
+    <div class="informationPanel" id="informationPanel">
+      <ul>
+        <li *ngIf="!open2;else elseOpen2" (click)="setOpen2()" class="title">&nbsp;+ Phenomenon</li>
+        <ng-template #elseOpen2>
+          <li (click)="setOpen2()" class="title">&nbsp;- Phenomenon</li>
+          <div class="content">
+            <table *ngIf="open2" class="content">
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>PheType</th>
+              </tr>
+              <tr *ngFor="let phenomonon of phenomena">
+                <th>phe {{phenomonon.biaohao}}</th>
+                <th>{{phenomonon.name}}</th>
+                <th>{{phenomonon.state}}</th>
+              </tr>
+            </table>
+          </div>
+        </ng-template>
+        <li *ngIf="!open3;else elseOpen3" (click)="setOpen3()" class="title">&nbsp;+ Interaction</li>
+        <ng-template #elseOpen3>
+          <li (click)="setOpen3()" class="title">&nbsp;- Interaction</li>
+          <div class="content">
+            <table *ngIf="open3" class="content">
+              <tr>
+                <th>Name</th>
+                <th>Initiator</th>
+                <th>Receiver</th>
+                <th>Content</th>
+              </tr>
+              <tr *ngFor="let phenomonon of phenomena">
+                <th>int {{phenomonon.biaohao}}</th>
+                <th>{{phenomonon.from.shortName}}</th>
+                <th>{{phenomonon.to.shortName}}</th>
+                <th>{{phenomonon.name}}</th>
+              </tr>
+            </table>
+          </div>
+        </ng-template>
+        <li *ngIf="!open4;else elseOpen4" (click)="setOpen4()" class="title">&nbsp;+ Reference</li>
+        <ng-template #elseOpen4>
+          <li (click)="setOpen4()" class="title">&nbsp;- Reference</li>
+          <div class="content">
+            <table *ngIf="open4" class="content">
+              <tr>
+                <th>Name</th>
+                <th>Initiator</th>
+                <th>Receiver</th>
+                <th>Content</th>
+                <th>RefType</th>
+              </tr>
+              <tr *ngFor="let reference of referencePhenomena">
+                <th>req {{reference.requirement.biaohao}}</th>
+                <th>{{reference.from.shortName}}</th>
+                <th>{{reference.to.shortName}}</th>
+                <th>{{reference.name}}</th>
+                <th *ngIf="reference.constraining === true">constraining</th>
+                <th *ngIf="reference.constraining === false">normal</th>
+              </tr>
+            </table>
+          </div>
+        </ng-template>
+        <li *ngIf="!open5;else elseOpen5" (click)="setOpen5()" class="title">&nbsp;+ PD Information</li>
+        <ng-template #elseOpen5>
+          <li (click)="setOpen5()" class="title">&nbsp;- PD Information</li>
+          <div class="content">
+            <table *ngIf="open5" class="content">Information</table>
+          </div>
+        </ng-template>
+      </ul>
+    </div>
+  </div>
+  <div id="droolsrulesPanel">
+    <div class="divcontent" style="white-space:pre-wrap; height:20px" *ngFor="let droolsRule of droolsRules">
+      {{droolsRule}} </div>
+  </div>
+  <div id="errorsPanel">
+    <div style="white-space:pre-wrap; height:20px; text-align: center;">ERRORS</div>
+  </div>
+
+  <button class="upload button">Upload Ontology
+    <input class="change" type="file" multiple="multiple" (change)="selectedFileOnChanged($event)" />
+  </button>
+  <button class="button" (click)="generateRefinedRequirements()">GenerateRefined</button>
+  <button class="button" (click)="generateProblemDiagram()">GeneratePD</button>
+  <button class="button" (click)="generateDroolsRules()">GenerateDrools</button>
+</div>
