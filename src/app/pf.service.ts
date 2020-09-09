@@ -11,7 +11,7 @@ const httpOptions = {
 })
 
 export class PFService {
-  private serviceUrl = 'http://localhost:8080/api/';
+  private serviceUrl = 'http://localhost:8081/api/';
 
   constructor(private httpClient: HttpClient) { }
 

@@ -19,11 +19,7 @@
   overflow: visible;
 }
 
-.tab #refined {
-  display: none;
-}
-
-.tab #problemdiagram {
+.tab #intermediate {
   display: none;
 }
 
@@ -69,12 +65,10 @@ ul {
 }
 
 #requirementsPanel {
-  position: absolute;
+  position: relative;
   margin-top: 20px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
   width: 98%;
-  height: 580px;
+  height: 700px;
   resize: none;
   display: block;
 }
@@ -82,56 +76,71 @@ ul {
 #requirementsPanel #templates {
   width: 20%;
   height: 100%;
+  display: inline-block;
+  border: 1px solid #000;
+  border-radius: 5px;
+  display: block;
 }
 
-#requirementsPanel .textarea {
-  position: absolute;
-  margin-left: 20%;
+#requirementsPanel #input_textarea {
+  position: relative;
+  margin-left: 20.2%;
+  margin-top: -700px;
   width: 80%;
-  height: 100%;
+  height: 70%;
   resize: none;
+  display: block;
+}
+
+#requirementsPanel #refined_textarea {
+  position: relative;
+  margin-top: 2px;
+  margin-left: 20.2%;
+  width: 80%;
+  height: 0;
+  resize: none;
+  display: none;
+}
+
+#requirementsPanel #errorsPanel {
+  position: relative;
+  overflow: auto;
+  width: 80%;
+  height: 28%;
+  margin-top: 2px;
+  margin-left: 20.2%;
+  border: 1px solid #000;
+  border-radius: 5px;
+  display: block;
 }
 
 #requirementsPanel #templates ul li{
   font-size: .78vw;
 }
 
-#refinedPanel {
-  position: absolute;
-  margin-top: 20px;
-  overflow: auto;
-  border: 1px solid #000;
-  border-radius: 5px;
-  width: 98%;
-  height: 580px;
-  display: block;
+#requirementsPanel #errorsPanel ul li{
+  font-size: 1vw;
+  height: 7px;
 }
 
-#refinedPanel .textarea {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  resize: none;
-}
-
-#problemdiagramPanel {
-  position: absolute;
+#intermediatePanel {
+  position: relative;
   margin-top: 20px;
   border: 1px solid #000;
   border-radius: 5px;
   width: 98%;
-  height: 580px;
+  height: 700px;
   display: block;
 }
 
-#problemdiagramPanel #content {
+#intermediatePanel #content {
   position: absolute;
   width: 80%;
   height: 100%;
   display: block;
 }
 
-#problemdiagramPanel #informationPanel {
+#intermediatePanel #informationPanel {
   position: absolute;
   overflow: auto;
   width: 20%;
@@ -140,7 +149,7 @@ ul {
   display: block;
 }
 
-#problemdiagramPanel #informationPanel .title {
+#intermediatePanel #informationPanel .title {
   position: relative;
   width: 100%;
   background: #36648B;
@@ -148,24 +157,17 @@ ul {
 }
 
 #droolsrulesPanel {
-  position: absolute;
+  position: relative;
   margin-top: 20px;
   overflow: auto;
   border: 1px solid #000;
   border-radius: 5px;
   width: 98%;
-  height: 580px;
+  height: 700px;
   display: block;
 }
 
-#errorsPanel {
-  overflow: auto;
-  width: 99%;
-  height: 200px;
-  margin-top: 610px;
-  border: 1px solid #000;
-  border-radius: 5px;
-}
+
 
 .upload{
   position: relative;
@@ -181,4 +183,5 @@ ul {
 
 .button{
   margin-left: 10px;
+  margin-top: 10px;
 }

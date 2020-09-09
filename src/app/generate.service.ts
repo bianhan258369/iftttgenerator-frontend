@@ -7,7 +7,7 @@ import {Observable, Subject} from 'rxjs';
 })
 
 export class GenerateService {
-  private serviceUrl = 'http://localhost:8080/api/';
+  private serviceUrl = 'http://localhost:8081/api/';
 
   constructor(private httpClient: HttpClient) { }
 

@@ -18,7 +18,7 @@ export class UploadService {
       params: params,
       reportProgress: true,
     };
-    const req = new HttpRequest('POST', 'http://localhost:8080/api/upload', formData, options);
+    const req = new HttpRequest('POST', 'http://localhost:8081/api/upload', formData, options);
     return this.httpClient.request(req);
   }
 }
