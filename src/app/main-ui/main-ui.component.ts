@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpHeaders, HttpEventType, HttpResponse } from "@angular/common/http";
-import { GenerateService } from '../generate.service';
-import { UploadService } from '../upload.service';
+import { GenerateService } from '../service/generate.service';
+import { UploadService } from '../service/upload.service';
 import * as joint from 'node_modules/jointjs/dist/joint.js';
 import { Rect } from '../entity/Rect';
 import { Oval } from '../entity/Oval';
 import { Line } from '../entity/Line';
 import { Phenomenon } from '../entity/Phenomenon';
-import { PFService } from '../pf.service';
+import { PFService } from '../service/pf.service';
 import { result } from 'lodash';
 
 
@@ -36,13 +36,12 @@ export class MainUIComponent implements OnInit {
 	ngOnInit() {
 		this.initPaper();
 		this.change_Menu('requirements')
-		this.errors = new Array<string>();
 		this.droolsRules = new Array<string>();
 		this.rects = new Array<Rect>();
 		this.ovals = new Array<Oval>();
 		this.lines = new Array<Line>();
 		this.phenomena = new Array<Phenomenon>()
-		this.referencePhenomena = new Array<Phenomenon>();
+    this.referencePhenomena = new Array<Phenomenon>();
 	}
 
 	open2 = true;
@@ -335,44 +334,57 @@ export class MainUIComponent implements OnInit {
 
 	change_Menu(tab: string) {
 		if (tab === 'requirements') {
-			document.getElementById(tab + 'Panel').style.display = 'block';
+			document.getElementById('requirementsPanel').style.display = 'block';
 			document.getElementById('intermediatePanel').style.display = 'none';
-			document.getElementById('droolsrulesPanel').style.display = 'none';
-			document.getElementById(tab).style.background = '#166dac'
+      document.getElementById('droolsrulesPanel').style.display = 'none';
+      document.getElementById('simulationPanel').style.display = 'none';
+			document.getElementById('requirements').style.background = '#166dac'
 			document.getElementById('intermediate').style.background = '#62a0cc'
-			document.getElementById('droolsrules').style.background = '#62a0cc'
+      document.getElementById('droolsrules').style.background = '#62a0cc'
+      document.getElementById('simulation').style.background = '#62a0cc'
 		}
 		else if (tab === 'intermediate') {
 			document.getElementById('requirementsPanel').style.display = 'none';
-			document.getElementById(tab + 'Panel').style.display = 'block';
+			document.getElementById('intermediatePanel').style.display = 'block';
 			document.getElementById('content').style.display = 'block';
-			document.getElementById('droolsrulesPanel').style.display = 'none';
-			document.getElementById(tab).style.background = '#166dac'
-			document.getElementById('requirements').style.background = '#62a0cc'
-			document.getElementById('droolsrules').style.background = '#62a0cc'
+      document.getElementById('droolsrulesPanel').style.display = 'none';
+      document.getElementById('simulationPanel').style.display = 'none';
+      document.getElementById('requirements').style.background = '#62a0cc'
+      document.getElementById('intermediate').style.background = '#166dac'
+      document.getElementById('droolsrules').style.background = '#62a0cc'
+      document.getElementById('simulation').style.background = '#62a0cc'
 		}
-		else {
+		else if (tab === 'droolsrules'){
 			document.getElementById('requirementsPanel').style.display = 'none';
 			document.getElementById('intermediatePanel').style.display = 'none';
-			document.getElementById(tab + 'Panel').style.display = 'block';
-			document.getElementById(tab).style.background = '#166dac'
+      document.getElementById('droolsrulesPanel').style.display = 'block';
+      document.getElementById('simulationPanel').style.display = 'none';
 			document.getElementById('requirements').style.background = '#62a0cc'
-			document.getElementById('intermediate').style.background = '#62a0cc'
-		}
+      document.getElementById('intermediate').style.background = '#62a0cc'
+      document.getElementById('droolsrules').style.background = '#166dac'
+      document.getElementById('simulation').style.background = '#62a0cc'
+    }
+    else{
+      document.getElementById('requirementsPanel').style.display = 'none';
+			document.getElementById('intermediatePanel').style.display = 'none';
+      document.getElementById('droolsrulesPanel').style.display = 'none';
+      document.getElementById('simulationPanel').style.display = 'block';
+			document.getElementById('requirements').style.background = '#62a0cc'
+      document.getElementById('intermediate').style.background = '#62a0cc'
+      document.getElementById('droolsrules').style.background = '#62a0cc'
+      document.getElementById('simulation').style.background = '#166dac'
+    }
 	}
 
 	generateRefinedRequirements() {
 		this.generateService.refineRequirements(this.requirementTexts.split('\n').join('//'), this.ontologyFilePath).subscribe(result => {
 			console.log(result)
 			this.refindeRequirements = result.refinedRequirements;
-			document.getElementById('input_textarea').style.height = '35%';
-			document.getElementById('refined_textarea').style.height = '35%';
-			document.getElementById('refined_textarea').style.display = 'block';
 		})
 	}
 
 	check() {
-		this.errors.length = 0
+    this.errors = new Array<string>();
 		this.errors.push('error1')
 		this.errors.push('error2')
 		this.errors.push('error3')

@@ -27,6 +27,10 @@
   display: none;
 }
 
+.tab #simulation {
+  display: none;
+}
+
 ul {
   position: relative;
   margin-left: -40px;
@@ -87,9 +91,13 @@ ul {
   margin-left: 20.2%;
   margin-top: -700px;
   width: 80%;
-  height: 70%;
+  height: 32%;
   resize: none;
   display: block;
+}
+
+#requirementsPanel #refined_introduction {
+  margin-left: 20.2%;
 }
 
 #requirementsPanel #refined_textarea {
@@ -97,16 +105,20 @@ ul {
   margin-top: 2px;
   margin-left: 20.2%;
   width: 80%;
-  height: 0;
+  height: 32%;
   resize: none;
-  display: none;
+  display: block;
+}
+
+#requirementsPanel #error_introduction {
+  margin-left: 20.2%;
 }
 
 #requirementsPanel #errorsPanel {
   position: relative;
   overflow: auto;
   width: 80%;
-  height: 28%;
+  height: 27%;
   margin-top: 2px;
   margin-left: 20.2%;
   border: 1px solid #000;
@@ -115,7 +127,7 @@ ul {
 }
 
 #requirementsPanel #templates ul li{
-  font-size: .78vw;
+  font-size: .75vw;
 }
 
 #requirementsPanel #errorsPanel ul li{
@@ -167,7 +179,15 @@ ul {
   display: block;
 }
 
-
+#simulationPanel {
+  position: relative;
+  margin-top: 20px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  width: 98%;
+  height: 700px;
+  display: block;
+}
 
 .upload{
   position: relative;
@@ -184,4 +204,8 @@ ul {
 .button{
   margin-left: 10px;
   margin-top: 10px;
+}
+
+.highlight{
+  color: #4b0082;
 }
