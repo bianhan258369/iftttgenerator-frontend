@@ -52,12 +52,12 @@
             class="highlight">SHOULD INCREASE</b></li>
       </ul>
     </div>
-    <textarea id="input_textarea" class="input" [(ngModel)]='requirementTexts' placeholder="please enter the requirements..."
-      cols="30" rows="10" name="requirements"></textarea>
-    <b id="refined_introduction" class="refined">Below Are The Refined Requirements, Please Modify Them Carefully:</b>
+    <b id="input_introduction" class="introduction">Please Enter The Requirements:</b>
+    <textarea id="input_textarea" class="input" [(ngModel)]='requirementTexts' cols="30" rows="10" name="requirements"></textarea>
+    <b id="refined_introduction" class="introduction">Below Are The Refined Requirements, Please Modify Them Carefully:</b>
     <textarea id="refined_textarea" class="refined" [(ngModel)]='refindeRequirements' cols="30" rows="10"
       name="requirements"></textarea>
-    <b id="error_introduction">Errors</b>
+    <b id="error_introduction" class="introduction">Errors</b>
     <div id="errorsPanel">
       <ul *ngFor="let error of errors">
         <li>{{error}}</li>

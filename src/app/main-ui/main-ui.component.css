@@ -86,12 +86,18 @@ ul {
   display: block;
 }
 
+#requirementsPanel #input_introduction
+{
+  margin-top: -700px;
+  margin-left: 20.2%;
+  display: block;
+}
+
 #requirementsPanel #input_textarea {
   position: relative;
   margin-left: 20.2%;
-  margin-top: -700px;
   width: 80%;
-  height: 32%;
+  height: 45%;
   resize: none;
   display: block;
 }
@@ -105,7 +111,7 @@ ul {
   margin-top: 2px;
   margin-left: 20.2%;
   width: 80%;
-  height: 32%;
+  height: 30%;
   resize: none;
   display: block;
 }
@@ -118,7 +124,7 @@ ul {
   position: relative;
   overflow: auto;
   width: 80%;
-  height: 27%;
+  height: 13.5%;
   margin-top: 2px;
   margin-left: 20.2%;
   border: 1px solid #000;
@@ -214,4 +220,8 @@ ul {
 
 .highlight{
   color: #4b0082;
+}
+
+.introduction{
+  color: #36648B;
 }

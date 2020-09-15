@@ -23,10 +23,13 @@
     "jointjs": "^3.2.0",
     "jquery": "^3.5.1",
     "lodash": "^3.10.1",
+    "monaco-languageclient": "^0.10.2",
     "ng2-file-upload": "^1.4.0",
-    "ngx-monaco-editor": "^9.0.0",
+    "ngx-monaco-editor": "^8.0.0",
+    "reconnecting-websocket": "^4.4.0",
     "rxjs": "~6.4.0",
     "tslib": "^1.9.0",
+    "vscode-ws-jsonrpc": "^0.1.1",
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
