@@ -150,7 +150,9 @@
     <div class="divcontent" style="white-space:pre-wrap; height:20px" *ngFor="let droolsRule of droolsRules">
       {{droolsRule}} </div>
   </div>
-  <div id="simulationPanel"></div>
+  <div id="simulationPanel">
+    <video id="video" autoplay="autoplay"><source src="assets/video/demo.mp4" type="video/mp4"></video>
+  </div>
 
   <button class="upload button">Upload Ontology
     <input class="change" type="file" multiple="multiple" (change)="selectedFileOnChanged($event)" />
@@ -158,4 +160,5 @@
   <button class="button" (click)="generateRefinedRequirements()">Refine Requirements</button>
   <button class="button" (click)="check()">Check</button>
   <button class="button" (click)="generateDroolsRules()">GenerateDrools</button>
+  <button class="button" (click)="generateSimulation()">ShowSimulation</button>
 </div>

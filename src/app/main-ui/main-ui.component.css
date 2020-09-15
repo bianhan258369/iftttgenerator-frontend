@@ -150,6 +150,7 @@ ul {
   width: 80%;
   height: 100%;
   display: block;
+  overflow: auto;
 }
 
 #intermediatePanel #informationPanel {
@@ -187,6 +188,11 @@ ul {
   width: 98%;
   height: 700px;
   display: block;
+}
+
+#simulationPanel #video{
+  width: 100%;
+  height: 100%;
 }
 
 .upload{

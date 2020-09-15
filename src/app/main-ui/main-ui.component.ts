@@ -41,7 +41,7 @@ export class MainUIComponent implements OnInit {
 		this.ovals = new Array<Oval>();
 		this.lines = new Array<Line>();
 		this.phenomena = new Array<Phenomenon>()
-    this.referencePhenomena = new Array<Phenomenon>();
+		this.referencePhenomena = new Array<Phenomenon>();
 	}
 
 	open2 = true;
@@ -336,44 +336,44 @@ export class MainUIComponent implements OnInit {
 		if (tab === 'requirements') {
 			document.getElementById('requirementsPanel').style.display = 'block';
 			document.getElementById('intermediatePanel').style.display = 'none';
-      document.getElementById('droolsrulesPanel').style.display = 'none';
-      document.getElementById('simulationPanel').style.display = 'none';
+			document.getElementById('droolsrulesPanel').style.display = 'none';
+			document.getElementById('simulationPanel').style.display = 'none';
 			document.getElementById('requirements').style.background = '#166dac'
 			document.getElementById('intermediate').style.background = '#62a0cc'
-      document.getElementById('droolsrules').style.background = '#62a0cc'
-      document.getElementById('simulation').style.background = '#62a0cc'
+			document.getElementById('droolsrules').style.background = '#62a0cc'
+			document.getElementById('simulation').style.background = '#62a0cc'
 		}
 		else if (tab === 'intermediate') {
 			document.getElementById('requirementsPanel').style.display = 'none';
 			document.getElementById('intermediatePanel').style.display = 'block';
 			document.getElementById('content').style.display = 'block';
-      document.getElementById('droolsrulesPanel').style.display = 'none';
-      document.getElementById('simulationPanel').style.display = 'none';
-      document.getElementById('requirements').style.background = '#62a0cc'
-      document.getElementById('intermediate').style.background = '#166dac'
-      document.getElementById('droolsrules').style.background = '#62a0cc'
-      document.getElementById('simulation').style.background = '#62a0cc'
+			document.getElementById('droolsrulesPanel').style.display = 'none';
+			document.getElementById('simulationPanel').style.display = 'none';
+			document.getElementById('requirements').style.background = '#62a0cc'
+			document.getElementById('intermediate').style.background = '#166dac'
+			document.getElementById('droolsrules').style.background = '#62a0cc'
+			document.getElementById('simulation').style.background = '#62a0cc'
 		}
-		else if (tab === 'droolsrules'){
+		else if (tab === 'droolsrules') {
 			document.getElementById('requirementsPanel').style.display = 'none';
 			document.getElementById('intermediatePanel').style.display = 'none';
-      document.getElementById('droolsrulesPanel').style.display = 'block';
-      document.getElementById('simulationPanel').style.display = 'none';
+			document.getElementById('droolsrulesPanel').style.display = 'block';
+			document.getElementById('simulationPanel').style.display = 'none';
 			document.getElementById('requirements').style.background = '#62a0cc'
-      document.getElementById('intermediate').style.background = '#62a0cc'
-      document.getElementById('droolsrules').style.background = '#166dac'
-      document.getElementById('simulation').style.background = '#62a0cc'
-    }
-    else{
-      document.getElementById('requirementsPanel').style.display = 'none';
+			document.getElementById('intermediate').style.background = '#62a0cc'
+			document.getElementById('droolsrules').style.background = '#166dac'
+			document.getElementById('simulation').style.background = '#62a0cc'
+		}
+		else {
+			document.getElementById('requirementsPanel').style.display = 'none';
 			document.getElementById('intermediatePanel').style.display = 'none';
-      document.getElementById('droolsrulesPanel').style.display = 'none';
-      document.getElementById('simulationPanel').style.display = 'block';
+			document.getElementById('droolsrulesPanel').style.display = 'none';
+			document.getElementById('simulationPanel').style.display = 'block';
 			document.getElementById('requirements').style.background = '#62a0cc'
-      document.getElementById('intermediate').style.background = '#62a0cc'
-      document.getElementById('droolsrules').style.background = '#62a0cc'
-      document.getElementById('simulation').style.background = '#166dac'
-    }
+			document.getElementById('intermediate').style.background = '#62a0cc'
+			document.getElementById('droolsrules').style.background = '#62a0cc'
+			document.getElementById('simulation').style.background = '#166dac'
+		}
 	}
 
 	generateRefinedRequirements() {
@@ -384,17 +384,13 @@ export class MainUIComponent implements OnInit {
 	}
 
 	check() {
-    this.errors = new Array<string>();
-		this.errors.push('error1')
-		this.errors.push('error2')
-		this.errors.push('error3')
-		this.errors.push('error4')
-		this.errors.push('error5')
-		this.errors.push('error6')
+		this.errors = new Array<string>();
+		this.errors.push('No Errors')
 	}
 
 	generateDroolsRules() {
 		var allRequirements = this.requirementTexts + '\n' + this.refindeRequirements;
+		console.log(allRequirements.split('\n').join('//'))
 		this.pfService.getProblemDiagram(allRequirements.split('\n').join('//'), this.ontologyFilePath).subscribe(result1 => {
 			this.phenomena = result1.phenomena;
 			this.referencePhenomena = result1.referencePhenomena
@@ -410,6 +406,11 @@ export class MainUIComponent implements OnInit {
 				this.change_Menu('droolsrules')
 			})
 		})
+	}
+
+	generateSimulation(){
+		document.getElementById("simulation").style.display = 'block';
+		this.change_Menu("simulation")
 	}
 
 }
