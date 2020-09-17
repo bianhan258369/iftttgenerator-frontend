@@ -97,9 +97,11 @@ ul {
   position: relative;
   margin-left: 20.2%;
   width: 80%;
-  height: 45%;
+  height: 60%;
   resize: none;
   display: block;
+  border: 1px solid #000;
+  border-radius: 5px;
 }
 
 #requirementsPanel #refined_introduction {
@@ -111,61 +113,42 @@ ul {
   margin-top: 2px;
   margin-left: 20.2%;
   width: 80%;
-  height: 30%;
+  height: 33%;
   resize: none;
   display: block;
-}
-
-#requirementsPanel #error_introduction {
-  margin-left: 20.2%;
-}
-
-#requirementsPanel #errorsPanel {
-  position: relative;
-  overflow: auto;
-  width: 80%;
-  height: 13.5%;
-  margin-top: 2px;
-  margin-left: 20.2%;
   border: 1px solid #000;
   border-radius: 5px;
-  display: block;
 }
 
 #requirementsPanel #templates ul li{
   font-size: .75vw;
 }
 
-#requirementsPanel #errorsPanel ul li{
-  font-size: 1vw;
-  height: 7px;
-}
 
 #intermediatePanel {
   position: relative;
   margin-top: 20px;
-  border: 1px solid #000;
-  border-radius: 5px;
   width: 98%;
   height: 700px;
   display: block;
 }
 
 #intermediatePanel #content {
-  position: absolute;
+  position: relative;
   width: 80%;
-  height: 100%;
+  height: 85%;
   display: block;
   overflow: auto;
+  float:left;
 }
 
 #intermediatePanel #informationPanel {
-  position: absolute;
+  position: relative;
   overflow: auto;
   width: 20%;
-  margin-left: 80%;
-  height: 100%;
+  height: 85%;
   display: block;
+  float:left;
 }
 
 #intermediatePanel #informationPanel .title {
@@ -173,6 +156,29 @@ ul {
   width: 100%;
   background: #36648B;
   cursor: pointer;
+}
+
+#intermediatePanel #error_introduction {
+  position: relative;
+  display: block;
+  float: left;
+  width: 100%;
+}
+
+#intermediatePanel #errorsPanel {
+  position: relative;
+  height: 15%;
+  width: 100%;
+  border: 1px solid #000;
+  border-radius: 5px;
+  overflow: auto;
+  display: block;
+  float: left;
+}
+
+#intermediatePanel #errorsPanel ul li{
+  font-size: 1vw;
+  height: 7px;
 }
 
 #droolsrulesPanel {

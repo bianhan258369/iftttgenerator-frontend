@@ -9,12 +9,13 @@ import { CommonModule }     from '@angular/common';
 import { FileUploadModule } from 'ng2-file-upload';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule }    from '@angular/common/http';
-
+import { MonacoEditorModule } from "ngx-monaco-editor";
+import { MonacoConfig } from "./monaco-config";
 
 @NgModule({
   declarations: [
     AppComponent,
-    MainUIComponent
+    MainUIComponent,
   ],
   imports: [
     CommonModule,
@@ -22,7 +23,8 @@ import { HttpClientModule }    from '@angular/common/http';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MonacoEditorModule.forRoot(MonacoConfig)
   ],
   providers: [],
   bootstrap: [AppComponent]

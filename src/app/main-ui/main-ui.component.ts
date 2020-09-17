@@ -30,6 +30,9 @@ export class MainUIComponent implements OnInit {
 	lines: Array<Line>;
 	phenomena: Array<Phenomenon>
 	referencePhenomena: Array<Phenomenon>
+	languageId = "req";
+  	editorOptions = { theme: "reqTheme", language: "req",minimap: {enabled: false}};
+  	editor;
 
 	constructor(private generateService: GenerateService, private uploadService: UploadService, private pfService: PFService) { }
 
@@ -302,6 +305,7 @@ export class MainUIComponent implements OnInit {
 				color: 'rgb(240,255,255)'
 			}
 		});
+		this.paper.scale(0.8, 0.5);
 		var that = this;
 
 		this.paper.on('blank:mousewheel', (event, x, y, delta) => {
@@ -373,6 +377,8 @@ export class MainUIComponent implements OnInit {
 			document.getElementById('intermediate').style.background = '#62a0cc'
 			document.getElementById('droolsrules').style.background = '#62a0cc'
 			document.getElementById('simulation').style.background = '#166dac'
+			var vid = document.getElementById('video')
+			vid.src = "assets/video/demo.mp4"
 		}
 	}
 
@@ -383,14 +389,8 @@ export class MainUIComponent implements OnInit {
 		})
 	}
 
-	check() {
-		this.errors = new Array<string>();
-		this.errors.push('No Errors')
-	}
-
-	generateDroolsRules() {
+	systemBehaviourDerivation(){
 		var allRequirements = this.requirementTexts + '\n' + this.refindeRequirements;
-		console.log(allRequirements.split('\n').join('//'))
 		this.pfService.getProblemDiagram(allRequirements.split('\n').join('//'), this.ontologyFilePath).subscribe(result1 => {
 			this.phenomena = result1.phenomena;
 			this.referencePhenomena = result1.referencePhenomena
@@ -400,11 +400,20 @@ export class MainUIComponent implements OnInit {
 			document.getElementById("intermediate").style.display = 'block';
 			this.change_Menu("intermediate")
 			this.showProblemDiagram()
-			this.generateService.transformToDrools(allRequirements.split('\n').join('//'), this.ontologyFilePath).subscribe(result2 => {
-				this.droolsRules = result2;
-				document.getElementById("droolsrules").style.display = 'block';
-				this.change_Menu('droolsrules')
-			})
+		})
+	}
+
+	check() {
+		this.errors = new Array<string>();
+		this.errors.push('No Errors')
+	}
+
+	generateDroolsRules() {
+		var allRequirements = this.requirementTexts + '\n' + this.refindeRequirements;
+		this.generateService.transformToDrools(allRequirements.split('\n').join('//'), this.ontologyFilePath).subscribe(result2 => {
+			this.droolsRules = result2;
+			document.getElementById("droolsrules").style.display = 'block';
+			this.change_Menu('droolsrules')
 		})
 	}
 
@@ -413,4 +422,7 @@ export class MainUIComponent implements OnInit {
 		this.change_Menu("simulation")
 	}
 
+	monacoOnInit(editor) {
+		this.editor = editor;
+	  }
 }

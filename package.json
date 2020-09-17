@@ -19,10 +19,13 @@
     "@angular/platform-browser": "~8.1.2",
     "@angular/platform-browser-dynamic": "~8.1.2",
     "@angular/router": "~8.1.2",
+    "@angular/service-worker": "^8.1.2",
+    "@materia-ui/ngx-monaco-editor": "^4.0.2",
     "backbone": "^1.4.0",
     "jointjs": "^3.2.0",
     "jquery": "^3.5.1",
     "lodash": "^3.10.1",
+    "monaco-editor": "^0.20.0",
     "monaco-languageclient": "^0.10.2",
     "ng2-file-upload": "^1.4.0",
     "ngx-monaco-editor": "^8.0.0",
@@ -33,7 +36,7 @@
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.801.2",
+    "@angular-devkit/build-angular": "^0.803.24",
     "@angular/cli": "~8.1.2",
     "@angular/compiler-cli": "~8.1.2",
     "@angular/language-service": "~8.1.2",

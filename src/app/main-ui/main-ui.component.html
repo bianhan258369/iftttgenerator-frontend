@@ -1,4 +1,4 @@
-<!--The content below is only a placeholder and can be replaced.-->
+The content below is only a placeholder and can be replaced.
 <div class="main">
   <div class="topbar">
     <nav>
@@ -19,29 +19,35 @@
     <div id="templates">
       <ul>
         <li style="text-align : center"><b>Templates</b></li>
-        <li ><b>'ALWAYS' Requirements：</b></li>
+        <li><b>'ALWAYS' Requirements：</b></li>
         <li>state <b class="highlight">SHOULD ALWAYS BE ACTIVE</b></li>
+        <li>attribute <b class="highlight">SHOULD ALWAYS BE ABOVE/BELOW</b> value</li>
         <li></li>
         <li><b>'NEVER' Requirements：</b></li>
-        <li>state <b class="highlight">SHOULD NEVER BE ACTIVE</b></li>
         <li>event <b class="highlight">SHOULD NEVER HAPPEN</b></li>
+        <li>attribute <b class="highlight">SHOULD NEVER BE ABOVE/BELOW</b> value</li>
         <li>[state1,state2,...] <b class="highlight">SHOULD NEVER OCCUR TOGETHER</b></li>
         <li></li>
         <li><b>'PREFERRED' Requirements：</b></li>
         <li><b class="highlight">PREFERRED</b> attribute <b class="highlight">IS</b> value</li>
         <li></li>
         <li><b>'IF-THEN' Requirements：</b></li>
-        <li><b class="highlight">IF</b> trigger <b class="highlight">(FOR TIME)</b> <b class="highlight">THEN</b> event</li>
-        <li><b class="highlight">IF</b> trigger <b class="highlight">(FOR TIME)</b> <b class="highlight">THEN</b> state</li>
-        <li><b class="highlight">IF</b> trigger <b class="highlight">THEN</b> attribute <b class="highlight">SHOULD INCREASE</b></li>
-        <li><b class="highlight">IF</b> trigger <b class="highlight">THEN</b> attribute <b class="highlight">SHOULD DECREASE</b></li>
+        <li><b class="highlight">IF</b> trigger <b class="highlight">(FOR TIME)</b> <b class="highlight">THEN</b> event
+        </li>
+        <li><b class="highlight">IF</b> trigger <b class="highlight">(FOR TIME)</b> <b class="highlight">THEN</b> state
+        </li>
+        <li><b class="highlight">IF</b> trigger <b class="highlight">THEN</b> attribute <b class="highlight">SHOULD
+            INCREASE</b></li>
+        <li><b class="highlight">IF</b> trigger <b class="highlight">THEN</b> attribute <b class="highlight">SHOULD
+            DECREASE</b></li>
         <li></li>
         <li></li>
         <li></li>
         <li style="text-align : center"><b>Examples</b></li>
         <li>ac.coldOn <b class="highlight">SHOULD ALWAYS BE ACTIVE</b></li>
-        <li>ac.coldOn <b class="highlight">SHOULD NEVER BE ACTIVE</b></li>
+        <li>air.temperature <b class="highlight">SHOULD ALWAYS BE ABOVE</b> 0</li>
         <li>ac.turnoncold <b class="highlight">SHOULD NEVER HAPPEN</b></li>
+        <li>air.temperature <b class="highlight">SHOULD NEVER BE BELOW</b> 0</li>
         <li>[ac.coldOn,window.wopen,...] <b class="highlight">SHOULD NEVER OCCUR TOGETHER</b></li>
         <li><b class="highlight">PREFERRED</b> air.temperature <b class="highlight">IS</b> 20</li>
         <li><b class="highlight">IF</b> air.temperature>30 <b class="highlight">(FOR 10m)</b> <b
@@ -53,16 +59,13 @@
       </ul>
     </div>
     <b id="input_introduction" class="introduction">Please Enter The Requirements:</b>
-    <textarea id="input_textarea" class="input" [(ngModel)]='requirementTexts' cols="30" rows="10" name="requirements"></textarea>
-    <b id="refined_introduction" class="introduction">Below Are The Refined Requirements, Please Modify Them Carefully:</b>
-    <textarea id="refined_textarea" class="refined" [(ngModel)]='refindeRequirements' cols="30" rows="10"
-      name="requirements"></textarea>
-    <b id="error_introduction" class="introduction">Errors</b>
-    <div id="errorsPanel">
-      <ul *ngFor="let error of errors">
-        <li>{{error}}</li>
-      </ul>
-    </div>
+    <ngx-monaco-editor id="input_textarea" class="input" [options]="editorOptions" [(ngModel)]="requirementTexts"
+      (onInit)="monacoOnInit($event)"></ngx-monaco-editor>
+    <b id="refined_introduction" class="introduction">Below Are The Requirements Complemented, Please Modify Them
+      If Necessary:</b>
+    <ngx-monaco-editor id="refined_textarea" class="refined" [options]="editorOptions" [(ngModel)]="refindeRequirements"
+      (onInit)="monacoOnInit($event)"></ngx-monaco-editor>
+
   </div>
   <div id="intermediatePanel">
     <div class="content" id="content"></div>
@@ -90,26 +93,6 @@
             </table>
           </div>
         </ng-template>
-        <!-- <li *ngIf="!open3;else elseOpen3" (click)="setOpen3()" class="title">&nbsp;+ Interaction</li>
-        <ng-template #elseOpen3>
-          <li (click)="setOpen3()" class="title">&nbsp;- Interaction</li>
-          <div class="content">
-            <table *ngIf="open3" class="content">
-              <tr>
-                <th>Name</th>
-                <th>Initiator</th>
-                <th>Receiver</th>
-                <th>Content</th>
-              </tr>
-              <tr *ngFor="let phenomonon of phenomena">
-                <th>int {{phenomonon.biaohao}}</th>
-                <th>{{phenomonon.from.shortName}}</th>
-                <th>{{phenomonon.to.shortName}}</th>
-                <th>{{phenomonon.name}}</th>
-              </tr>
-            </table>
-          </div>
-        </ng-template> -->
         <li *ngIf="!open4;else elseOpen4" (click)="setOpen4()" class="title">&nbsp;+ Reference Phenomena</li>
         <ng-template #elseOpen4>
           <li (click)="setOpen4()" class="title">&nbsp;- Reference Phenomena</li>
@@ -124,7 +107,6 @@
                 <th>RefType</th>
               </tr>
               <tr *ngFor="let reference of referencePhenomena">
-                <!-- <th>req {{reference.requirement.biaohao}}</th> -->
                 <th>phe{{reference.biaohao}}</th>
                 <th>req{{reference.requirement.biaohao}}</th>
                 <th>{{reference.from.shortName}}</th>
@@ -145,20 +127,27 @@
         </ng-template>
       </ul>
     </div>
+    <b id="error_introduction" class="introduction">Errors</b>
+    <div id="errorsPanel">
+      <ul *ngFor="let error of errors">
+        <li>{{error}}</li>
+      </ul>
+    </div>
   </div>
   <div id="droolsrulesPanel">
     <div class="divcontent" style="white-space:pre-wrap; height:20px" *ngFor="let droolsRule of droolsRules">
       {{droolsRule}} </div>
   </div>
   <div id="simulationPanel">
-    <video id="video" autoplay="autoplay"><source src="assets/video/demo.mp4" type="video/mp4"></video>
+    <video id="video" autoplay></video>
   </div>
 
-  <button class="upload button">Upload Ontology
+  <button class="upload button">UploadOntology
     <input class="change" type="file" multiple="multiple" (change)="selectedFileOnChanged($event)" />
   </button>
-  <button class="button" (click)="generateRefinedRequirements()">Refine Requirements</button>
-  <button class="button" (click)="check()">Check</button>
+  <button class="button" (click)="generateRefinedRequirements()">ComplementRequirements</button>
+  <button class="button" (click)="systemBehaviourDerivation()">DeriveSystemBehaviours</button>
+  <button class="button" (click)="check()">CheckErrors</button>
   <button class="button" (click)="generateDroolsRules()">GenerateDrools</button>
   <button class="button" (click)="generateSimulation()">ShowSimulation</button>
 </div>
