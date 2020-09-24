@@ -9,6 +9,7 @@ import { Line } from '../entity/Line';
 import { Phenomenon } from '../entity/Phenomenon';
 import { PFService } from '../service/pf.service';
 import { result } from 'lodash';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 
 @Component({
@@ -21,6 +22,7 @@ export class MainUIComponent implements OnInit {
 	requirementTexts: string;
 	refindeRequirements: string;
 	errors: Array<string>;
+	errorFlag: boolean;
 	droolsRules: Array<string>;
 	ontologyFilePath: string;
 	graph: joint.dia.Graph;
@@ -378,7 +380,7 @@ export class MainUIComponent implements OnInit {
 			document.getElementById('droolsrules').style.background = '#62a0cc'
 			document.getElementById('simulation').style.background = '#166dac'
 			var vid = document.getElementById('video')
-			vid.src = "assets/video/demo.mp4"
+			// vid.src = "assets/video/demo.mp4"
 		}
 	}
 
@@ -391,12 +393,12 @@ export class MainUIComponent implements OnInit {
 
 	systemBehaviourDerivation(){
 		var allRequirements = this.requirementTexts + '\n' + this.refindeRequirements;
-		this.pfService.getProblemDiagram(allRequirements.split('\n').join('//'), this.ontologyFilePath).subscribe(result1 => {
-			this.phenomena = result1.phenomena;
-			this.referencePhenomena = result1.referencePhenomena
-			this.ovals = result1.ovals
-			this.rects = result1.rects
-			this.lines = result1.lines
+		this.pfService.getProblemDiagram(allRequirements.split('\n').join('//'), this.ontologyFilePath).subscribe(result => {
+			this.phenomena = result.phenomena;
+			this.referencePhenomena = result.referencePhenomena
+			this.ovals = result.ovals
+			this.rects = result.rects
+			this.lines = result.lines
 			document.getElementById("intermediate").style.display = 'block';
 			this.change_Menu("intermediate")
 			this.showProblemDiagram()
@@ -404,17 +406,24 @@ export class MainUIComponent implements OnInit {
 	}
 
 	check() {
-		this.errors = new Array<string>();
-		this.errors.push('No Errors')
+		var allRequirements = this.requirementTexts + '\n' + this.refindeRequirements;
+		this.generateService.check(allRequirements.split('\n').join('//'), this.ontologyFilePath).subscribe(result => {
+			this.errors = result;
+			if(this.errors[0] === 'No Errors!') this.errorFlag = true;
+			else this.errorFlag = false;
+		})
 	}
 
 	generateDroolsRules() {
-		var allRequirements = this.requirementTexts + '\n' + this.refindeRequirements;
-		this.generateService.transformToDrools(allRequirements.split('\n').join('//'), this.ontologyFilePath).subscribe(result2 => {
-			this.droolsRules = result2;
-			document.getElementById("droolsrules").style.display = 'block';
-			this.change_Menu('droolsrules')
-		})
+		if(!this.errorFlag) alert('Please Solve The Errors First!')
+		else{
+			var allRequirements = this.requirementTexts + '\n' + this.refindeRequirements;
+			this.generateService.transformToDrools(allRequirements.split('\n').join('//'), this.ontologyFilePath).subscribe(result => {
+				this.droolsRules = result;
+				document.getElementById("droolsrules").style.display = 'block';
+				this.change_Menu('droolsrules')
+			})
+		}
 	}
 
 	generateSimulation(){

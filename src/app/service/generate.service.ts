@@ -22,4 +22,10 @@ export class GenerateService {
     url = decodeURIComponent(url);
     return this.httpClient.get<any>(url);
   }  
+
+  check(requirementTexts:string, ontologyPath:string) : Observable<string[]>{
+    var url = this.serviceUrl + 'check?requirementTexts=' + requirementTexts + '&ontologyPath=' + ontologyPath
+    url = decodeURIComponent(url);
+    return this.httpClient.get<string[]>(url);
+  }  
 }
