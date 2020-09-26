@@ -145,8 +145,24 @@
     <input class="change" type="file" multiple="multiple" (change)="selectedFileOnChanged($event)" />
   </button>
   <button class="button" (click)="generateRefinedRequirements()">ComplementRequirements</button>
-  <button class="button" (click)="systemBehaviourDerivation()">DeriveSystemBehaviours</button>
-  <button class="button" (click)="check()">CheckErrors</button>
+  <details class="detail">
+    <summary>DeriveSystemBehaviours</summary>
+    <p (click)="problemDiagramDerivation()">ProblemDiagram</p>
+    <p (click)="problemDiagramDerivation2()">ProblemDiagram2</p>
+    <p (click)="scenarioDiagramDerivation()">ScenarioDiagram</p>
+  </details>
+
+  <details class="detail">
+    <summary>CheckErrors</summary>
+      <p (click)="ruleBasedCheck()">Rule</p>
+      <p (click)="scenarioBasedCheck()">Scenario</p>
+      <p (click)="formalismBasedCheck()">Formalism</p>
+      <p (click)="satisfactionBasedCheck()">Satisfaction</p>
+  </details>
+ 
+
   <button class="button" (click)="generateDroolsRules()">GenerateDrools</button>
   <button class="button" (click)="generateSimulation()">ShowSimulation</button>
+ 
+
 </div>
