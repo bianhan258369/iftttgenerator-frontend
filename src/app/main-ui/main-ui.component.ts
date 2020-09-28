@@ -8,8 +8,9 @@ import { Oval } from '../entity/Oval';
 import { Line } from '../entity/Line';
 import { Phenomenon } from '../entity/Phenomenon';
 import { PFService } from '../service/pf.service';
-import { result } from 'lodash';
+import { indexOf, result } from 'lodash';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { calcPossibleSecurityContexts } from '@angular/compiler/src/template_parser/binding_parser';
 
 
 @Component({
@@ -19,6 +20,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 })
 export class MainUIComponent implements OnInit {
 	interval
+	imgPath: string;
 	requirementTexts: string;
 	refindeRequirements: string;
 	errors: Array<string>;
@@ -38,7 +40,8 @@ export class MainUIComponent implements OnInit {
 	rectsWithSensors: Array<Rect>;
 	linesWithSensors: Array<Line>;
 	phenomena: Array<Phenomenon>
-	referencePhenomena: Array<Phenomenon>
+	referencePhenomena: Array<Phenomenon>;
+	scenariaDiagramPaths: Array<string>;
 	languageId = "req";
 	editorOptions = { theme: "reqTheme", language: "req", minimap: { enabled: false } };
 	editor;
@@ -57,6 +60,7 @@ export class MainUIComponent implements OnInit {
 		this.linesWithSensors = new Array<Line>();
 		this.phenomena = new Array<Phenomenon>()
 		this.referencePhenomena = new Array<Phenomenon>();
+		this.scenariaDiagramPaths = new Array<string>();
 	}
 
 	open2 = true;
@@ -341,13 +345,8 @@ export class MainUIComponent implements OnInit {
 		}
 	}
 
-	showScenarioDiagram(index){
-		this.scgraph.clear();
-	}
-
 	initPaper(): void{
 		this.initPdPaper();
-		this.initScPaper();
 	}
 
 	initPdPaper(): void {
@@ -375,30 +374,30 @@ export class MainUIComponent implements OnInit {
 		});
 	}
 
-	initScPaper(): void {
-		this.scgraph = new joint.dia.Graph();
-		let d = $("#sccontent");
-		let wid = d.width();
-		let hei = d.height();
-		this.scpaper = new joint.dia.Paper({
-			el: $("#sccontent"),
-			width: wid,
-			height: hei,
-			model: this.scgraph,
-			gridSize: 10,
-			drawGrid: true,
-			background: {
-				color: 'rgb(240,255,255)'
-			}
-		});
-		this.scpaper.scale(0.8, 0.5);
-		var that = this;
+	// initScPaper(): void {
+	// 	this.scgraph = new joint.dia.Graph();
+	// 	let d = $("#sccontent");
+	// 	let wid = d.width();
+	// 	let hei = d.height();
+	// 	this.scpaper = new joint.dia.Paper({
+	// 		el: $("#sccontent"),
+	// 		width: wid,
+	// 		height: hei,
+	// 		model: this.scgraph,
+	// 		gridSize: 10,
+	// 		drawGrid: true,
+	// 		background: {
+	// 			color: 'rgb(240,255,255)'
+	// 		}
+	// 	});
+	// 	this.scpaper.scale(0.8, 0.5);
+	// 	var that = this;
 
-		this.scpaper.on('blank:scpaper', (event, x, y, delta) => {
-			let scale = that.scpaper.scale();
-			that.scpaper.scale(scale.sx + (delta * 0.01), scale.sy + (delta * 0.01));
-		});
-	}
+	// 	this.scpaper.on('blank:scpaper', (event, x, y, delta) => {
+	// 		let scale = that.scpaper.scale();
+	// 		that.scpaper.scale(scale.sx + (delta * 0.01), scale.sy + (delta * 0.01));
+	// 	});
+	// }
 
 	selectedFileOnChanged(event) {
 		this.uploadFile(event.target.files[0])
@@ -448,19 +447,19 @@ export class MainUIComponent implements OnInit {
 			document.getElementById('droolsrules').style.background = '#62a0cc'
 			document.getElementById('simulation').style.background = '#62a0cc'
 		}
-		else if (tab === 'scenario') {
-			document.getElementById('requirementsPanel').style.display = 'none';
-			document.getElementById('intermediatePanel').style.display = 'none';
-			document.getElementById('scenarioPanel').style.display = 'block';
-			document.getElementById('sccontent').style.display = 'block';
-			document.getElementById('droolsrulesPanel').style.display = 'none';
-			document.getElementById('simulationPanel').style.display = 'none';
-			document.getElementById('requirements').style.background = '#62a0cc'
-			document.getElementById('intermediate').style.background = '#62a0cc'
-			document.getElementById('scenario').style.background = '#166dac'
-			document.getElementById('droolsrules').style.background = '#62a0cc'
-			document.getElementById('simulation').style.background = '#62a0cc'
-		}
+		// else if (tab === 'scenario') {
+		// 	document.getElementById('requirementsPanel').style.display = 'none';
+		// 	document.getElementById('intermediatePanel').style.display = 'none';
+		// 	document.getElementById('scenarioPanel').style.display = 'block';
+		// 	document.getElementById('sccontent').style.display = 'block';
+		// 	document.getElementById('droolsrulesPanel').style.display = 'none';
+		// 	document.getElementById('simulationPanel').style.display = 'none';
+		// 	document.getElementById('requirements').style.background = '#62a0cc'
+		// 	document.getElementById('intermediate').style.background = '#62a0cc'
+		// 	document.getElementById('scenario').style.background = '#166dac'
+		// 	document.getElementById('droolsrules').style.background = '#62a0cc'
+		// 	document.getElementById('simulation').style.background = '#62a0cc'
+		// }
 		else if (tab === 'droolsrules') {
 			document.getElementById('requirementsPanel').style.display = 'none';
 			document.getElementById('intermediatePanel').style.display = 'none';
@@ -487,6 +486,23 @@ export class MainUIComponent implements OnInit {
 			var vid = document.getElementById('video')
 			// vid.src = "assets/video/demo.mp4"
 		}
+	}
+
+	showSCD(index : number){
+		var path : string = this.scenariaDiagramPaths[index].trim();
+		this.imgPath = path;
+		console.log(this.imgPath)
+		document.getElementById('requirementsPanel').style.display = 'none';
+		document.getElementById('intermediatePanel').style.display = 'none';
+		document.getElementById('scenarioPanel').style.display = 'block';
+		document.getElementById('sccontent').style.display = 'block';
+		document.getElementById('droolsrulesPanel').style.display = 'none';
+		document.getElementById('simulationPanel').style.display = 'none';
+		document.getElementById('requirements').style.background = '#62a0cc'
+		document.getElementById('intermediate').style.background = '#62a0cc'
+		document.getElementById('scenario').style.background = '#166dac'
+		document.getElementById('droolsrules').style.background = '#62a0cc'
+		document.getElementById('simulation').style.background = '#62a0cc'
 	}
 
 	generateRefinedRequirements() {
@@ -553,9 +569,21 @@ export class MainUIComponent implements OnInit {
 	}
 
 	scenarioDiagramDerivation(){
-		document.getElementById("scenario").style.display = 'block';
-		this.change_Menu("scenario");
-		this.closeDetails();
+		var requirements = this.requirementTexts + '\n' + this.refindeRequirements;
+		var allRequirements: string = ''
+		for (var i = 0; i < requirements.split('\n').length; i++) {
+			var requirement: string = requirements.split('\n')[i];
+			if (requirement.trim() !== '') {
+				allRequirements = allRequirements + requirement;
+				if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
+			}
+		}
+		this.pfService.getScenarioDiagram(allRequirements, this.ontologyFilePath).subscribe(result => {
+			console.log(result)
+			this.scenariaDiagramPaths = result.paths;
+			document.getElementById("scenario").style.display = 'block';
+			this.closeDetails();
+		})	
 	}
 
 	ruleBasedCheck() {

@@ -18,4 +18,11 @@ export class PFService {
     console.log(url)
     return this.httpClient.get<any>(url);
   }
+
+  getScenarioDiagram(requirementTexts:string, ontologyPath:string) : Observable<any>{
+    var url = this.serviceUrl + 'getSCD?requirementTexts=' + requirementTexts + '&ontologyPath=' + ontologyPath
+    url = decodeURIComponent(url);
+    console.log(url)
+    return this.httpClient.get<any>(url);
+  }
 }
