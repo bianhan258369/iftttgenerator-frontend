@@ -9,6 +9,7 @@
     <ul id="tablabel">
       <li id="requirements" (click)="change_Menu('requirements')">Requirements</li>
       <li id="intermediate" (click)="change_Menu('intermediate')">Intermediate</li>
+      <li id="scenario" (click)="change_Menu('scenario')">Scenario</li>
       <li id="droolsrules" (click)="change_Menu('droolsrules')">Drools Rules</li>
       <li id="simulation" (click)="change_Menu('simulation')">Simulation</li>
     </ul>
@@ -67,7 +68,7 @@
 
   </div>
   <div id="intermediatePanel">
-    <div class="content" id="content"></div>
+    <div class="content" id="pdcontent"></div>
     <div class="informationPanel" id="informationPanel">
       <ul>
         <li *ngIf="!open2;else elseOpen2" (click)="setOpen2()" class="title">&nbsp;+ All Phenomena</li>
@@ -126,13 +127,24 @@
         </ng-template>
       </ul>
     </div>
-    <b id="error_introduction" class="introduction">Errors</b>
-    <div id="errorsPanel">
+    <b id="error_introduction" class="error_introduction introduction">Errors</b>
+    <div id="errorsPanel" class="errorsPanel">
       <ul *ngFor="let error of errors">
         <li>{{error}}</li>
       </ul>
     </div>
   </div>
+
+  <div id="scenarioPanel">
+    <div class="content" id="sccontent"></div>
+    <b id="error_introduction" class="error_introduction introduction">Errors</b>
+    <div id="errorsPanel" class="errorsPanel">
+      <ul *ngFor="let error of errors">
+        <li>{{error}}</li>
+      </ul>
+    </div>
+  </div>
+
   <div id="droolsrulesPanel">
     <div class="divcontent" style="white-space:pre-wrap; height:20px" *ngFor="let droolsRule of droolsRules">
       {{droolsRule}} </div>

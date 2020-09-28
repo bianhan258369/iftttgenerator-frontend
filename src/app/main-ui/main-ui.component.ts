@@ -28,8 +28,10 @@ export class MainUIComponent implements OnInit {
 	satisfactionErrorFlag: boolean;
 	droolsRules: Array<string>;
 	ontologyFilePath: string;
-	graph: joint.dia.Graph;
-	paper: joint.dia.Paper;
+	pdgraph: joint.dia.Graph;
+	pdpaper: joint.dia.Paper;
+	scgraph: joint.dia.Graph;
+	scpaper: joint.dia.Paper;
 	rects: Array<Rect>;
 	ovals: Array<Oval>;
 	lines: Array<Line>;
@@ -75,7 +77,7 @@ export class MainUIComponent implements OnInit {
 	}
 
 	showProblemDiagram(rects, ovals, lines) {
-		this.graph.clear();
+		this.pdgraph.clear();
 		var MachineElement = joint.dia.Element.define('examples.CustomTextElement', {
 			attrs: {
 				label: {
@@ -207,7 +209,7 @@ export class MainUIComponent implements OnInit {
 					},
 
 				});
-				this.graph.addCells([rectGraphList[rectToIndex], machineElement, link]);
+				this.pdgraph.addCells([rectGraphList[rectToIndex], machineElement, link]);
 			}
 			else if (line.state === 1) {
 				let oval: Oval = line.from as Oval;
@@ -248,7 +250,7 @@ export class MainUIComponent implements OnInit {
 					},
 
 				});
-				this.graph.addCells([rectGraphList[rectIndex], ovalGraphList[ovalIndex], link]);
+				this.pdgraph.addCells([rectGraphList[rectIndex], ovalGraphList[ovalIndex], link]);
 			}
 			else if(line.state === 2) {
 				let oval: Oval = line.from as Oval;
@@ -294,7 +296,7 @@ export class MainUIComponent implements OnInit {
 					},
 
 				});
-				this.graph.addCells([rectGraphList[rectIndex], ovalGraphList[ovalIndex], link]);
+				this.pdgraph.addCells([rectGraphList[rectIndex], ovalGraphList[ovalIndex], link]);
 			}
 			else{
 				let rectFrom : Rect = line.from as Rect;
@@ -334,33 +336,67 @@ export class MainUIComponent implements OnInit {
 					},
 
 				});
-				this.graph.addCells([rectGraphList[rectFromIndex], rectGraphList[rectToIndex], link]);
+				this.pdgraph.addCells([rectGraphList[rectFromIndex], rectGraphList[rectToIndex], link]);
 			}
 		}
 	}
 
-	initPaper(): void {
-		this.graph = new joint.dia.Graph();
-		let d = $("#content");
+	showScenarioDiagram(index){
+		this.scgraph.clear();
+	}
+
+	initPaper(): void{
+		this.initPdPaper();
+		this.initScPaper();
+	}
+
+	initPdPaper(): void {
+		this.pdgraph = new joint.dia.Graph();
+		let d = $("#pdcontent");
 		let wid = d.width();
 		let hei = d.height();
-		this.paper = new joint.dia.Paper({
-			el: $("#content"),
+		this.pdpaper = new joint.dia.Paper({
+			el: $("#pdcontent"),
 			width: wid,
 			height: hei,
-			model: this.graph,
+			model: this.pdgraph,
 			gridSize: 10,
 			drawGrid: true,
 			background: {
 				color: 'rgb(240,255,255)'
 			}
 		});
-		this.paper.scale(0.8, 0.5);
+		this.pdpaper.scale(0.8, 0.5);
 		var that = this;
 
-		this.paper.on('blank:mousewheel', (event, x, y, delta) => {
-			let scale = that.paper.scale();
-			that.paper.scale(scale.sx + (delta * 0.01), scale.sy + (delta * 0.01));
+		this.pdpaper.on('blank:pdpaper', (event, x, y, delta) => {
+			let scale = that.pdpaper.scale();
+			that.pdpaper.scale(scale.sx + (delta * 0.01), scale.sy + (delta * 0.01));
+		});
+	}
+
+	initScPaper(): void {
+		this.scgraph = new joint.dia.Graph();
+		let d = $("#sccontent");
+		let wid = d.width();
+		let hei = d.height();
+		this.scpaper = new joint.dia.Paper({
+			el: $("#sccontent"),
+			width: wid,
+			height: hei,
+			model: this.scgraph,
+			gridSize: 10,
+			drawGrid: true,
+			background: {
+				color: 'rgb(240,255,255)'
+			}
+		});
+		this.scpaper.scale(0.8, 0.5);
+		var that = this;
+
+		this.scpaper.on('blank:scpaper', (event, x, y, delta) => {
+			let scale = that.scpaper.scale();
+			that.scpaper.scale(scale.sx + (delta * 0.01), scale.sy + (delta * 0.01));
 		});
 	}
 
@@ -390,41 +426,62 @@ export class MainUIComponent implements OnInit {
 		if (tab === 'requirements') {
 			document.getElementById('requirementsPanel').style.display = 'block';
 			document.getElementById('intermediatePanel').style.display = 'none';
+			document.getElementById('scenarioPanel').style.display = 'none';
 			document.getElementById('droolsrulesPanel').style.display = 'none';
 			document.getElementById('simulationPanel').style.display = 'none';
 			document.getElementById('requirements').style.background = '#166dac'
 			document.getElementById('intermediate').style.background = '#62a0cc'
+			document.getElementById('scenario').style.background = '#62a0cc'
 			document.getElementById('droolsrules').style.background = '#62a0cc'
 			document.getElementById('simulation').style.background = '#62a0cc'
 		}
 		else if (tab === 'intermediate') {
 			document.getElementById('requirementsPanel').style.display = 'none';
 			document.getElementById('intermediatePanel').style.display = 'block';
-			document.getElementById('content').style.display = 'block';
+			document.getElementById('scenarioPanel').style.display = 'none';
+			document.getElementById('pdcontent').style.display = 'block';
 			document.getElementById('droolsrulesPanel').style.display = 'none';
 			document.getElementById('simulationPanel').style.display = 'none';
 			document.getElementById('requirements').style.background = '#62a0cc'
 			document.getElementById('intermediate').style.background = '#166dac'
+			document.getElementById('scenario').style.background = '#62a0cc'
+			document.getElementById('droolsrules').style.background = '#62a0cc'
+			document.getElementById('simulation').style.background = '#62a0cc'
+		}
+		else if (tab === 'scenario') {
+			document.getElementById('requirementsPanel').style.display = 'none';
+			document.getElementById('intermediatePanel').style.display = 'none';
+			document.getElementById('scenarioPanel').style.display = 'block';
+			document.getElementById('sccontent').style.display = 'block';
+			document.getElementById('droolsrulesPanel').style.display = 'none';
+			document.getElementById('simulationPanel').style.display = 'none';
+			document.getElementById('requirements').style.background = '#62a0cc'
+			document.getElementById('intermediate').style.background = '#62a0cc'
+			document.getElementById('scenario').style.background = '#166dac'
 			document.getElementById('droolsrules').style.background = '#62a0cc'
 			document.getElementById('simulation').style.background = '#62a0cc'
 		}
 		else if (tab === 'droolsrules') {
 			document.getElementById('requirementsPanel').style.display = 'none';
 			document.getElementById('intermediatePanel').style.display = 'none';
+			document.getElementById('scenarioPanel').style.display = 'none';
 			document.getElementById('droolsrulesPanel').style.display = 'block';
 			document.getElementById('simulationPanel').style.display = 'none';
 			document.getElementById('requirements').style.background = '#62a0cc'
 			document.getElementById('intermediate').style.background = '#62a0cc'
+			document.getElementById('scenario').style.background = '#62a0cc'
 			document.getElementById('droolsrules').style.background = '#166dac'
 			document.getElementById('simulation').style.background = '#62a0cc'
 		}
 		else {
 			document.getElementById('requirementsPanel').style.display = 'none';
 			document.getElementById('intermediatePanel').style.display = 'none';
+			document.getElementById('scenarioPanel').style.display = 'none';
 			document.getElementById('droolsrulesPanel').style.display = 'none';
 			document.getElementById('simulationPanel').style.display = 'block';
 			document.getElementById('requirements').style.background = '#62a0cc'
 			document.getElementById('intermediate').style.background = '#62a0cc'
+			document.getElementById('scenario').style.background = '#62a0cc'
 			document.getElementById('droolsrules').style.background = '#62a0cc'
 			document.getElementById('simulation').style.background = '#166dac'
 			var vid = document.getElementById('video')
@@ -492,6 +549,12 @@ export class MainUIComponent implements OnInit {
 			this.change_Menu("intermediate")
 			this.showProblemDiagram(this.rectsWithSensors, this.ovals, this.linesWithSensors)
 		})
+		this.closeDetails();
+	}
+
+	scenarioDiagramDerivation(){
+		document.getElementById("scenario").style.display = 'block';
+		this.change_Menu("scenario");
 		this.closeDetails();
 	}
 
