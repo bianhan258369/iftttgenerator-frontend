@@ -71,7 +71,7 @@
 
   </div>
   <div id="intermediatePanel">
-    <div class="content" id="pdcontent"></div>
+    <div class="content" id="content"></div>
     <div class="informationPanel" id="informationPanel">
       <ul>
         <li *ngIf="!open2;else elseOpen2" (click)="setOpen2()" class="title">&nbsp;+ All Phenomena</li>
@@ -139,7 +139,7 @@
   </div>
 
   <div id="scenarioPanel">
-    <img [src]="imgPath" class="content" id="sccontent"/>
+    <img [src]="imgURL" class="content" id="sccontent"/>
     <b id="error_introduction" class="error_introduction introduction">Errors</b>
     <div id="errorsPanel" class="errorsPanel">
       <ul *ngFor="let error of errors">
@@ -159,7 +159,7 @@
   <button class="upload button">UploadOntology
     <input class="change" type="file" multiple="multiple" (change)="selectedFileOnChanged($event)" />
   </button>
-  <button class="button" (click)="generateRefinedRequirements()">ComplementRequirements</button>
+  <button class="button" (click)="generateComplementedRequirements()">ComplementRequirements</button>
   <details class="detail">
     <summary>DeriveSystemBehaviours</summary>
     <p (click)="problemDiagramDerivation()">ProblemDiagram</p>

@@ -70,6 +70,46 @@ ul {
   background-color: #36648B;
 }
 
+#tablabel details {
+  position: relative;
+  height: 4%;
+  padding: 0 12px 0 12px;
+  text-align: center;
+  list-style-type: none;
+  float: left;
+  display: block;
+
+  list-style-type: none;
+  cursor: pointer;
+  color: white;
+  background: #62a0cc;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  z-index: 1;
+  font-size: 12px;
+}
+
+#scenario summary:hover {
+  opacity: 0.5;
+  display: block;
+  cursor: pointer;
+}
+
+#scenario p:hover {
+  opacity: 0.5;
+  display: block;
+  cursor: pointer;
+}
+
+#scenario ::-webkit-details-marker {
+  display: none;
+}
+
+#scenario ::-moz-list-bullet {
+  font-size: 0;
+}
+
 #requirementsPanel {
   position: relative;
   margin-top: 20px;
@@ -82,7 +122,7 @@ ul {
 #requirementsPanel #templates {
   width: 20%;
   height: 100%;
-  display: inline-block;
+  display: block;
   border: 1px solid #000;
   border-radius: 5px;
   display: block;
@@ -134,7 +174,7 @@ ul {
   display: block;
 }
 
-#intermediatePanel #pdcontent {
+#intermediatePanel #content {
   position: relative;
   width: 80%;
   height: 85%;
@@ -267,7 +307,7 @@ ul {
   float: left;
 
   list-style-type: none;
-  cursor: pointer;
+  /* cursor: pointer; */
   color: rgb(12, 11, 11);
   background: #e0e2e4;
   border: 1px solid #ddd;
@@ -282,13 +322,15 @@ ul {
 
 .detail summary:hover {
   opacity: 0.5;
-  display: block;
   cursor: pointer;
+}
+
+.detail p{
+  font-size: 13.3333px;
 }
 
 .detail p:hover {
   opacity: 0.5;
-  display: block;
   cursor: pointer;
 }
 

@@ -20,7 +20,7 @@ import { calcPossibleSecurityContexts } from '@angular/compiler/src/template_par
 })
 export class MainUIComponent implements OnInit {
 	interval
-	imgPath: string;
+	imgURL: string;
 	requirementTexts: string;
 	refindeRequirements: string;
 	errors: Array<string>;
@@ -30,10 +30,8 @@ export class MainUIComponent implements OnInit {
 	satisfactionErrorFlag: boolean;
 	droolsRules: Array<string>;
 	ontologyFilePath: string;
-	pdgraph: joint.dia.Graph;
-	pdpaper: joint.dia.Paper;
-	scgraph: joint.dia.Graph;
-	scpaper: joint.dia.Paper;
+	graph: joint.dia.Graph;
+	paper: joint.dia.Paper;
 	rects: Array<Rect>;
 	ovals: Array<Oval>;
 	lines: Array<Line>;
@@ -81,7 +79,7 @@ export class MainUIComponent implements OnInit {
 	}
 
 	showProblemDiagram(rects, ovals, lines) {
-		this.pdgraph.clear();
+		this.graph.clear();
 		var MachineElement = joint.dia.Element.define('examples.CustomTextElement', {
 			attrs: {
 				label: {
@@ -213,7 +211,7 @@ export class MainUIComponent implements OnInit {
 					},
 
 				});
-				this.pdgraph.addCells([rectGraphList[rectToIndex], machineElement, link]);
+				this.graph.addCells([rectGraphList[rectToIndex], machineElement, link]);
 			}
 			else if (line.state === 1) {
 				let oval: Oval = line.from as Oval;
@@ -254,7 +252,7 @@ export class MainUIComponent implements OnInit {
 					},
 
 				});
-				this.pdgraph.addCells([rectGraphList[rectIndex], ovalGraphList[ovalIndex], link]);
+				this.graph.addCells([rectGraphList[rectIndex], ovalGraphList[ovalIndex], link]);
 			}
 			else if(line.state === 2) {
 				let oval: Oval = line.from as Oval;
@@ -300,7 +298,7 @@ export class MainUIComponent implements OnInit {
 					},
 
 				});
-				this.pdgraph.addCells([rectGraphList[rectIndex], ovalGraphList[ovalIndex], link]);
+				this.graph.addCells([rectGraphList[rectIndex], ovalGraphList[ovalIndex], link]);
 			}
 			else{
 				let rectFrom : Rect = line.from as Rect;
@@ -340,64 +338,34 @@ export class MainUIComponent implements OnInit {
 					},
 
 				});
-				this.pdgraph.addCells([rectGraphList[rectFromIndex], rectGraphList[rectToIndex], link]);
+				this.graph.addCells([rectGraphList[rectFromIndex], rectGraphList[rectToIndex], link]);
 			}
 		}
 	}
 
-	initPaper(): void{
-		this.initPdPaper();
-	}
-
-	initPdPaper(): void {
-		this.pdgraph = new joint.dia.Graph();
-		let d = $("#pdcontent");
+	initPaper(): void {
+		this.graph = new joint.dia.Graph();
+		let d = $("#content");
 		let wid = d.width();
 		let hei = d.height();
-		this.pdpaper = new joint.dia.Paper({
-			el: $("#pdcontent"),
+		this.paper = new joint.dia.Paper({
+			el: $("#content"),
 			width: wid,
 			height: hei,
-			model: this.pdgraph,
+			model: this.graph,
 			gridSize: 10,
 			drawGrid: true,
 			background: {
 				color: 'rgb(240,255,255)'
 			}
 		});
-		this.pdpaper.scale(0.8, 0.5);
+		this.paper.scale(0.8, 0.5);
 		var that = this;
-
-		this.pdpaper.on('blank:pdpaper', (event, x, y, delta) => {
-			let scale = that.pdpaper.scale();
-			that.pdpaper.scale(scale.sx + (delta * 0.01), scale.sy + (delta * 0.01));
+		this.paper.on('blank:mousewheel', (event, x, y, delta) => {
+			let scale = that.paper.scale();
+			that.paper.scale(scale.sx + (delta * 0.01), scale.sy + (delta * 0.01));
 		});
 	}
-
-	// initScPaper(): void {
-	// 	this.scgraph = new joint.dia.Graph();
-	// 	let d = $("#sccontent");
-	// 	let wid = d.width();
-	// 	let hei = d.height();
-	// 	this.scpaper = new joint.dia.Paper({
-	// 		el: $("#sccontent"),
-	// 		width: wid,
-	// 		height: hei,
-	// 		model: this.scgraph,
-	// 		gridSize: 10,
-	// 		drawGrid: true,
-	// 		background: {
-	// 			color: 'rgb(240,255,255)'
-	// 		}
-	// 	});
-	// 	this.scpaper.scale(0.8, 0.5);
-	// 	var that = this;
-
-	// 	this.scpaper.on('blank:scpaper', (event, x, y, delta) => {
-	// 		let scale = that.scpaper.scale();
-	// 		that.scpaper.scale(scale.sx + (delta * 0.01), scale.sy + (delta * 0.01));
-	// 	});
-	// }
 
 	selectedFileOnChanged(event) {
 		this.uploadFile(event.target.files[0])
@@ -438,7 +406,7 @@ export class MainUIComponent implements OnInit {
 			document.getElementById('requirementsPanel').style.display = 'none';
 			document.getElementById('intermediatePanel').style.display = 'block';
 			document.getElementById('scenarioPanel').style.display = 'none';
-			document.getElementById('pdcontent').style.display = 'block';
+			document.getElementById('content').style.display = 'block';
 			document.getElementById('droolsrulesPanel').style.display = 'none';
 			document.getElementById('simulationPanel').style.display = 'none';
 			document.getElementById('requirements').style.background = '#62a0cc'
@@ -447,19 +415,6 @@ export class MainUIComponent implements OnInit {
 			document.getElementById('droolsrules').style.background = '#62a0cc'
 			document.getElementById('simulation').style.background = '#62a0cc'
 		}
-		// else if (tab === 'scenario') {
-		// 	document.getElementById('requirementsPanel').style.display = 'none';
-		// 	document.getElementById('intermediatePanel').style.display = 'none';
-		// 	document.getElementById('scenarioPanel').style.display = 'block';
-		// 	document.getElementById('sccontent').style.display = 'block';
-		// 	document.getElementById('droolsrulesPanel').style.display = 'none';
-		// 	document.getElementById('simulationPanel').style.display = 'none';
-		// 	document.getElementById('requirements').style.background = '#62a0cc'
-		// 	document.getElementById('intermediate').style.background = '#62a0cc'
-		// 	document.getElementById('scenario').style.background = '#166dac'
-		// 	document.getElementById('droolsrules').style.background = '#62a0cc'
-		// 	document.getElementById('simulation').style.background = '#62a0cc'
-		// }
 		else if (tab === 'droolsrules') {
 			document.getElementById('requirementsPanel').style.display = 'none';
 			document.getElementById('intermediatePanel').style.display = 'none';
@@ -490,8 +445,9 @@ export class MainUIComponent implements OnInit {
 
 	showSCD(index : number){
 		var path : string = this.scenariaDiagramPaths[index].trim();
-		this.imgPath = path;
-		console.log(this.imgPath)
+		var time = (new Date()).getTime();
+		var url=`http://localhost:8081/api/display?fileName=${path}&time=${time}`;
+		this.imgURL = url;
 		document.getElementById('requirementsPanel').style.display = 'none';
 		document.getElementById('intermediatePanel').style.display = 'none';
 		document.getElementById('scenarioPanel').style.display = 'block';
@@ -503,9 +459,11 @@ export class MainUIComponent implements OnInit {
 		document.getElementById('scenario').style.background = '#166dac'
 		document.getElementById('droolsrules').style.background = '#62a0cc'
 		document.getElementById('simulation').style.background = '#62a0cc'
+		var scenarioTab:any = document.getElementById("scenario");
+		scenarioTab.open = false;
 	}
 
-	generateRefinedRequirements() {
+	generateComplementedRequirements() {
 		var requirements: string = ''
 		for (var i = 0; i < this.requirementTexts.split('\n').length; i++) {
 			var requirement: string = this.requirementTexts.split('\n')[i];
@@ -539,8 +497,8 @@ export class MainUIComponent implements OnInit {
 			document.getElementById("intermediate").style.display = 'block';
 			this.change_Menu("intermediate")
 			this.showProblemDiagram(this.rects, this.ovals, this.lines)
+			this.closeDetails();
 		})
-		this.closeDetails();
 	}
 
 	problemDiagramDerivation2() {
@@ -564,8 +522,8 @@ export class MainUIComponent implements OnInit {
 			document.getElementById("intermediate").style.display = 'block';
 			this.change_Menu("intermediate")
 			this.showProblemDiagram(this.rectsWithSensors, this.ovals, this.linesWithSensors)
+			this.closeDetails();
 		})
-		this.closeDetails();
 	}
 
 	scenarioDiagramDerivation(){
@@ -599,7 +557,7 @@ export class MainUIComponent implements OnInit {
 		}
 		this.generateService.check(allRequirements, this.ontologyFilePath).subscribe(result => {
 			this.errors = result;
-			if (this.errors[0] === 'No Errors!') this.ruleErrorFlag = true;
+			if (this.errors[0] === 'No Rule Errors!') this.ruleErrorFlag = true;
 			else this.ruleErrorFlag = false;
 			this.scenarioErrorFlag = false;
 			this.formalismErrorFlag = false;
@@ -612,8 +570,8 @@ export class MainUIComponent implements OnInit {
 		if (!this.ruleErrorFlag) alert('Please Solve The Rule Errors First!')
 		else{
 			this.errors.length=0
-			this.errors.push('No Errors!');
-			if (this.errors[0] === 'No Errors!') this.scenarioErrorFlag = true;
+			this.errors.push('No Scenario Errors!');
+			if (this.errors[0] === 'No Scenario Errors!') this.scenarioErrorFlag = true;
 			else this.scenarioErrorFlag = false;
 			this.formalismErrorFlag = false;
 			this.satisfactionErrorFlag = false;
@@ -625,8 +583,8 @@ export class MainUIComponent implements OnInit {
 		if (!this.scenarioErrorFlag) alert('Please Solve The Scenario Errors First!')
 		else{
 			this.errors.length=0
-			this.errors.push('No Errors!');
-			if (this.errors[0] === 'No Errors!') this.formalismErrorFlag = true;
+			this.errors.push('No Formalism Errors!');
+			if (this.errors[0] === 'No Formalism Errors!') this.formalismErrorFlag = true;
 			else this.formalismErrorFlag = false;
 			this.satisfactionErrorFlag = false;
 		}
@@ -637,15 +595,15 @@ export class MainUIComponent implements OnInit {
 		if (!this.formalismErrorFlag) alert('Please Solve The Formalism Errors First!')
 		else{
 			this.errors.length=0
-			this.errors.push('No Errors!');
-			if (this.errors[0] === 'No Errors!') this.satisfactionErrorFlag = true;
+			this.errors.push('No Satisfaction Errors!');
+			if (this.errors[0] === 'No Satisfaction Errors!') this.satisfactionErrorFlag = true;
 			else this.satisfactionErrorFlag = false;
 		}
 		this.closeDetails();
 	}
 
 	generateDroolsRules() {
-		if (!this.satisfactionErrorFlag) alert('Please Solve The Satisfaction Errors First!')
+		if (!this.satisfactionErrorFlag) alert('Please Solve The All The Errors First!')
 		else {
 			var requirements = this.requirementTexts + '\n' + this.refindeRequirements;
 			var allRequirements: string = ''
