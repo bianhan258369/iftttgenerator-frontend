@@ -145,11 +145,11 @@ ul {
   border-radius: 5px;
 }
 
-#requirementsPanel #refined_introduction {
+#requirementsPanel #complemented_introduction {
   margin-left: 20.2%;
 }
 
-#requirementsPanel #refined_textarea {
+#requirementsPanel #complemented_textarea {
   position: relative;
   margin-top: 2px;
   margin-left: 20.2%;
@@ -340,4 +340,17 @@ ul {
 
 .detail ::-moz-list-bullet {
   font-size: 0;
+}
+
+#planing{
+  position: absolute;
+  width: 250px;
+  height: 150px;
+  top: 50%;
+  left: 50%;
+  border: 1px solid #000;
+  border-radius: 5px;
+  z-index: 5;
+  background-color: white;
+  display: none;
 }

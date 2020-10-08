@@ -64,9 +64,9 @@
     <b id="input_introduction" class="introduction">Please Enter The Requirements:</b>
     <ngx-monaco-editor id="input_textarea" class="input" [options]="editorOptions" [(ngModel)]="requirementTexts"
       (onInit)="monacoOnInit($event)"></ngx-monaco-editor>
-    <b id="refined_introduction" class="introduction">Below Are The Requirements Complemented, Please Modify Them
+    <b id="complemented_introduction" class="introduction">Below Are The Requirements Complemented, Please Modify Them
       If Necessary:</b>
-    <ngx-monaco-editor id="refined_textarea" class="refined" [options]="editorOptions" [(ngModel)]="refindeRequirements"
+    <ngx-monaco-editor id="complemented_textarea" class="complemented" [options]="editorOptions" [(ngModel)]="complementedRequirements"
       (onInit)="monacoOnInit($event)"></ngx-monaco-editor>
 
   </div>
@@ -159,7 +159,7 @@
   <button class="upload button">UploadOntology
     <input class="change" type="file" multiple="multiple" (change)="selectedFileOnChanged($event)" />
   </button>
-  <button class="button" (click)="generateComplementedRequirements()">ComplementRequirements</button>
+  <button class="button" (click)="displayPlaning()">ComplementRequirements</button>
   <details class="detail">
     <summary>DeriveSystemBehaviours</summary>
     <p (click)="problemDiagramDerivation()">ProblemDiagram</p>
@@ -170,14 +170,17 @@
   <details class="detail">
     <summary>CheckErrors</summary>
       <p (click)="ruleBasedCheck()">Rule</p>
-      <p (click)="scenarioBasedCheck()">Scenario</p>
       <p (click)="formalismBasedCheck()">Formalism</p>
-      <p (click)="satisfactionBasedCheck()">Satisfaction</p>
-  </details>
- 
+  </details> 
 
+  <button class="button" (click)="checkSatisfaction()">CheckSatisfaction</button>
   <button class="button" (click)="generateDroolsRules()">GenerateDrools</button>
   <button class="button" (click)="generateSimulation()">ShowSimulation</button>
- 
 
+  <div id="planing"> Please Choose Your Preference<br/>
+    <label><input type="radio" name="planning" value="Random">Random</label><br/>
+    <label><input type="radio" name="planning" value="SaveEnergy">SaveEnergy</label><br/>
+    <button class="button" (click)="complementRequirements()">Confirm</button>
+    <button class="button" (click)="cancel()">Cancel</button>
+  </div>
 </div>

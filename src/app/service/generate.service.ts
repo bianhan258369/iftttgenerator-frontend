@@ -12,20 +12,20 @@ export class GenerateService {
 
   constructor(private httpClient: HttpClient) { }
 
-  transformToDrools(requirementTexts:string, ontologyPath:string) : Observable<string[]>{
-    var url = this.serviceUrl + 'transform?requirementTexts=' + requirementTexts + '&ontologyPath=' + ontologyPath
+  transform(requirementTexts:string, ontologyPath:string, type:string, index) : Observable<string[]>{
+    var url = this.serviceUrl + 'transform2' + type + '?requirementTexts=' + requirementTexts + '&ontologyPath=' + ontologyPath + '&index=' + index
     url = decodeURIComponent(url);
     return this.httpClient.get<string[]>(url);
   }
 
-  refineRequirements(requirementTexts:string, ontologyPath:string) : Observable<any>{
-    var url = this.serviceUrl + 'refine?requirementTexts=' + requirementTexts + '&ontologyPath=' + ontologyPath
+  complementRequirements(requirementTexts:string, ontologyPath:string, index) : Observable<any>{
+    var url = this.serviceUrl + 'complement?requirementTexts=' + requirementTexts + '&ontologyPath=' + ontologyPath + '&index=' + index
     url = decodeURIComponent(url);
     return this.httpClient.get<any>(url);
   }  
 
-  check(requirementTexts:string, ontologyPath:string) : Observable<string[]>{
-    var url = this.serviceUrl + 'check?requirementTexts=' + requirementTexts + '&ontologyPath=' + ontologyPath
+  check(requirementTexts:string, ontologyPath:string, index) : Observable<string[]>{
+    var url = this.serviceUrl + 'check?requirementTexts=' + requirementTexts + '&ontologyPath=' + ontologyPath + '&index=' + index
     url = decodeURIComponent(url);
     return this.httpClient.get<string[]>(url);
   }  

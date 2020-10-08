@@ -11,6 +11,7 @@ import { PFService } from '../service/pf.service';
 import { indexOf, result } from 'lodash';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { calcPossibleSecurityContexts } from '@angular/compiler/src/template_parser/binding_parser';
+import { SimulationService } from '../service/simulation.service';
 
 
 @Component({
@@ -20,12 +21,12 @@ import { calcPossibleSecurityContexts } from '@angular/compiler/src/template_par
 })
 export class MainUIComponent implements OnInit {
 	interval
+	index: number;
 	imgURL: string;
 	requirementTexts: string;
-	refindeRequirements: string;
+	complementedRequirements: string;
 	errors: Array<string>;
 	ruleErrorFlag: boolean;
-	scenarioErrorFlag: boolean;
 	formalismErrorFlag: boolean;
 	satisfactionErrorFlag: boolean;
 	droolsRules: Array<string>;
@@ -44,7 +45,7 @@ export class MainUIComponent implements OnInit {
 	editorOptions = { theme: "reqTheme", language: "req", minimap: { enabled: false } };
 	editor;
 
-	constructor(private generateService: GenerateService, private uploadService: UploadService, private pfService: PFService) { }
+	constructor(private generateService: GenerateService, private uploadService: UploadService, private pfService: PFService, private simulationService : SimulationService) { }
 
 	ngOnInit() {
 		this.initPaper();
@@ -463,23 +464,12 @@ export class MainUIComponent implements OnInit {
 		scenarioTab.open = false;
 	}
 
-	generateComplementedRequirements() {
-		var requirements: string = ''
-		for (var i = 0; i < this.requirementTexts.split('\n').length; i++) {
-			var requirement: string = this.requirementTexts.split('\n')[i];
-			if (requirement.trim() !== '') {
-				requirements = requirements + requirement;
-				if (i !== this.requirementTexts.split('\n').length - 1) requirements = requirements + '//'
-			}
-		}
-		this.generateService.refineRequirements(requirements, this.ontologyFilePath).subscribe(result => {
-			console.log(result)
-			this.refindeRequirements = result.refinedRequirements;
-		})
+	displayPlaning() {
+		document.getElementById("planing").style.display = 'block';
 	}
 
 	problemDiagramDerivation() {
-		var requirements = this.requirementTexts + '\n' + this.refindeRequirements;
+		var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
 		var allRequirements: string = ''
 		for (var i = 0; i < requirements.split('\n').length; i++) {
 			var requirement: string = requirements.split('\n')[i];
@@ -488,7 +478,7 @@ export class MainUIComponent implements OnInit {
 				if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
 			}
 		}
-		this.pfService.getProblemDiagram(allRequirements, this.ontologyFilePath).subscribe(result => {
+		this.pfService.getProblemDiagram(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
 			this.phenomena = result.phenomena;
 			this.referencePhenomena = result.referencePhenomena
 			this.ovals = result.ovals
@@ -502,7 +492,7 @@ export class MainUIComponent implements OnInit {
 	}
 
 	problemDiagramDerivation2() {
-		var requirements = this.requirementTexts + '\n' + this.refindeRequirements;
+		var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
 		var allRequirements: string = ''
 		for (var i = 0; i < requirements.split('\n').length; i++) {
 			var requirement: string = requirements.split('\n')[i];
@@ -511,7 +501,7 @@ export class MainUIComponent implements OnInit {
 				if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
 			}
 		}
-		this.pfService.getProblemDiagram(allRequirements, this.ontologyFilePath).subscribe(result => {
+		this.pfService.getProblemDiagram(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
 			this.phenomena = result.phenomena;
 			this.referencePhenomena = result.referencePhenomena
 			this.ovals = result.ovals
@@ -527,7 +517,7 @@ export class MainUIComponent implements OnInit {
 	}
 
 	scenarioDiagramDerivation(){
-		var requirements = this.requirementTexts + '\n' + this.refindeRequirements;
+		var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
 		var allRequirements: string = ''
 		for (var i = 0; i < requirements.split('\n').length; i++) {
 			var requirement: string = requirements.split('\n')[i];
@@ -536,7 +526,7 @@ export class MainUIComponent implements OnInit {
 				if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
 			}
 		}
-		this.pfService.getScenarioDiagram(allRequirements, this.ontologyFilePath).subscribe(result => {
+		this.pfService.getScenarioDiagram(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
 			console.log(result)
 			this.scenariaDiagramPaths = result.paths;
 			document.getElementById("scenario").style.display = 'block';
@@ -546,7 +536,7 @@ export class MainUIComponent implements OnInit {
 
 	ruleBasedCheck() {
 		this.errors.length=0
-		var requirements = this.requirementTexts + '\n' + this.refindeRequirements;
+		var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
 		var allRequirements: string = ''
 		for (var i = 0; i < requirements.split('\n').length; i++) {
 			var requirement: string = requirements.split('\n')[i];
@@ -555,32 +545,19 @@ export class MainUIComponent implements OnInit {
 				if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
 			}
 		}
-		this.generateService.check(allRequirements, this.ontologyFilePath).subscribe(result => {
+		this.generateService.check(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
 			this.errors = result;
 			if (this.errors[0] === 'No Rule Errors!') this.ruleErrorFlag = true;
 			else this.ruleErrorFlag = false;
-			this.scenarioErrorFlag = false;
 			this.formalismErrorFlag = false;
 			this.satisfactionErrorFlag = false;
 		})
 		this.closeDetails();
 	}
 
-	scenarioBasedCheck(){
-		if (!this.ruleErrorFlag) alert('Please Solve The Rule Errors First!')
-		else{
-			this.errors.length=0
-			this.errors.push('No Scenario Errors!');
-			if (this.errors[0] === 'No Scenario Errors!') this.scenarioErrorFlag = true;
-			else this.scenarioErrorFlag = false;
-			this.formalismErrorFlag = false;
-			this.satisfactionErrorFlag = false;
-		}
-		this.closeDetails();
-	}
 
 	formalismBasedCheck(){
-		if (!this.scenarioErrorFlag) alert('Please Solve The Scenario Errors First!')
+		if (!this.ruleErrorFlag) alert('Please Solve The Rule Errors First!')
 		else{
 			this.errors.length=0
 			this.errors.push('No Formalism Errors!');
@@ -591,7 +568,7 @@ export class MainUIComponent implements OnInit {
 		this.closeDetails();
 	}
 
-	satisfactionBasedCheck(){
+	checkSatisfaction(){
 		if (!this.formalismErrorFlag) alert('Please Solve The Formalism Errors First!')
 		else{
 			this.errors.length=0
@@ -599,13 +576,12 @@ export class MainUIComponent implements OnInit {
 			if (this.errors[0] === 'No Satisfaction Errors!') this.satisfactionErrorFlag = true;
 			else this.satisfactionErrorFlag = false;
 		}
-		this.closeDetails();
 	}
 
 	generateDroolsRules() {
 		if (!this.satisfactionErrorFlag) alert('Please Solve The All The Errors First!')
 		else {
-			var requirements = this.requirementTexts + '\n' + this.refindeRequirements;
+			var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
 			var allRequirements: string = ''
 			for (var i = 0; i < requirements.split('\n').length; i++) {
 				var requirement: string = requirements.split('\n')[i];
@@ -614,7 +590,27 @@ export class MainUIComponent implements OnInit {
 					if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
 				}
 			}
-			this.generateService.transformToDrools(allRequirements, this.ontologyFilePath).subscribe(result => {
+			this.generateService.transform(allRequirements, this.ontologyFilePath,'Drools', this.index).subscribe(result => {
+				this.droolsRules = result;
+				document.getElementById("droolsrules").style.display = 'block';
+				this.change_Menu('droolsrules')
+			})
+		}
+	}
+
+	generateOnenetRules() {
+		if (!this.satisfactionErrorFlag) alert('Please Solve The All The Errors First!')
+		else {
+			var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
+			var allRequirements: string = ''
+			for (var i = 0; i < requirements.split('\n').length; i++) {
+				var requirement: string = requirements.split('\n')[i];
+				if (requirement.trim() !== '') {
+					allRequirements = allRequirements + requirement;
+					if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
+				}
+			}
+			this.generateService.transform(allRequirements, this.ontologyFilePath,'Onenet', this.index).subscribe(result => {
 				this.droolsRules = result;
 				document.getElementById("droolsrules").style.display = 'block';
 				this.change_Menu('droolsrules')
@@ -631,11 +627,44 @@ export class MainUIComponent implements OnInit {
 	}
 
 	generateSimulation() {
-		document.getElementById("simulation").style.display = 'block';
-		this.change_Menu("simulation")
+		var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
+		var allRequirements: string = ''
+		for (var i = 0; i < requirements.split('\n').length; i++) {
+			var requirement: string = requirements.split('\n')[i];
+			if (requirement.trim() !== '') {
+				allRequirements = allRequirements + requirement;
+				if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
+			}
+		}
+		this.simulationService.simulation(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
+			alert('onenet simulation is starting')
+		})
 	}
 
 	monacoOnInit(editor) {
 		this.editor = editor;
+	}
+
+	complementRequirements(){
+		var planing = $("input[type=radio]:checked").val();
+		if(planing === 'Random') this.index = 0;
+		if(planing === 'SaveEnergy') this.index = 1;
+		var requirements: string = ''
+		for (var i = 0; i < this.requirementTexts.split('\n').length; i++) {
+			var requirement: string = this.requirementTexts.split('\n')[i];
+			if (requirement.trim() !== '') {
+				requirements = requirements + requirement;
+				if (i !== this.requirementTexts.split('\n').length - 1) requirements = requirements + '//'
+			}
+		}
+		this.generateService.complementRequirements(requirements, this.ontologyFilePath, this.index).subscribe(result => {
+			console.log(result)
+			this.complementedRequirements = result.complementedRequirements;
+			document.getElementById("planing").style.display = 'none';
+		})
+	}
+
+	cancel(){
+		document.getElementById("planing").style.display = 'none';
 	}
 }
