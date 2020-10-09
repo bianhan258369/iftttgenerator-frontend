@@ -29,6 +29,7 @@ export class MainUIComponent implements OnInit {
 	ruleErrorFlag: boolean;
 	formalismErrorFlag: boolean;
 	satisfactionErrorFlag: boolean;
+	problemDiagramFlag: boolean;
 	droolsRules: Array<string>;
 	ontologyFilePath: string;
 	graph: joint.dia.Graph;
@@ -60,6 +61,7 @@ export class MainUIComponent implements OnInit {
 		this.phenomena = new Array<Phenomenon>()
 		this.referencePhenomena = new Array<Phenomenon>();
 		this.scenariaDiagramPaths = new Array<string>();
+		this.problemDiagramFlag = false;
 	}
 
 	open2 = true;
@@ -487,6 +489,7 @@ export class MainUIComponent implements OnInit {
 			document.getElementById("intermediate").style.display = 'block';
 			this.change_Menu("intermediate")
 			this.showProblemDiagram(this.rects, this.ovals, this.lines)
+			this.problemDiagramFlag = true;
 			this.closeDetails();
 		})
 	}
@@ -512,26 +515,30 @@ export class MainUIComponent implements OnInit {
 			document.getElementById("intermediate").style.display = 'block';
 			this.change_Menu("intermediate")
 			this.showProblemDiagram(this.rectsWithSensors, this.ovals, this.linesWithSensors)
+			this.problemDiagramFlag = true;
 			this.closeDetails();
 		})
 	}
 
 	scenarioDiagramDerivation(){
-		var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
-		var allRequirements: string = ''
-		for (var i = 0; i < requirements.split('\n').length; i++) {
-			var requirement: string = requirements.split('\n')[i];
-			if (requirement.trim() !== '') {
-				allRequirements = allRequirements + requirement;
-				if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
+		if(this.problemDiagramFlag === false) alert('Please Generate Problem Diagram First!')
+		else{
+			var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
+			var allRequirements: string = ''
+			for (var i = 0; i < requirements.split('\n').length; i++) {
+				var requirement: string = requirements.split('\n')[i];
+				if (requirement.trim() !== '') {
+					allRequirements = allRequirements + requirement;
+					if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
+				}
 			}
-		}
-		this.pfService.getScenarioDiagram(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
-			console.log(result)
-			this.scenariaDiagramPaths = result.paths;
-			document.getElementById("scenario").style.display = 'block';
-			this.closeDetails();
-		})	
+			this.pfService.getScenarioDiagram(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
+				console.log(result)
+				this.scenariaDiagramPaths = result.paths;
+				document.getElementById("scenario").style.display = 'block';
+				this.closeDetails();
+			})	
+		}		
 	}
 
 	ruleBasedCheck() {
@@ -636,8 +643,8 @@ export class MainUIComponent implements OnInit {
 				if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
 			}
 		}
+		alert('onenet simulation is starting')
 		this.simulationService.simulation(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
-			alert('onenet simulation is starting')
 		})
 	}
 
