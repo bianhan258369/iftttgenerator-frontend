@@ -28,7 +28,6 @@ export class MainUIComponent implements OnInit {
 	errors: Array<string>;
 	ruleErrorFlag: boolean;
 	formalismErrorFlag: boolean;
-	satisfactionErrorFlag: boolean;
 	problemDiagramFlag: boolean;
 	droolsRules: Array<string>;
 	ontologyFilePath: string;
@@ -467,7 +466,7 @@ export class MainUIComponent implements OnInit {
 	}
 
 	displayPlaning() {
-		document.getElementById("planing").style.display = 'block';
+		 document.getElementById("planing").style.display = 'block';
 	}
 
 	problemDiagramDerivation() {
@@ -557,7 +556,6 @@ export class MainUIComponent implements OnInit {
 			if (this.errors[0] === 'No Rule Errors!') this.ruleErrorFlag = true;
 			else this.ruleErrorFlag = false;
 			this.formalismErrorFlag = false;
-			this.satisfactionErrorFlag = false;
 		})
 		this.closeDetails();
 	}
@@ -570,23 +568,34 @@ export class MainUIComponent implements OnInit {
 			this.errors.push('No Formalism Errors!');
 			if (this.errors[0] === 'No Formalism Errors!') this.formalismErrorFlag = true;
 			else this.formalismErrorFlag = false;
-			this.satisfactionErrorFlag = false;
 		}
 		this.closeDetails();
 	}
 
 	checkSatisfaction(){
 		if (!this.formalismErrorFlag) alert('Please Solve The Formalism Errors First!')
+		if(this.problemDiagramFlag === false) alert('Please Generate Problem Diagram First!')
 		else{
-			this.errors.length=0
-			this.errors.push('No Satisfaction Errors!');
-			if (this.errors[0] === 'No Satisfaction Errors!') this.satisfactionErrorFlag = true;
-			else this.satisfactionErrorFlag = false;
-		}
+			var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
+			var allRequirements: string = ''
+			for (var i = 0; i < requirements.split('\n').length; i++) {
+				var requirement: string = requirements.split('\n')[i];
+				if (requirement.trim() !== '') {
+					allRequirements = allRequirements + requirement;
+					if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
+				}
+			}
+			this.pfService.getScenarioDiagram(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
+				console.log(result)
+				this.scenariaDiagramPaths = result.paths;
+				document.getElementById("scenario").style.display = 'block';
+				this.closeDetails();
+			})	
+		}	
 	}
 
 	generateDroolsRules() {
-		if (!this.satisfactionErrorFlag) alert('Please Solve The All The Errors First!')
+		if (this.scenariaDiagramPaths.length === 0) alert('Not Passing Satisfaction Check!')
 		else {
 			var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
 			var allRequirements: string = ''
@@ -606,7 +615,7 @@ export class MainUIComponent implements OnInit {
 	}
 
 	generateOnenetRules() {
-		if (!this.satisfactionErrorFlag) alert('Please Solve The All The Errors First!')
+		if (this.scenariaDiagramPaths.length === 0) alert('Not Passing Satisfaction Check!')
 		else {
 			var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
 			var allRequirements: string = ''
