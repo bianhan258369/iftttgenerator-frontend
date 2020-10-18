@@ -27,7 +27,7 @@
   display: none;
 }
 
-.tab #droolsrules {
+.tab #rules {
   display: none;
 }
 
@@ -237,7 +237,7 @@ ul {
   overflow: auto;
 }
 
-#droolsrulesPanel {
+#rulesPanel {
   position: relative;
   margin-top: 20px;
   overflow: auto;
