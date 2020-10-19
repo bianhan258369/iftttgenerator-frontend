@@ -580,7 +580,8 @@ export class MainUIComponent implements OnInit {
 				}
 			}
 			this.generateService.z3Check(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
-				if (result === 'sat') {
+				console.log(result)
+				if (result.sat === 'sat') {
 					this.errors.length = 0
 					this.errors.push('No Formalism Errors!');
 					this.formalismErrorFlag = true;
@@ -590,6 +591,7 @@ export class MainUIComponent implements OnInit {
 					this.errors.push('unsat');
 					this.formalismErrorFlag = false;
 				}
+				this.closeDetails();
 			})
 		}
 	}
