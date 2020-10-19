@@ -29,7 +29,7 @@ export class MainUIComponent implements OnInit {
 	ruleErrorFlag: boolean;
 	formalismErrorFlag: boolean;
 	problemDiagramFlag: boolean;
-	droolsRules: Array<string>;
+	rules: Array<string>;
 	ontologyFilePath: string;
 	graph: joint.dia.Graph;
 	paper: joint.dia.Paper;
@@ -45,12 +45,12 @@ export class MainUIComponent implements OnInit {
 	editorOptions = { theme: "reqTheme", language: "req", minimap: { enabled: false } };
 	editor;
 
-	constructor(private generateService: GenerateService, private uploadService: UploadService, private pfService: PFService, private simulationService : SimulationService) { }
+	constructor(private generateService: GenerateService, private uploadService: UploadService, private pfService: PFService, private simulationService: SimulationService) { }
 
 	ngOnInit() {
 		this.initPaper();
 		this.change_Menu('requirements')
-		this.droolsRules = new Array<string>();
+		this.rules = new Array<string>();
 		this.errors = new Array<string>();
 		this.rects = new Array<Rect>();
 		this.ovals = new Array<Oval>();
@@ -256,7 +256,7 @@ export class MainUIComponent implements OnInit {
 				});
 				this.graph.addCells([rectGraphList[rectIndex], ovalGraphList[ovalIndex], link]);
 			}
-			else if(line.state === 2) {
+			else if (line.state === 2) {
 				let oval: Oval = line.from as Oval;
 				let rect: Rect = line.to as Rect;
 				let rectIndex = -1;
@@ -302,8 +302,8 @@ export class MainUIComponent implements OnInit {
 				});
 				this.graph.addCells([rectGraphList[rectIndex], ovalGraphList[ovalIndex], link]);
 			}
-			else{
-				let rectFrom : Rect = line.from as Rect;
+			else {
+				let rectFrom: Rect = line.from as Rect;
 				let rectTo: Rect = line.to as Rect;
 				let rectFromIndex = -1;
 				let rectToIndex = -1;
@@ -396,12 +396,12 @@ export class MainUIComponent implements OnInit {
 			document.getElementById('requirementsPanel').style.display = 'block';
 			document.getElementById('intermediatePanel').style.display = 'none';
 			document.getElementById('scenarioPanel').style.display = 'none';
-			document.getElementById('droolsrulesPanel').style.display = 'none';
+			document.getElementById('rulesPanel').style.display = 'none';
 			document.getElementById('simulationPanel').style.display = 'none';
 			document.getElementById('requirements').style.background = '#166dac'
 			document.getElementById('intermediate').style.background = '#62a0cc'
 			document.getElementById('scenario').style.background = '#62a0cc'
-			document.getElementById('droolsrules').style.background = '#62a0cc'
+			document.getElementById('rules').style.background = '#62a0cc'
 			document.getElementById('simulation').style.background = '#62a0cc'
 		}
 		else if (tab === 'intermediate') {
@@ -409,64 +409,64 @@ export class MainUIComponent implements OnInit {
 			document.getElementById('intermediatePanel').style.display = 'block';
 			document.getElementById('scenarioPanel').style.display = 'none';
 			document.getElementById('content').style.display = 'block';
-			document.getElementById('droolsrulesPanel').style.display = 'none';
+			document.getElementById('rulesPanel').style.display = 'none';
 			document.getElementById('simulationPanel').style.display = 'none';
 			document.getElementById('requirements').style.background = '#62a0cc'
 			document.getElementById('intermediate').style.background = '#166dac'
 			document.getElementById('scenario').style.background = '#62a0cc'
-			document.getElementById('droolsrules').style.background = '#62a0cc'
+			document.getElementById('rules').style.background = '#62a0cc'
 			document.getElementById('simulation').style.background = '#62a0cc'
 		}
-		else if (tab === 'droolsrules') {
+		else if (tab === 'rules') {
 			document.getElementById('requirementsPanel').style.display = 'none';
 			document.getElementById('intermediatePanel').style.display = 'none';
 			document.getElementById('scenarioPanel').style.display = 'none';
-			document.getElementById('droolsrulesPanel').style.display = 'block';
+			document.getElementById('rulesPanel').style.display = 'block';
 			document.getElementById('simulationPanel').style.display = 'none';
 			document.getElementById('requirements').style.background = '#62a0cc'
 			document.getElementById('intermediate').style.background = '#62a0cc'
 			document.getElementById('scenario').style.background = '#62a0cc'
-			document.getElementById('droolsrules').style.background = '#166dac'
+			document.getElementById('rules').style.background = '#166dac'
 			document.getElementById('simulation').style.background = '#62a0cc'
 		}
 		else {
 			document.getElementById('requirementsPanel').style.display = 'none';
 			document.getElementById('intermediatePanel').style.display = 'none';
 			document.getElementById('scenarioPanel').style.display = 'none';
-			document.getElementById('droolsrulesPanel').style.display = 'none';
+			document.getElementById('rulesPanel').style.display = 'none';
 			document.getElementById('simulationPanel').style.display = 'block';
 			document.getElementById('requirements').style.background = '#62a0cc'
 			document.getElementById('intermediate').style.background = '#62a0cc'
 			document.getElementById('scenario').style.background = '#62a0cc'
-			document.getElementById('droolsrules').style.background = '#62a0cc'
+			document.getElementById('rules').style.background = '#62a0cc'
 			document.getElementById('simulation').style.background = '#166dac'
 			var vid = document.getElementById('video')
 			// vid.src = "assets/video/demo.mp4"
 		}
 	}
 
-	showSCD(index : number){
-		var path : string = this.scenariaDiagramPaths[index].trim();
+	showSCD(index: number) {
+		var path: string = this.scenariaDiagramPaths[index].trim();
 		var time = (new Date()).getTime();
-		var url=`http://localhost:8081/api/display?fileName=${path}&time=${time}`;
+		var url = `http://localhost:8081/api/display?fileName=${path}&time=${time}`;
 		this.imgURL = url;
 		document.getElementById('requirementsPanel').style.display = 'none';
 		document.getElementById('intermediatePanel').style.display = 'none';
 		document.getElementById('scenarioPanel').style.display = 'block';
 		document.getElementById('sccontent').style.display = 'block';
-		document.getElementById('droolsrulesPanel').style.display = 'none';
+		document.getElementById('rulesPanel').style.display = 'none';
 		document.getElementById('simulationPanel').style.display = 'none';
 		document.getElementById('requirements').style.background = '#62a0cc'
 		document.getElementById('intermediate').style.background = '#62a0cc'
 		document.getElementById('scenario').style.background = '#166dac'
-		document.getElementById('droolsrules').style.background = '#62a0cc'
+		document.getElementById('rules').style.background = '#62a0cc'
 		document.getElementById('simulation').style.background = '#62a0cc'
-		var scenarioTab:any = document.getElementById("scenario");
+		var scenarioTab: any = document.getElementById("scenario");
 		scenarioTab.open = false;
 	}
 
 	displayPlaning() {
-		 document.getElementById("planing").style.display = 'block';
+		document.getElementById("planing").style.display = 'block';
 	}
 
 	problemDiagramDerivation() {
@@ -519,9 +519,9 @@ export class MainUIComponent implements OnInit {
 		})
 	}
 
-	scenarioDiagramDerivation(){
-		if(this.problemDiagramFlag === false) alert('Please Generate Problem Diagram First!')
-		else{
+	scenarioDiagramDerivation() {
+		if (this.problemDiagramFlag === false) alert('Please Generate Problem Diagram First!')
+		else {
 			var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
 			var allRequirements: string = ''
 			for (var i = 0; i < requirements.split('\n').length; i++) {
@@ -536,46 +536,70 @@ export class MainUIComponent implements OnInit {
 				this.scenariaDiagramPaths = result.paths;
 				document.getElementById("scenario").style.display = 'block';
 				this.closeDetails();
-			})	
-		}		
+			})
+		}
 	}
 
 	ruleBasedCheck() {
-		this.errors.length=0
-		var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
-		var allRequirements: string = ''
-		for (var i = 0; i < requirements.split('\n').length; i++) {
-			var requirement: string = requirements.split('\n')[i];
-			if (requirement.trim() !== '') {
-				allRequirements = allRequirements + requirement;
-				if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
+		this.errors.length = 0
+		this.errors.push('No Rule Errors!')
+		this.ruleErrorFlag = true;
+		// var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
+		// var allRequirements: string = ''
+		// for (var i = 0; i < requirements.split('\n').length; i++) {
+		// 	var requirement: string = requirements.split('\n')[i];
+		// 	if (requirement.trim() !== '') {
+		// 		allRequirements = allRequirements + requirement;
+		// 		if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
+		// 	}
+		// }
+		// this.generateService.check(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
+		// 	this.errors = result;
+		// 	if (this.errors[0] === 'No Rule Errors!') this.ruleErrorFlag = true;
+		// 	else this.ruleErrorFlag = false;
+		// 	this.formalismErrorFlag = false;
+		// })
+		this.closeDetails();
+	}
+
+
+	formalismBasedCheck() {
+		if (!this.ruleErrorFlag) {
+			alert('Please Solve The Rule Errors First!')
+			this.closeDetails();
+		}
+		else {
+			this.errors.length = 0;
+			var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
+			var allRequirements: string = ''
+			for (var i = 0; i < requirements.split('\n').length; i++) {
+				var requirement: string = requirements.split('\n')[i];
+				if (requirement.trim() !== '') {
+					allRequirements = allRequirements + requirement;
+					if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
+				}
 			}
+			this.generateService.z3Check(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
+				console.log(result)
+				if (result.sat === 'sat') {
+					this.errors.length = 0
+					this.errors.push('No Formalism Errors!');
+					this.formalismErrorFlag = true;
+				}
+				else {
+					this.errors.length = 0
+					this.errors.push('unsat');
+					this.formalismErrorFlag = false;
+				}
+				this.closeDetails();
+			})
 		}
-		this.generateService.check(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
-			this.errors = result;
-			if (this.errors[0] === 'No Rule Errors!') this.ruleErrorFlag = true;
-			else this.ruleErrorFlag = false;
-			this.formalismErrorFlag = false;
-		})
-		this.closeDetails();
 	}
 
-
-	formalismBasedCheck(){
-		if (!this.ruleErrorFlag) alert('Please Solve The Rule Errors First!')
-		else{
-			this.errors.length=0
-			this.errors.push('No Formalism Errors!');
-			if (this.errors[0] === 'No Formalism Errors!') this.formalismErrorFlag = true;
-			else this.formalismErrorFlag = false;
-		}
-		this.closeDetails();
-	}
-
-	checkSatisfaction(){
+	checkSatisfaction() {
 		if (!this.formalismErrorFlag) alert('Please Solve The Formalism Errors First!')
-		if(this.problemDiagramFlag === false) alert('Please Generate Problem Diagram First!')
-		else{
+		if (this.problemDiagramFlag === false) alert('Please Generate Problem Diagram First!')
+		else {
 			var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
 			var allRequirements: string = ''
 			for (var i = 0; i < requirements.split('\n').length; i++) {
@@ -590,11 +614,11 @@ export class MainUIComponent implements OnInit {
 				this.scenariaDiagramPaths = result.paths;
 				document.getElementById("scenario").style.display = 'block';
 				this.closeDetails();
-			})	
-		}	
+			})
+		}
 	}
 
-	generateDroolsRules() {
+	generateSystemBehaviours() {
 		if (this.scenariaDiagramPaths.length === 0) alert('Not Passing Satisfaction Check!')
 		else {
 			var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
@@ -606,10 +630,32 @@ export class MainUIComponent implements OnInit {
 					if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
 				}
 			}
-			this.generateService.transform(allRequirements, this.ontologyFilePath,'Drools', this.index).subscribe(result => {
-				this.droolsRules = result;
-				document.getElementById("droolsrules").style.display = 'block';
-				this.change_Menu('droolsrules')
+			this.generateService.transform(allRequirements, this.ontologyFilePath, 'SystemBehaviour', this.index).subscribe(result => {
+				this.rules = result;
+				document.getElementById("rules").style.display = 'block';
+				this.change_Menu('rules')
+				this.closeDetails();
+			})
+		}
+	}
+
+	generateDroolsrules() {
+		if (this.scenariaDiagramPaths.length === 0) alert('Not Passing Satisfaction Check!')
+		else {
+			var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
+			var allRequirements: string = ''
+			for (var i = 0; i < requirements.split('\n').length; i++) {
+				var requirement: string = requirements.split('\n')[i];
+				if (requirement.trim() !== '') {
+					allRequirements = allRequirements + requirement;
+					if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
+				}
+			}
+			this.generateService.transform(allRequirements, this.ontologyFilePath, 'Drools', this.index).subscribe(result => {
+				this.rules = result;
+				document.getElementById("rules").style.display = 'block';
+				this.change_Menu('rules')
+				this.closeDetails();
 			})
 		}
 	}
@@ -626,18 +672,19 @@ export class MainUIComponent implements OnInit {
 					if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
 				}
 			}
-			this.generateService.transform(allRequirements, this.ontologyFilePath,'Onenet', this.index).subscribe(result => {
-				this.droolsRules = result;
-				document.getElementById("droolsrules").style.display = 'block';
-				this.change_Menu('droolsrules')
+			this.generateService.transform(allRequirements, this.ontologyFilePath, 'Onenet', this.index).subscribe(result => {
+				this.rules = result;
+				document.getElementById("rules").style.display = 'block';
+				this.change_Menu('rules')
+				this.closeDetails();
 			})
 		}
 	}
 
-	closeDetails(){
+	closeDetails() {
 		var details = document.getElementsByClassName("detail");
-		for(var i = 0;i < details.length;i++){
-			var element:any = details[i];
+		for (var i = 0; i < details.length; i++) {
+			var element: any = details[i];
 			element.open = false;
 		}
 	}
@@ -661,10 +708,10 @@ export class MainUIComponent implements OnInit {
 		this.editor = editor;
 	}
 
-	complementRequirements(){
+	complementRequirements() {
 		var planing = $("input[type=radio]:checked").val();
-		if(planing === 'Random') this.index = 0;
-		if(planing === 'SaveEnergy') this.index = 1;
+		if (planing === 'Random') this.index = 0;
+		if (planing === 'SaveEnergy') this.index = 1;
 		var requirements: string = ''
 		for (var i = 0; i < this.requirementTexts.split('\n').length; i++) {
 			var requirement: string = this.requirementTexts.split('\n')[i];
@@ -680,7 +727,7 @@ export class MainUIComponent implements OnInit {
 		})
 	}
 
-	cancel(){
+	cancel() {
 		document.getElementById("planing").style.display = 'none';
 	}
 }

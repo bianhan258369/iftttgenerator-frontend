@@ -13,7 +13,7 @@
         <summary>ScenarioDiagrams</summary>
           <p *ngFor="let path of scenariaDiagramPaths;let i = index" (click)=showSCD(i)>SCD{{i + 1}}</p>
       </details>
-      <li id="droolsrules" (click)="change_Menu('droolsrules')">Onenet Rules</li>
+      <li id="rules" (click)="change_Menu('rules')">Rules</li>
       <li id="simulation" (click)="change_Menu('simulation')">Simulation</li>
     </ul>
   </div>
@@ -146,9 +146,9 @@
     </div>
   </div>
 
-  <div id="droolsrulesPanel">
-    <div class="divcontent" style="white-space:pre-wrap; height:20px" *ngFor="let droolsRule of droolsRules">
-      {{droolsRule}} </div>
+  <div id="rulesPanel">
+    <div class="divcontent" style="white-space:pre-wrap; height:20px" *ngFor="let rule of rules">
+      {{rule}} </div>
   </div>
   <div id="simulationPanel">
     <video id="video" autoplay></video>
@@ -162,7 +162,6 @@
     <summary>DeriveSystemBehaviours</summary>
     <p (click)="problemDiagramDerivation()">WithoutSensors</p>
     <p (click)="problemDiagramDerivation2()">WithSensors</p>
-    <!-- <p (click)="scenarioDiagramDerivation()">ScenarioDiagram</p> -->
   </details>
 
   <details class="detail">
@@ -172,7 +171,12 @@
   </details> 
 
   <button class="button" (click)="checkSatisfaction()">CheckSatisfaction</button>
-  <button class="button" (click)="generateOnenetRules()">GenerateOnenet</button>
+  <details class="detail">
+    <summary>GenerateRules</summary>
+    <p (click)="generateSystemBehaviours()">SystemBehaviours</p>
+    <p (click)="generateDroolsRules()">Drools</p>
+    <p (click)="generateOnenetRules()">Onenet</p>
+  </details>
   <button class="button" (click)="generateSimulation()">ShowSimulation</button>
 
   <div id="planing"> Please Choose Your Preference<br/>

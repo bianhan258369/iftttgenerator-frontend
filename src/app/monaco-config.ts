@@ -18,7 +18,7 @@ export function monacoOnLoad() {
   monaco.languages.setMonarchTokensProvider('req', {
     tokenizer: {
       root: [
-        [/SHOULD|ALWAYS|BE|ACTIVE|NEVER|HAPPEN|OCCUR|TOGETHER|IF|THEN|FOR|INCREASE|DECREASE|PREFERRED|IS/, "req-key"],
+        [/SHOULD|ALWAYS|BE|ACTIVE|NEVER|HAPPEN|OCCUR|TOGETHER|IF|THEN|FOR|PREFERRED|IS|AND|OR|ABOVE|BELOW/, "req-key"],
       ]
     }
   });

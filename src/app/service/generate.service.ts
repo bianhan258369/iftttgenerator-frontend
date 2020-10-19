@@ -29,4 +29,10 @@ export class GenerateService {
     url = decodeURIComponent(url);
     return this.httpClient.get<string[]>(url);
   }  
+
+  z3Check(requirementTexts:string, ontologyPath:string, index) : Observable<any>{
+    var url = this.serviceUrl + 'z3Check?requirementTexts=' + requirementTexts + '&ontologyPath=' + ontologyPath + '&index=' + index
+    url = decodeURIComponent(url);
+    return this.httpClient.get<any>(url);
+  }  
 }
