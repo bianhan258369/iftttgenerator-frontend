@@ -13,7 +13,7 @@
         <summary>ScenarioDiagrams</summary>
           <p *ngFor="let path of scenariaDiagramPaths;let i = index" (click)=showSCD(i)>SCD{{i + 1}}</p>
       </details>
-      <li id="droolsrules" (click)="change_Menu('droolsrules')">Drools Rules</li>
+      <li id="droolsrules" (click)="change_Menu('droolsrules')">Onenet Rules</li>
       <li id="simulation" (click)="change_Menu('simulation')">Simulation</li>
     </ul>
   </div>
@@ -166,14 +166,14 @@
   </details>
 
   <details class="detail">
-    <summary>CheckErrors</summary>
+    <summary>CheckInconsistency</summary>
       <p (click)="ruleBasedCheck()">Rule</p>
       <p (click)="formalismBasedCheck()">Formalism</p>
   </details> 
 
   <button class="button" (click)="checkSatisfaction()">CheckSatisfaction</button>
-  <button class="button" (click)="generateDroolsRules()">GenerateDrools</button>
-  <!-- <button class="button" (click)="generateSimulation()">ShowSimulation</button> -->
+  <button class="button" (click)="generateOnenetRules()">GenerateOnenet</button>
+  <button class="button" (click)="generateSimulation()">ShowSimulation</button>
 
   <div id="planing"> Please Choose Your Preference<br/>
     <label><input type="radio" name="planning" value="Random">Random</label><br/>
