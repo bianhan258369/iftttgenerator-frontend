@@ -170,7 +170,12 @@
       <p (click)="formalismBasedCheck()">Formalism</p>
   </details> 
 
-  <button class="button" (click)="checkSatisfaction()">CheckSatisfaction</button>
+  <details class="detail">
+    <summary>CheckSatisfaction</summary>
+    <p (click)="generateScenarioDiagrams()">ScenarioDiagrams</p>
+    <p (click)="NuSMVCheck()">NuSMVCheck</p>
+  </details>
+  
   <details class="detail">
     <summary>GenerateRules</summary>
     <p (click)="generateSystemBehaviours()">SystemBehaviours</p>
@@ -180,7 +185,7 @@
   <button class="button" (click)="generateSimulation()">ShowSimulation</button>
 
   <div id="planing"> Please Choose Your Preference<br/>
-    <label><input type="radio" name="planning" value="Random">Random</label><br/>
+    <label><input checked="true" type="radio" name="planning" value="Random">Random</label><br/>
     <label><input type="radio" name="planning" value="SaveEnergy">SaveEnergy</label><br/>
     <button class="button" (click)="complementRequirements()">Confirm</button>
     <button class="button" (click)="cancel()">Cancel</button>

@@ -596,7 +596,7 @@ export class MainUIComponent implements OnInit {
 		}
 	}
 
-	checkSatisfaction() {
+	generateScenarioDiagrams() {
 		if (!this.formalismErrorFlag) alert('Please Solve The Formalism Errors First!')
 		if (this.problemDiagramFlag === false) alert('Please Generate Problem Diagram First!')
 		else {
@@ -616,6 +616,10 @@ export class MainUIComponent implements OnInit {
 				this.closeDetails();
 			})
 		}
+	}
+
+	NuSMVCheck(){
+		this.closeDetails();
 	}
 
 	generateSystemBehaviours() {
@@ -639,7 +643,7 @@ export class MainUIComponent implements OnInit {
 		}
 	}
 
-	generateDroolsrules() {
+	generateDroolsRules() {
 		if (this.scenariaDiagramPaths.length === 0) alert('Not Passing Satisfaction Check!')
 		else {
 			var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
