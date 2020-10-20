@@ -612,8 +612,10 @@ export class MainUIComponent implements OnInit {
 			this.pfService.getScenarioDiagram(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
 				console.log(result)
 				this.scenariaDiagramPaths = result.paths;
+				var uncoverRequirements : Array<string> = result.uncoveredRequirement;
 				document.getElementById("scenario").style.display = 'block';
 				this.closeDetails();
+				alert(uncoverRequirements + ' Are Not Covered In Scenario Diagrams')
 			})
 		}
 	}

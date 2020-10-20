@@ -279,11 +279,13 @@ ul {
 .button {
   margin-left: 10px;
   margin-top: 10px;
+  padding: 1px 6px;
   color: rgb(12, 11, 11);
   background: #e0e2e4;
   border: 1px solid #ddd;
   cursor: pointer;
   float: left;
+  font-size: 15px;
 }
 
 .button:hover{
@@ -317,7 +319,7 @@ ul {
 .detail summary {
   text-align: center;
   font-family: Arial;
-  font-size: 13.3333px;
+  font-size: 15px;
 }
 
 .detail summary:hover {
@@ -326,7 +328,7 @@ ul {
 }
 
 .detail p{
-  font-size: 13.3333px;
+  font-size: 15px;
 }
 
 .detail p:hover {
