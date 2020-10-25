@@ -30,6 +30,7 @@ export class MainUIComponent implements OnInit {
 	formalismErrorFlag: boolean;
 	problemDiagramFlag: boolean;
 	rules: Array<string>;
+	instructions: Array<string>;
 	ontologyFilePath: string;
 	graph: joint.dia.Graph;
 	paper: joint.dia.Paper;
@@ -397,11 +398,13 @@ export class MainUIComponent implements OnInit {
 			document.getElementById('intermediatePanel').style.display = 'none';
 			document.getElementById('scenarioPanel').style.display = 'none';
 			document.getElementById('rulesPanel').style.display = 'none';
+			document.getElementById('instructionsPanel').style.display = 'none';
 			document.getElementById('simulationPanel').style.display = 'none';
 			document.getElementById('requirements').style.background = '#166dac'
 			document.getElementById('intermediate').style.background = '#62a0cc'
 			document.getElementById('scenario').style.background = '#62a0cc'
 			document.getElementById('rules').style.background = '#62a0cc'
+			document.getElementById('instructions').style.background = '#62a0cc'
 			document.getElementById('simulation').style.background = '#62a0cc'
 		}
 		else if (tab === 'intermediate') {
@@ -410,11 +413,13 @@ export class MainUIComponent implements OnInit {
 			document.getElementById('scenarioPanel').style.display = 'none';
 			document.getElementById('content').style.display = 'block';
 			document.getElementById('rulesPanel').style.display = 'none';
+			document.getElementById('instructionsPanel').style.display = 'none';
 			document.getElementById('simulationPanel').style.display = 'none';
 			document.getElementById('requirements').style.background = '#62a0cc'
 			document.getElementById('intermediate').style.background = '#166dac'
 			document.getElementById('scenario').style.background = '#62a0cc'
 			document.getElementById('rules').style.background = '#62a0cc'
+			document.getElementById('instructions').style.background = '#62a0cc'
 			document.getElementById('simulation').style.background = '#62a0cc'
 		}
 		else if (tab === 'rules') {
@@ -422,11 +427,27 @@ export class MainUIComponent implements OnInit {
 			document.getElementById('intermediatePanel').style.display = 'none';
 			document.getElementById('scenarioPanel').style.display = 'none';
 			document.getElementById('rulesPanel').style.display = 'block';
+			document.getElementById('instructionsPanel').style.display = 'none';
 			document.getElementById('simulationPanel').style.display = 'none';
 			document.getElementById('requirements').style.background = '#62a0cc'
 			document.getElementById('intermediate').style.background = '#62a0cc'
 			document.getElementById('scenario').style.background = '#62a0cc'
 			document.getElementById('rules').style.background = '#166dac'
+			document.getElementById('instructions').style.background = '#62a0cc'
+			document.getElementById('simulation').style.background = '#62a0cc'
+		}
+		else if (tab === 'instructions') {
+			document.getElementById('requirementsPanel').style.display = 'none';
+			document.getElementById('intermediatePanel').style.display = 'none';
+			document.getElementById('scenarioPanel').style.display = 'none';
+			document.getElementById('rulesPanel').style.display = 'none';
+			document.getElementById('instructionsPanel').style.display = 'block';
+			document.getElementById('simulationPanel').style.display = 'none';
+			document.getElementById('requirements').style.background = '#62a0cc'
+			document.getElementById('intermediate').style.background = '#62a0cc'
+			document.getElementById('scenario').style.background = '#62a0cc'
+			document.getElementById('rules').style.background = '#62a0cc'
+			document.getElementById('instructions').style.background = '#166dac'
 			document.getElementById('simulation').style.background = '#62a0cc'
 		}
 		else {
@@ -434,11 +455,13 @@ export class MainUIComponent implements OnInit {
 			document.getElementById('intermediatePanel').style.display = 'none';
 			document.getElementById('scenarioPanel').style.display = 'none';
 			document.getElementById('rulesPanel').style.display = 'none';
+			document.getElementById('instructionsPanel').style.display = 'none';
 			document.getElementById('simulationPanel').style.display = 'block';
 			document.getElementById('requirements').style.background = '#62a0cc'
 			document.getElementById('intermediate').style.background = '#62a0cc'
 			document.getElementById('scenario').style.background = '#62a0cc'
 			document.getElementById('rules').style.background = '#62a0cc'
+			document.getElementById('instructions').style.background = '#62a0cc'
 			document.getElementById('simulation').style.background = '#166dac'
 			var vid = document.getElementById('video')
 			// vid.src = "assets/video/demo.mp4"
@@ -465,7 +488,7 @@ export class MainUIComponent implements OnInit {
 		scenarioTab.open = false;
 	}
 
-	displayPlaning() {
+	displayPlaningPanel() {
 		document.getElementById("planing").style.display = 'block';
 	}
 
@@ -597,27 +620,23 @@ export class MainUIComponent implements OnInit {
 	}
 
 	generateScenarioDiagrams() {
-		if (!this.formalismErrorFlag) alert('Please Solve The Formalism Errors First!')
-		if (this.problemDiagramFlag === false) alert('Please Generate Problem Diagram First!')
-		else {
-			var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
-			var allRequirements: string = ''
-			for (var i = 0; i < requirements.split('\n').length; i++) {
-				var requirement: string = requirements.split('\n')[i];
-				if (requirement.trim() !== '') {
-					allRequirements = allRequirements + requirement;
-					if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
-				}
+		var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
+		var allRequirements: string = ''
+		for (var i = 0; i < requirements.split('\n').length; i++) {
+			var requirement: string = requirements.split('\n')[i];
+			if (requirement.trim() !== '') {
+				allRequirements = allRequirements + requirement;
+				if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
 			}
-			this.pfService.getScenarioDiagram(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
-				console.log(result)
-				this.scenariaDiagramPaths = result.paths;
-				var uncoverRequirements : Array<string> = result.uncoveredRequirement;
-				document.getElementById("scenario").style.display = 'block';
-				this.closeDetails();
-				alert(uncoverRequirements + ' Are Not Covered In Scenario Diagrams')
-			})
 		}
+		this.pfService.getScenarioDiagram(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
+			console.log(result)
+			this.scenariaDiagramPaths = result.paths;
+			var uncoverRequirements : Array<string> = result.uncoveredRequirement;
+			document.getElementById("scenario").style.display = 'block';
+			this.closeDetails();
+			alert(uncoverRequirements + ' Are Not Covered In Scenario Diagrams')
+		})
 	}
 
 	NuSMVCheck(){
@@ -625,24 +644,21 @@ export class MainUIComponent implements OnInit {
 	}
 
 	generateSystemBehaviours() {
-		if (this.scenariaDiagramPaths.length === 0) alert('Not Passing Satisfaction Check!')
-		else {
-			var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
-			var allRequirements: string = ''
-			for (var i = 0; i < requirements.split('\n').length; i++) {
-				var requirement: string = requirements.split('\n')[i];
-				if (requirement.trim() !== '') {
-					allRequirements = allRequirements + requirement;
-					if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
-				}
+		var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
+		var allRequirements: string = ''
+		for (var i = 0; i < requirements.split('\n').length; i++) {
+			var requirement: string = requirements.split('\n')[i];
+			if (requirement.trim() !== '') {
+				allRequirements = allRequirements + requirement;
+				if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
 			}
-			this.generateService.transform(allRequirements, this.ontologyFilePath, 'SystemBehaviour', this.index).subscribe(result => {
-				this.rules = result;
-				document.getElementById("rules").style.display = 'block';
-				this.change_Menu('rules')
-				this.closeDetails();
-			})
 		}
+		this.generateService.transform(allRequirements, this.ontologyFilePath, 'SystemBehaviour', this.index).subscribe(result => {
+			this.rules = result;
+			document.getElementById("rules").style.display = 'block';
+			this.change_Menu('rules')
+			this.closeDetails();
+		})
 	}
 
 	generateDroolsRules() {
@@ -658,9 +674,9 @@ export class MainUIComponent implements OnInit {
 				}
 			}
 			this.generateService.transform(allRequirements, this.ontologyFilePath, 'Drools', this.index).subscribe(result => {
-				this.rules = result;
-				document.getElementById("rules").style.display = 'block';
-				this.change_Menu('rules')
+				this.instructions = result;
+				document.getElementById("instructions").style.display = 'block';
+				this.change_Menu('instructions')
 				this.closeDetails();
 			})
 		}
@@ -679,9 +695,9 @@ export class MainUIComponent implements OnInit {
 				}
 			}
 			this.generateService.transform(allRequirements, this.ontologyFilePath, 'Onenet', this.index).subscribe(result => {
-				this.rules = result;
-				document.getElementById("rules").style.display = 'block';
-				this.change_Menu('rules')
+				this.instructions = result;
+				document.getElementById("instructions").style.display = 'block';
+				this.change_Menu('instructions')
 				this.closeDetails();
 			})
 		}

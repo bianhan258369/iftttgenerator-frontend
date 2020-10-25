@@ -31,6 +31,10 @@
   display: none;
 }
 
+.tab #instructions {
+  display: none;
+}
+
 .tab #simulation {
   display: none;
 }
@@ -238,6 +242,17 @@ ul {
 }
 
 #rulesPanel {
+  position: relative;
+  margin-top: 20px;
+  overflow: auto;
+  border: 1px solid #000;
+  border-radius: 5px;
+  width: 98%;
+  height: 700px;
+  display: block;
+}
+
+#instructionsPanel {
   position: relative;
   margin-top: 20px;
   overflow: auto;

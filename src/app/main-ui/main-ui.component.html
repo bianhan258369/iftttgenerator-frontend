@@ -8,12 +8,13 @@
   <div class="tab">
     <ul id="tablabel">
       <li id="requirements" (click)="change_Menu('requirements')">Requirements</li>
-      <li id="intermediate" (click)="change_Menu('intermediate')">Intermediate</li>
       <details id="scenario">
         <summary>ScenarioDiagrams</summary>
           <p *ngFor="let path of scenariaDiagramPaths;let i = index" (click)=showSCD(i)>SCD{{i + 1}}</p>
       </details>
-      <li id="rules" (click)="change_Menu('rules')">Rules</li>
+      <li id="intermediate" (click)="change_Menu('intermediate')">ProblemDiagram</li>
+      <li id="rules" (click)="change_Menu('rules')">SystemBehaviours</li>
+      <li id="instructions" (click)="change_Menu('instructions')">Instructions</li>
       <li id="simulation" (click)="change_Menu('simulation')">Simulation</li>
     </ul>
   </div>
@@ -150,6 +151,10 @@
     <div class="divcontent" style="white-space:pre-wrap; height:20px" *ngFor="let rule of rules">
       {{rule}} </div>
   </div>
+  <div id="instructionsPanel">
+    <div class="divcontent" style="white-space:pre-wrap; height:20px" *ngFor="let instruction of instructions">
+      {{instruction}} </div>
+  </div>
   <div id="simulationPanel">
     <video id="video" autoplay></video>
   </div>
@@ -157,28 +162,29 @@
   <button class="upload button">UploadOntology
     <input class="change" type="file" multiple="multiple" (change)="selectedFileOnChanged($event)" />
   </button>
-  <button class="button" (click)="displayPlaning()">ComplementRequirements</button>
+  <button class="button" (click)="displayPlaningPanel()">ComplementRequirements</button>
+  <button class="button" (click)="generateScenarioDiagrams()">DisplayPlanning</button>
   <details class="detail">
-    <summary>DeriveSystemBehaviours</summary>
-    <p (click)="problemDiagramDerivation()">WithoutSensors</p>
-    <p (click)="problemDiagramDerivation2()">WithSensors</p>
+    <summary>DeriveProblemDiagram</summary>
+    <p (click)="problemDiagramDerivation()">PDWithoutSensors</p>
+    <p (click)="problemDiagramDerivation2()">PDWithSensors</p>
   </details>
-
+  <button class="button" (click)="generateSystemBehaviours()">GenerateSystemBehaviours</button>
+<!--   
   <details class="detail">
     <summary>CheckInconsistency</summary>
       <p (click)="ruleBasedCheck()">Rule</p>
       <p (click)="formalismBasedCheck()">Formalism</p>
-  </details> 
+  </details>  -->
 
-  <details class="detail">
+  <!-- <details class="detail">
     <summary>CheckSatisfaction</summary>
     <p (click)="generateScenarioDiagrams()">ScenarioDiagrams</p>
     <p (click)="NuSMVCheck()">NuSMVCheck</p>
-  </details>
+  </details> -->
   
   <details class="detail">
-    <summary>GenerateRules</summary>
-    <p (click)="generateSystemBehaviours()">SystemBehaviours</p>
+    <summary>GenerateDeviceInstructions</summary>
     <p (click)="generateDroolsRules()">Drools</p>
     <p (click)="generateOnenetRules()">Onenet</p>
   </details>
