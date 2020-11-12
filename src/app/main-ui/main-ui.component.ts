@@ -472,6 +472,7 @@ export class MainUIComponent implements OnInit {
 		var path: string = this.scenariaDiagramPaths[index].trim();
 		var time = (new Date()).getTime();
 		var url = `http://localhost:8081/api/display?fileName=${path}&time=${time}`;
+		// var url = `http://47.52.116.116:8081/api/display?fileName=${path}&time=${time}`;
 		this.imgURL = url;
 		document.getElementById('requirementsPanel').style.display = 'none';
 		document.getElementById('intermediatePanel').style.display = 'none';
@@ -751,5 +752,10 @@ export class MainUIComponent implements OnInit {
 
 	cancel() {
 		document.getElementById("planing").style.display = 'none';
+	}
+
+	downloadOntology(){
+		window.open('http://localhost:8081/api/downloadOntology')
+		// window.open('http://47.52.116.116:8081/api/downloadOntology')
 	}
 }
