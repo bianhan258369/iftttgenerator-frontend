@@ -8,12 +8,13 @@
   <div class="tab">
     <ul id="tablabel">
       <li id="requirements" (click)="change_Menu('requirements')">Requirements</li>
-      <details id="scenario">
+      <!-- <details id="scenario">
         <summary>ScenarioDiagrams</summary>
           <p *ngFor="let path of scenariaDiagramPaths;let i = index" (click)=showSCD(i)>SCD{{i + 1}}</p>
-      </details>
+      </details> -->
       <li id="intermediate" (click)="change_Menu('intermediate')">ProblemDiagram</li>
       <li id="rules" (click)="change_Menu('rules')">SystemBehaviours</li>
+      <li id="scenario" (click)="change_Menu('scenario')">ScenarioDiagram</li>
       <li id="instructions" (click)="change_Menu('instructions')">Instructions</li>
       <li id="simulation" (click)="change_Menu('simulation')">Simulation</li>
     </ul>
@@ -24,11 +25,11 @@
       <ul>
         <li style="text-align : center"><b>Templates</b></li>
         <li><b>'ALWAYS' Requirements：</b></li>
-        <li>state <b class="highlight">SHOULD ALWAYS BE ACTIVE</b></li>
+        <!-- <li>state <b class="highlight">SHOULD ALWAYS BE ACTIVE</b></li> -->
         <li>attribute <b class="highlight">SHOULD ALWAYS BE ABOVE/BELOW</b> value</li>
         <li></li>
         <li><b>'NEVER' Requirements：</b></li>
-        <li>event <b class="highlight">SHOULD NEVER HAPPEN</b></li>
+        <!-- <li>event <b class="highlight">SHOULD NEVER HAPPEN</b></li> -->
         <li>attribute <b class="highlight">SHOULD NEVER BE ABOVE/BELOW</b> value</li>
         <li>[state1,state2,...] <b class="highlight">SHOULD NEVER OCCUR TOGETHER</b></li>
         <li></li>
@@ -40,15 +41,15 @@
         </li>
         <li><b class="highlight">IF</b> trigger <b class="highlight">(FOR TIME)</b> <b class="highlight">THEN</b> state
         </li>
-        <li><b class="highlight">IF</b> trigger <b class="highlight">(FOR TIME)</b> <b class="highlight">THEN</b> user's intend
+        <li><b class="highlight">IF</b> trigger <b class="highlight">(FOR TIME)</b> <b class="highlight">THEN</b> effect
         </li>
         <li></li>
         <li></li>
         <li></li>
         <li style="text-align : center"><b>Examples</b></li>
-        <li>Ac.coldOn <b class="highlight">SHOULD ALWAYS BE ACTIVE</b></li>
+        <!-- <li>Ac.coldOn <b class="highlight">SHOULD ALWAYS BE ACTIVE</b></li> -->
         <li>Air.temperature <b class="highlight">SHOULD ALWAYS BE ABOVE</b> 0</li>
-        <li>Ac.turnoncold <b class="highlight">SHOULD NEVER HAPPEN</b></li>
+        <!-- <li>Ac.turnoncold <b class="highlight">SHOULD NEVER HAPPEN</b></li> -->
         <li>Air.temperature <b class="highlight">SHOULD NEVER BE BELOW</b> 0</li>
         <li>[Ac.coldOn,Window.wopen,...] <b class="highlight">SHOULD NEVER OCCUR TOGETHER</b></li>
         <li><b class="highlight">PREFERRED</b> Air.temperature <b class="highlight">IS</b> 25</li>
@@ -60,6 +61,7 @@
               class="highlight">THEN</b> allow ventilating the room</li>
       </ul>
     </div>
+
     <b id="input_introduction" class="introduction">Please Enter The Requirements:</b>
     <ngx-monaco-editor id="input_textarea" class="input" [options]="editorOptions" [(ngModel)]="requirementTexts"
       (onInit)="monacoOnInit($event)"></ngx-monaco-editor>
@@ -67,6 +69,12 @@
       If Necessary:</b>
     <ngx-monaco-editor id="complemented_textarea" class="complemented" [options]="editorOptions" [(ngModel)]="complementedRequirements"
       (onInit)="monacoOnInit($event)"></ngx-monaco-editor>
+      <b id="functional_introduction" class="introduction">Below Are The Synthesized Functional Requirements:</b>
+    <div id="functionalRequirementsPanel" class="functionalRequirementsPanel">
+      <ul *ngFor="let functionalRequirement of functionalRequirements">
+        <li>{{functionalRequirement}}</li>
+      </ul>
+    </div>
 
   </div>
   <div id="intermediatePanel">
@@ -138,13 +146,9 @@
   </div>
 
   <div id="scenarioPanel">
+    <a [href]="imgURL" target="_blank">
     <img [src]="imgURL" class="content" id="sccontent"/>
-    <b id="error_introduction" class="error_introduction introduction">Errors</b>
-    <div id="errorsPanel" class="errorsPanel">
-      <ul *ngFor="let error of errors">
-        <li>{{error}}</li>
-      </ul>
-    </div>
+  </a>
   </div>
 
   <div id="rulesPanel">
@@ -163,13 +167,15 @@
     <input class="change" type="file" multiple="multiple" (change)="selectedFileOnChanged($event)" />
   </button>
   <button class="button" (click)="displayPlaningPanel()">ComplementRequirements</button>
-  <button class="button" (click)="generateScenarioDiagrams()">DisplayPlanning</button>
+  <button class="button" (click)="generateFunctionalRequirements()">GenerateFunctionalRequirements</button>
+  <!-- <button class="button" (click)="generateScenarioDiagrams()">DisplayPlanning</button> -->
   <details class="detail">
     <summary>DeriveProblemDiagram</summary>
     <p (click)="problemDiagramDerivation()">PDWithoutSensors</p>
     <p (click)="problemDiagramDerivation2()">PDWithSensors</p>
   </details>
   <button class="button" (click)="generateSystemBehaviours()">GenerateSystemBehaviours</button>
+  <button class="button" (click)="generateScenarioDiagrams()">EnsureRequirements</button>
 <!--   
   <details class="detail">
     <summary>CheckInconsistency</summary>
@@ -185,6 +191,7 @@
   
   <details class="detail">
     <summary>GenerateDeviceInstructions</summary>
+    <p (click)="generateIFTTTRules()">IFTTT</p>
     <p (click)="generateDroolsRules()">Drools</p>
     <p (click)="generateOnenetRules()">Onenet</p>
   </details>

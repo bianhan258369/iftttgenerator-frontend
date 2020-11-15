@@ -141,7 +141,7 @@ ul {
 #requirementsPanel #input_textarea {
   position: relative;
   margin-left: 20.2%;
-  width: 80%;
+  width: 40%;
   height: 60%;
   resize: none;
   display: block;
@@ -157,7 +157,7 @@ ul {
   position: relative;
   margin-top: 2px;
   margin-left: 20.2%;
-  width: 80%;
+  width: 40%;
   height: 33%;
   resize: none;
   display: block;
@@ -165,10 +165,33 @@ ul {
   border-radius: 5px;
 }
 
+#requirementsPanel #functional_introduction {
+  margin-top: -700px;
+  margin-left: 61%;
+  display: block;
+}
+
+#requirementsPanel #functionalRequirementsPanel{
+  position: relative;
+  margin-top: 2px;
+  margin-left: 61%;
+  width: 35%;
+  height: 96%;
+  resize: none;
+  display: block;
+  border: 1px solid #000;
+  border-radius: 5px;
+  overflow: auto;
+}
+
+#requirementsPanel #functionalRequirementsPanel ul li {
+  font-size: 1vw;
+  height: 7px;
+}
+
 #requirementsPanel #templates ul li {
   font-size: .75vw;
 }
-
 
 #intermediatePanel {
   position: relative;
@@ -236,9 +259,13 @@ ul {
 
 #scenarioPanel #sccontent {
   position: relative;
-  height: 85%;
+  /* height: 85%; */
   display: block;
-  overflow: auto;
+  /* overflow: auto; */
+  width: auto;  
+  height: auto;  
+  max-width: 100%;  
+  max-height: 100%; 
 }
 
 #rulesPanel {

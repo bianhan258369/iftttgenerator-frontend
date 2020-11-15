@@ -12,7 +12,7 @@ export class GenerateService {
 
   constructor(private httpClient: HttpClient) { }
 
-  transform(requirementTexts:string, ontologyPath:string, type:string, index) : Observable<string[]>{
+  transform(requirementTexts:string, ontologyPath:string, type:string, index) : Observable<any>{
     var url = this.serviceUrl + 'transform2' + type + '?requirementTexts=' + requirementTexts + '&ontologyPath=' + ontologyPath + '&index=' + index
     url = decodeURIComponent(url);
     return this.httpClient.get<string[]>(url);

@@ -12,6 +12,7 @@ import { indexOf, result } from 'lodash';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { calcPossibleSecurityContexts } from '@angular/compiler/src/template_parser/binding_parser';
 import { SimulationService } from '../service/simulation.service';
+import { IfThenRequirement } from '../entity/IfThenRequirement';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class MainUIComponent implements OnInit {
 	imgURL: string;
 	requirementTexts: string;
 	complementedRequirements: string;
+	functionalRequirements: Array<string>;
 	errors: Array<string>;
 	ruleErrorFlag: boolean;
 	formalismErrorFlag: boolean;
@@ -41,7 +43,8 @@ export class MainUIComponent implements OnInit {
 	linesWithSensors: Array<Line>;
 	phenomena: Array<Phenomenon>
 	referencePhenomena: Array<Phenomenon>;
-	scenariaDiagramPaths: Array<string>;
+	ifThenRequirements: Array<IfThenRequirement>;
+	scenariaDiagramPath: string;
 	languageId = "req";
 	editorOptions = { theme: "reqTheme", language: "req", minimap: { enabled: false } };
 	editor;
@@ -60,8 +63,8 @@ export class MainUIComponent implements OnInit {
 		this.linesWithSensors = new Array<Line>();
 		this.phenomena = new Array<Phenomenon>()
 		this.referencePhenomena = new Array<Phenomenon>();
-		this.scenariaDiagramPaths = new Array<string>();
 		this.problemDiagramFlag = false;
+		this.ifThenRequirements = new Array<IfThenRequirement>()
 	}
 
 	open2 = true;
@@ -422,6 +425,22 @@ export class MainUIComponent implements OnInit {
 			document.getElementById('instructions').style.background = '#62a0cc'
 			document.getElementById('simulation').style.background = '#62a0cc'
 		}
+		else if (tab === 'scenario') {
+			document.getElementById('requirementsPanel').style.display = 'none';
+			document.getElementById('intermediatePanel').style.display = 'none';
+			document.getElementById('scenarioPanel').style.display = 'block';
+			document.getElementById('content').style.display = 'none';
+			document.getElementById('rulesPanel').style.display = 'none';
+			document.getElementById('instructionsPanel').style.display = 'none';
+			document.getElementById('simulationPanel').style.display = 'none';
+			document.getElementById('requirements').style.background = '#62a0cc'
+			document.getElementById('intermediate').style.background = '#62a0cc'
+			document.getElementById('scenario').style.background = '#166dac'
+			document.getElementById('rules').style.background = '#62a0cc'
+			document.getElementById('instructions').style.background = '#62a0cc'
+			document.getElementById('simulation').style.background = '#62a0cc'
+			document.getElementById('errorsPanel').style.display = 'none';
+		}
 		else if (tab === 'rules') {
 			document.getElementById('requirementsPanel').style.display = 'none';
 			document.getElementById('intermediatePanel').style.display = 'none';
@@ -468,124 +487,70 @@ export class MainUIComponent implements OnInit {
 		}
 	}
 
-	showSCD(index: number) {
-		var path: string = this.scenariaDiagramPaths[index].trim();
-		var time = (new Date()).getTime();
-		var url = `http://localhost:8081/api/display?fileName=${path}&time=${time}`;
-		// var url = `http://47.52.116.116:8081/api/display?fileName=${path}&time=${time}`;
-		this.imgURL = url;
-		document.getElementById('requirementsPanel').style.display = 'none';
-		document.getElementById('intermediatePanel').style.display = 'none';
-		document.getElementById('scenarioPanel').style.display = 'block';
-		document.getElementById('sccontent').style.display = 'block';
-		document.getElementById('rulesPanel').style.display = 'none';
-		document.getElementById('simulationPanel').style.display = 'none';
-		document.getElementById('requirements').style.background = '#62a0cc'
-		document.getElementById('intermediate').style.background = '#62a0cc'
-		document.getElementById('scenario').style.background = '#166dac'
-		document.getElementById('rules').style.background = '#62a0cc'
-		document.getElementById('simulation').style.background = '#62a0cc'
-		var scenarioTab: any = document.getElementById("scenario");
-		scenarioTab.open = false;
+	generateFunctionalRequirements() {
+		var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
+		var allRequirements: string = ''
+		for (var i = 0; i < requirements.split('\n').length; i++) {
+			var requirement: string = requirements.split('\n')[i];
+			if (requirement.trim() !== '') {
+				allRequirements = allRequirements + requirement;
+				if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
+			}
+		}
+		this.generateService.transform(allRequirements, this.ontologyFilePath, 'FunctionalRequirements', this.index).subscribe(result => {
+			this.functionalRequirements = result.functionalRequirements;
+			this.ifThenRequirements = result.ifThenRequirements;
+		})
 	}
+
 
 	displayPlaningPanel() {
 		document.getElementById("planing").style.display = 'block';
 	}
 
 	problemDiagramDerivation() {
-		var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
-		var allRequirements: string = ''
-		for (var i = 0; i < requirements.split('\n').length; i++) {
-			var requirement: string = requirements.split('\n')[i];
-			if (requirement.trim() !== '') {
-				allRequirements = allRequirements + requirement;
-				if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
-			}
-		}
+		var allRequirements = this.functionalRequirements.join("//")
+		this.errors.length = 0
+		this.errors.push('No Errors!')
 		this.pfService.getProblemDiagram(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
-			this.phenomena = result.phenomena;
-			this.referencePhenomena = result.referencePhenomena
-			this.ovals = result.ovals
-			this.rects = result.rectsWithoutSensors
-			this.lines = result.linesWithoutSensors
-			document.getElementById("intermediate").style.display = 'block';
-			this.change_Menu("intermediate")
-			this.showProblemDiagram(this.rects, this.ovals, this.lines)
-			this.problemDiagramFlag = true;
-			this.closeDetails();
+			this.generateService.check(allRequirements, this.ontologyFilePath, this.index).subscribe(result2 => {
+				this.errors = result2
+				this.phenomena = result.phenomena;
+				this.referencePhenomena = result.referencePhenomena
+				this.ovals = result.ovals
+				this.rects = result.rectsWithoutSensors
+				this.lines = result.linesWithoutSensors
+				document.getElementById("intermediate").style.display = 'block';
+				this.change_Menu("intermediate")
+				this.showProblemDiagram(this.rects, this.ovals, this.lines)
+				this.problemDiagramFlag = true;
+				this.closeDetails();
+			})	
 		})
 	}
 
 	problemDiagramDerivation2() {
-		var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
-		var allRequirements: string = ''
-		for (var i = 0; i < requirements.split('\n').length; i++) {
-			var requirement: string = requirements.split('\n')[i];
-			if (requirement.trim() !== '') {
-				allRequirements = allRequirements + requirement;
-				if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
-			}
-		}
+		var allRequirements = this.functionalRequirements.join("//")
+		this.errors.length = 0
+		this.errors.push('No Errors!')
 		this.pfService.getProblemDiagram(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
-			this.phenomena = result.phenomena;
-			this.referencePhenomena = result.referencePhenomena
-			this.ovals = result.ovals
-			this.rects = result.rectsWithSensors
-			this.lines = result.linesWithSensors
-			this.rectsWithSensors = result.rectsWithSensors
-			this.linesWithSensors = result.linesWithSensors
-			document.getElementById("intermediate").style.display = 'block';
-			this.change_Menu("intermediate")
-			this.showProblemDiagram(this.rectsWithSensors, this.ovals, this.linesWithSensors)
-			this.problemDiagramFlag = true;
-			this.closeDetails();
-		})
-	}
-
-	scenarioDiagramDerivation() {
-		if (this.problemDiagramFlag === false) alert('Please Generate Problem Diagram First!')
-		else {
-			var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
-			var allRequirements: string = ''
-			for (var i = 0; i < requirements.split('\n').length; i++) {
-				var requirement: string = requirements.split('\n')[i];
-				if (requirement.trim() !== '') {
-					allRequirements = allRequirements + requirement;
-					if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
-				}
-			}
-			this.pfService.getScenarioDiagram(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
-				console.log(result)
-				this.scenariaDiagramPaths = result.paths;
-				document.getElementById("scenario").style.display = 'block';
+			this.generateService.check(allRequirements, this.ontologyFilePath, this.index).subscribe(result2 => {
+				this.errors = result2;
+				this.phenomena = result.phenomena;
+				this.referencePhenomena = result.referencePhenomena
+				this.ovals = result.ovals
+				this.rects = result.rectsWithSensors
+				this.lines = result.linesWithSensors
+				this.rectsWithSensors = result.rectsWithSensors
+				this.linesWithSensors = result.linesWithSensors
+				document.getElementById("intermediate").style.display = 'block';
+				this.change_Menu("intermediate")
+				this.showProblemDiagram(this.rectsWithSensors, this.ovals, this.linesWithSensors)
+				this.problemDiagramFlag = true;
 				this.closeDetails();
 			})
-		}
+		})
 	}
-
-	ruleBasedCheck() {
-		this.errors.length = 0
-		this.errors.push('No Rule Errors!')
-		this.ruleErrorFlag = true;
-		// var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
-		// var allRequirements: string = ''
-		// for (var i = 0; i < requirements.split('\n').length; i++) {
-		// 	var requirement: string = requirements.split('\n')[i];
-		// 	if (requirement.trim() !== '') {
-		// 		allRequirements = allRequirements + requirement;
-		// 		if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
-		// 	}
-		// }
-		// this.generateService.check(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
-		// 	this.errors = result;
-		// 	if (this.errors[0] === 'No Rule Errors!') this.ruleErrorFlag = true;
-		// 	else this.ruleErrorFlag = false;
-		// 	this.formalismErrorFlag = false;
-		// })
-		this.closeDetails();
-	}
-
 
 	formalismBasedCheck() {
 		if (!this.ruleErrorFlag) {
@@ -594,15 +559,7 @@ export class MainUIComponent implements OnInit {
 		}
 		else {
 			this.errors.length = 0;
-			var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
-			var allRequirements: string = ''
-			for (var i = 0; i < requirements.split('\n').length; i++) {
-				var requirement: string = requirements.split('\n')[i];
-				if (requirement.trim() !== '') {
-					allRequirements = allRequirements + requirement;
-					if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
-				}
-			}
+			var allRequirements = this.functionalRequirements.join("//")
 			this.generateService.z3Check(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
 				console.log(result)
 				if (result.sat === 'sat') {
@@ -620,40 +577,8 @@ export class MainUIComponent implements OnInit {
 		}
 	}
 
-	generateScenarioDiagrams() {
-		var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
-		var allRequirements: string = ''
-		for (var i = 0; i < requirements.split('\n').length; i++) {
-			var requirement: string = requirements.split('\n')[i];
-			if (requirement.trim() !== '') {
-				allRequirements = allRequirements + requirement;
-				if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
-			}
-		}
-		this.pfService.getScenarioDiagram(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
-			console.log(result)
-			this.scenariaDiagramPaths = result.paths;
-			var uncoverRequirements : Array<string> = result.uncoveredRequirement;
-			document.getElementById("scenario").style.display = 'block';
-			this.closeDetails();
-			alert(uncoverRequirements + ' Are Not Covered In Scenario Diagrams')
-		})
-	}
-
-	NuSMVCheck(){
-		this.closeDetails();
-	}
-
 	generateSystemBehaviours() {
-		var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
-		var allRequirements: string = ''
-		for (var i = 0; i < requirements.split('\n').length; i++) {
-			var requirement: string = requirements.split('\n')[i];
-			if (requirement.trim() !== '') {
-				allRequirements = allRequirements + requirement;
-				if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
-			}
-		}
+		var allRequirements = this.functionalRequirements.join("//")
 		this.generateService.transform(allRequirements, this.ontologyFilePath, 'SystemBehaviour', this.index).subscribe(result => {
 			this.rules = result;
 			document.getElementById("rules").style.display = 'block';
@@ -662,46 +587,70 @@ export class MainUIComponent implements OnInit {
 		})
 	}
 
-	generateDroolsRules() {
-		if (this.scenariaDiagramPaths.length === 0) alert('Not Passing Satisfaction Check!')
-		else {
-			var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
-			var allRequirements: string = ''
-			for (var i = 0; i < requirements.split('\n').length; i++) {
-				var requirement: string = requirements.split('\n')[i];
-				if (requirement.trim() !== '') {
-					allRequirements = allRequirements + requirement;
-					if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
-				}
-			}
-			this.generateService.transform(allRequirements, this.ontologyFilePath, 'Drools', this.index).subscribe(result => {
-				this.instructions = result;
-				document.getElementById("instructions").style.display = 'block';
-				this.change_Menu('instructions')
-				this.closeDetails();
-			})
+	generateScenarioDiagrams() {
+		var triggerLists: Array<Array<string>>
+		var actionLists: Array<Array<string>>
+		var times: Array<string>
+		var expectations: Array<string>
+		triggerLists = new Array<Array<string>>()
+		actionLists = new Array<Array<string>>()
+		times = new Array<string>()
+		expectations = new Array<string>()
+		for (var i = 0; i < this.ifThenRequirements.length; i++) {
+			var ifThenRequirement = this.ifThenRequirements[i]
+			triggerLists.push(ifThenRequirement.triggerList)
+			actionLists.push(ifThenRequirement.actionList)
+			times.push(ifThenRequirement.time)
+			expectations.push(ifThenRequirement.expectation)
 		}
+		this.pfService.getScenarioDiagram(triggerLists, actionLists, times, expectations, this.ontologyFilePath, this.index).subscribe(result => {
+			console.log(result)
+			this.scenariaDiagramPath = result.path;
+			this.showSCD()
+			document.getElementById("scenario").style.display = 'block';
+			this.change_Menu('scenario')
+			this.closeDetails();
+		})
+	}
+
+	showSCD() {
+		console.log(this.scenariaDiagramPath)
+		var path: string = this.scenariaDiagramPath.trim();
+		var time = (new Date()).getTime();
+		var url = `http://localhost:8081/api/display?fileName=${path}&time=${time}`;
+		// var url = `http://47.52.116.116:8081/api/display?fileName=${path}&time=${time}`;
+		this.imgURL = url;
+
+	}
+
+	generateIFTTTRules() {
+		var allRequirements = this.functionalRequirements.join("//")
+		this.generateService.transform(allRequirements, this.ontologyFilePath, 'IFTTT', this.index).subscribe(result => {
+			this.instructions = result;
+			document.getElementById("instructions").style.display = 'block';
+			this.change_Menu('instructions')
+			this.closeDetails();
+		})
+	}
+
+	generateDroolsRules() {
+		var allRequirements = this.functionalRequirements.join("//")
+		this.generateService.transform(allRequirements, this.ontologyFilePath, 'Drools', this.index).subscribe(result => {
+			this.instructions = result;
+			document.getElementById("instructions").style.display = 'block';
+			this.change_Menu('instructions')
+			this.closeDetails();
+		})
 	}
 
 	generateOnenetRules() {
-		if (this.scenariaDiagramPaths.length === 0) alert('Not Passing Satisfaction Check!')
-		else {
-			var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
-			var allRequirements: string = ''
-			for (var i = 0; i < requirements.split('\n').length; i++) {
-				var requirement: string = requirements.split('\n')[i];
-				if (requirement.trim() !== '') {
-					allRequirements = allRequirements + requirement;
-					if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
-				}
-			}
-			this.generateService.transform(allRequirements, this.ontologyFilePath, 'Onenet', this.index).subscribe(result => {
-				this.instructions = result;
-				document.getElementById("instructions").style.display = 'block';
-				this.change_Menu('instructions')
-				this.closeDetails();
-			})
-		}
+		var allRequirements = this.functionalRequirements.join("//")
+		this.generateService.transform(allRequirements, this.ontologyFilePath, 'Onenet', this.index).subscribe(result => {
+			this.instructions = result;
+			document.getElementById("instructions").style.display = 'block';
+			this.change_Menu('instructions')
+			this.closeDetails();
+		})
 	}
 
 	closeDetails() {
@@ -713,15 +662,7 @@ export class MainUIComponent implements OnInit {
 	}
 
 	generateSimulation() {
-		var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
-		var allRequirements: string = ''
-		for (var i = 0; i < requirements.split('\n').length; i++) {
-			var requirement: string = requirements.split('\n')[i];
-			if (requirement.trim() !== '') {
-				allRequirements = allRequirements + requirement;
-				if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
-			}
-		}
+		var allRequirements = this.functionalRequirements.join("//")
 		alert('onenet simulation is starting')
 		this.simulationService.simulation(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
 		})
@@ -754,7 +695,7 @@ export class MainUIComponent implements OnInit {
 		document.getElementById("planing").style.display = 'none';
 	}
 
-	downloadOntology(){
+	downloadOntology() {
 		window.open('http://localhost:8081/api/downloadOntology')
 		// window.open('http://47.52.116.116:8081/api/downloadOntology')
 	}
