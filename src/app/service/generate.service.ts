@@ -12,6 +12,12 @@ export class GenerateService {
 
   constructor(private httpClient: HttpClient) { }
 
+  chooseScenario(scenario:string) : Observable<any>{
+    var url = this.serviceUrl + 'chooseScenario?scenario=' + scenario
+    url = decodeURIComponent(url);
+    return this.httpClient.get<any>(url);
+  }
+
   transform(requirementTexts:string, ontologyPath:string, type:string, index) : Observable<any>{
     var url = this.serviceUrl + 'transform2' + type + '?requirementTexts=' + requirementTexts + '&ontologyPath=' + ontologyPath + '&index=' + index
     url = decodeURIComponent(url);

@@ -142,7 +142,7 @@ ul {
   position: relative;
   margin-left: 20.2%;
   width: 40%;
-  height: 60%;
+  height: 97%;
   resize: none;
   display: block;
   border: 1px solid #000;
@@ -387,6 +387,19 @@ ul {
 }
 
 #planing{
+  position: absolute;
+  width: 250px;
+  height: 150px;
+  top: 35%;
+  left: 45%;
+  border: 1px solid #000;
+  border-radius: 5px;
+  z-index: 5;
+  background-color: white;
+  display: none;
+}
+
+#chooseScenario{
   position: absolute;
   width: 250px;
   height: 150px;

@@ -65,10 +65,10 @@
     <b id="input_introduction" class="introduction">Please Enter The Requirements:</b>
     <ngx-monaco-editor id="input_textarea" class="input" [options]="editorOptions" [(ngModel)]="requirementTexts"
       (onInit)="monacoOnInit($event)"></ngx-monaco-editor>
-    <b id="complemented_introduction" class="introduction">Below Are The Requirements Complemented, Please Modify Them
+    <!-- <b id="complemented_introduction" class="introduction">Below Are The Requirements Complemented, Please Modify Them
       If Necessary:</b>
     <ngx-monaco-editor id="complemented_textarea" class="complemented" [options]="editorOptions" [(ngModel)]="complementedRequirements"
-      (onInit)="monacoOnInit($event)"></ngx-monaco-editor>
+      (onInit)="monacoOnInit($event)"></ngx-monaco-editor> -->
       <b id="functional_introduction" class="introduction">Below Are The Synthesized Functional Requirements:</b>
     <div id="functionalRequirementsPanel" class="functionalRequirementsPanel">
       <ul *ngFor="let functionalRequirement of functionalRequirements">
@@ -166,14 +166,15 @@
   <button class="upload button">UploadOntology
     <input class="change" type="file" multiple="multiple" (change)="selectedFileOnChanged($event)" />
   </button>
-  <button class="button" (click)="displayPlaningPanel()">ComplementRequirements</button>
-  <button class="button" (click)="generateFunctionalRequirements()">GenerateFunctionalRequirements</button>
+  <button class="button" (click)="displayChooseScenarioPanel()">ChooseScenario</button>
+  <!-- <button class="button" (click)="displayPlaningPanel()">ComplementRequirements</button> -->
+  <button class="button" (click)="displayPlaningPanel()">GenerateFunctionalRequirements</button>
   <!-- <button class="button" (click)="generateScenarioDiagrams()">DisplayPlanning</button> -->
-  <details class="detail">
+  <!-- <details class="detail">
     <summary>DeriveProblemDiagram</summary>
     <p (click)="problemDiagramDerivation()">PDWithoutSensors</p>
     <p (click)="problemDiagramDerivation2()">PDWithSensors</p>
-  </details>
+  </details> -->
   <button class="button" (click)="generateSystemBehaviours()">GenerateSystemBehaviours</button>
   <button class="button" (click)="generateScenarioDiagrams()">EnsureRequirements</button>
 <!--   
@@ -198,10 +199,17 @@
   <button class="button" (click)="generateSimulation()">ShowSimulation</button>
 
   <div id="planing"> Please Choose Your Preference<br/>
-    <label><input checked="true" type="radio" name="planning" value="Random">Random</label><br/>
-    <label><input type="radio" name="planning" value="SaveEnergy">SaveEnergy</label><br/>
-    <button class="button" (click)="complementRequirements()">Confirm</button>
+    <label><input checked="true" type="radio" name="planingRadio" value="Random">Random</label><br/>
+    <label><input type="radio" name="planingRadio" value="SaveEnergy">SaveEnergy</label><br/>
+    <button class="button" (click)="generateFunctionalRequirements()">Confirm</button>
     <button class="button" (click)="cancel()">Cancel</button>
   </div>
-  <button class="button" (click)="downloadOntology()">DownloadOntology</button>
+
+  <div id="chooseScenario"> Please Choose Your Scenario<br/>
+    <label><input checked="true" type="radio" name="scenarioRadio" value="SmartConferenceRoom">SmartConferenceRoom</label><br/>
+    <label><input type="radio" name="scenarioRadio" value="SmartHome">SmartHome</label><br/>
+    <button class="button" (click)="chooseScenario()">Confirm</button>
+    <button class="button" (click)="cancel()">Cancel</button>
+  </div>
+  <!-- <button class="button" (click)="downloadOntology()">DownloadOntology</button> -->
 </div>

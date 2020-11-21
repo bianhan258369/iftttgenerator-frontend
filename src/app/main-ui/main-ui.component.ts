@@ -439,7 +439,6 @@ export class MainUIComponent implements OnInit {
 			document.getElementById('rules').style.background = '#62a0cc'
 			document.getElementById('instructions').style.background = '#62a0cc'
 			document.getElementById('simulation').style.background = '#62a0cc'
-			document.getElementById('errorsPanel').style.display = 'none';
 		}
 		else if (tab === 'rules') {
 			document.getElementById('requirementsPanel').style.display = 'none';
@@ -487,25 +486,72 @@ export class MainUIComponent implements OnInit {
 		}
 	}
 
-	generateFunctionalRequirements() {
-		var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
-		var allRequirements: string = ''
-		for (var i = 0; i < requirements.split('\n').length; i++) {
-			var requirement: string = requirements.split('\n')[i];
+	chooseScenario() {
+		var scenario = $("input[name=scenarioRadio]:checked").val();
+		this.generateService.chooseScenario(scenario.toString()).subscribe(result => {
+			this.ontologyFilePath = result.path
+			this.cancel()
+		})
+	}
+
+	complementRequirements() {
+		var planing = $("input[name=planingRadio]:checked").val();
+		if (planing === 'Random') this.index = 0;
+		if (planing === 'SaveEnergy') this.index = 1;
+		var requirements: string = ''
+		for (var i = 0; i < this.requirementTexts.split('\n').length; i++) {
+			var requirement: string = this.requirementTexts.split('\n')[i];
 			if (requirement.trim() !== '') {
-				allRequirements = allRequirements + requirement;
-				if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
+				requirements = requirements + requirement;
+				if (i !== this.requirementTexts.split('\n').length - 1) requirements = requirements + '//'
 			}
 		}
-		this.generateService.transform(allRequirements, this.ontologyFilePath, 'FunctionalRequirements', this.index).subscribe(result => {
-			this.functionalRequirements = result.functionalRequirements;
-			this.ifThenRequirements = result.ifThenRequirements;
+		this.generateService.complementRequirements(requirements, this.ontologyFilePath, this.index).subscribe(result => {
+			console.log(result)
+			this.complementedRequirements = result.complementedRequirements;
+			document.getElementById("planing").style.display = 'none';
+		})
+	}
+
+	generateFunctionalRequirements() {
+		var planing = $("input[name=planingRadio]:checked").val();
+		if (planing === 'Random') this.index = 0;
+		if (planing === 'SaveEnergy') this.index = 1;
+		var requirements: string = ''
+		for (var i = 0; i < this.requirementTexts.split('\n').length; i++) {
+			var requirement: string = this.requirementTexts.split('\n')[i];
+			if (requirement.trim() !== '') {
+				requirements = requirements + requirement;
+				if (i !== this.requirementTexts.split('\n').length - 1) requirements = requirements + '//'
+			}
+		}
+		this.generateService.complementRequirements(requirements, this.ontologyFilePath, this.index).subscribe(result => {
+			console.log(result)
+			this.complementedRequirements = result.complementedRequirements;
+			document.getElementById("planing").style.display = 'none';
+			var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
+			var allRequirements: string = ''
+			for (var i = 0; i < requirements.split('\n').length; i++) {
+				var requirement: string = requirements.split('\n')[i];
+				if (requirement.trim() !== '') {
+					allRequirements = allRequirements + requirement;
+					if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
+				}
+			}
+			this.generateService.transform(allRequirements, this.ontologyFilePath, 'FunctionalRequirements', this.index).subscribe(result2 => {
+				this.functionalRequirements = result2.functionalRequirements;
+				this.ifThenRequirements = result2.ifThenRequirements;
+			})
 		})
 	}
 
 
 	displayPlaningPanel() {
 		document.getElementById("planing").style.display = 'block';
+	}
+
+	displayChooseScenarioPanel() {
+		document.getElementById("chooseScenario").style.display = 'block';
 	}
 
 	problemDiagramDerivation() {
@@ -525,7 +571,7 @@ export class MainUIComponent implements OnInit {
 				this.showProblemDiagram(this.rects, this.ovals, this.lines)
 				this.problemDiagramFlag = true;
 				this.closeDetails();
-			})	
+			})
 		})
 	}
 
@@ -579,11 +625,30 @@ export class MainUIComponent implements OnInit {
 
 	generateSystemBehaviours() {
 		var allRequirements = this.functionalRequirements.join("//")
-		this.generateService.transform(allRequirements, this.ontologyFilePath, 'SystemBehaviour', this.index).subscribe(result => {
-			this.rules = result;
-			document.getElementById("rules").style.display = 'block';
-			this.change_Menu('rules')
-			this.closeDetails();
+		this.errors.length = 0
+		this.errors.push('No Errors!')
+		this.pfService.getProblemDiagram(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
+			this.generateService.check(allRequirements, this.ontologyFilePath, this.index).subscribe(result2 => {
+				this.errors = result2;
+				this.phenomena = result.phenomena;
+				this.referencePhenomena = result.referencePhenomena
+				this.ovals = result.ovals
+				this.rects = result.rectsWithSensors
+				this.lines = result.linesWithSensors
+				this.rectsWithSensors = result.rectsWithSensors
+				this.linesWithSensors = result.linesWithSensors
+				document.getElementById("intermediate").style.display = 'block';
+				this.change_Menu("intermediate")
+				this.showProblemDiagram(this.rectsWithSensors, this.ovals, this.linesWithSensors)
+				this.problemDiagramFlag = true;
+				this.closeDetails();
+				this.generateService.transform(allRequirements, this.ontologyFilePath, 'SystemBehaviour', this.index).subscribe(result3 => {
+					this.rules = result3;
+					document.getElementById("rules").style.display = 'block';
+					this.change_Menu('rules')
+					this.closeDetails();
+				})
+			})
 		})
 	}
 
@@ -664,7 +729,9 @@ export class MainUIComponent implements OnInit {
 	generateSimulation() {
 		var allRequirements = this.functionalRequirements.join("//")
 		alert('onenet simulation is starting')
+		window.open('https://open.iot.10086.cn/app_editor/#/view?pid=372136&id=90235&is_model=0')
 		this.simulationService.simulation(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
+			
 		})
 	}
 
@@ -672,31 +739,8 @@ export class MainUIComponent implements OnInit {
 		this.editor = editor;
 	}
 
-	complementRequirements() {
-		var planing = $("input[type=radio]:checked").val();
-		if (planing === 'Random') this.index = 0;
-		if (planing === 'SaveEnergy') this.index = 1;
-		var requirements: string = ''
-		for (var i = 0; i < this.requirementTexts.split('\n').length; i++) {
-			var requirement: string = this.requirementTexts.split('\n')[i];
-			if (requirement.trim() !== '') {
-				requirements = requirements + requirement;
-				if (i !== this.requirementTexts.split('\n').length - 1) requirements = requirements + '//'
-			}
-		}
-		this.generateService.complementRequirements(requirements, this.ontologyFilePath, this.index).subscribe(result => {
-			console.log(result)
-			this.complementedRequirements = result.complementedRequirements;
-			document.getElementById("planing").style.display = 'none';
-		})
-	}
-
 	cancel() {
 		document.getElementById("planing").style.display = 'none';
-	}
-
-	downloadOntology() {
-		window.open('http://localhost:8081/api/downloadOntology')
-		// window.open('http://47.52.116.116:8081/api/downloadOntology')
+		document.getElementById("chooseScenario").style.display = 'none';
 	}
 }
