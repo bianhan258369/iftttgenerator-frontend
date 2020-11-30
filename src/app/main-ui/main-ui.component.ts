@@ -23,7 +23,10 @@ import { IfThenRequirement } from '../entity/IfThenRequirement';
 export class MainUIComponent implements OnInit {
 	interval
 	index: number;
-	imgURL: string;
+	tabs: Array<string>;
+	srImgURL: string;
+	drImgURL: string;
+	sbImgURL: string;
 	requirementTexts: string;
 	complementedRequirements: string;
 	functionalRequirements: Array<string>;
@@ -44,7 +47,9 @@ export class MainUIComponent implements OnInit {
 	phenomena: Array<Phenomenon>
 	referencePhenomena: Array<Phenomenon>;
 	ifThenRequirements: Array<IfThenRequirement>;
-	scenariaDiagramPath: string;
+	srSCDPath: string;
+	drSCDPath: string;
+	sbSCDPath: string;
 	languageId = "req";
 	editorOptions = { theme: "reqTheme", language: "req", minimap: { enabled: false } };
 	editor;
@@ -52,8 +57,7 @@ export class MainUIComponent implements OnInit {
 	constructor(private generateService: GenerateService, private uploadService: UploadService, private pfService: PFService, private simulationService: SimulationService) { }
 
 	ngOnInit() {
-		this.initPaper();
-		this.change_Menu('requirements')
+		this.tabs = new Array<string>("requirements", "devicerequirements", "problemdiagram", "scenario", "systembehaviours", "instructions", "simulation")
 		this.rules = new Array<string>();
 		this.errors = new Array<string>();
 		this.rects = new Array<Rect>();
@@ -65,6 +69,8 @@ export class MainUIComponent implements OnInit {
 		this.referencePhenomena = new Array<Phenomenon>();
 		this.problemDiagramFlag = false;
 		this.ifThenRequirements = new Array<IfThenRequirement>()
+		this.initPaper();
+		this.change_Menu('requirements')
 	}
 
 	open2 = true;
@@ -396,93 +402,18 @@ export class MainUIComponent implements OnInit {
 	}
 
 	change_Menu(tab: string) {
-		if (tab === 'requirements') {
-			document.getElementById('requirementsPanel').style.display = 'block';
-			document.getElementById('intermediatePanel').style.display = 'none';
-			document.getElementById('scenarioPanel').style.display = 'none';
-			document.getElementById('rulesPanel').style.display = 'none';
-			document.getElementById('instructionsPanel').style.display = 'none';
-			document.getElementById('simulationPanel').style.display = 'none';
-			document.getElementById('requirements').style.background = '#166dac'
-			document.getElementById('intermediate').style.background = '#62a0cc'
-			document.getElementById('scenario').style.background = '#62a0cc'
-			document.getElementById('rules').style.background = '#62a0cc'
-			document.getElementById('instructions').style.background = '#62a0cc'
-			document.getElementById('simulation').style.background = '#62a0cc'
-		}
-		else if (tab === 'intermediate') {
-			document.getElementById('requirementsPanel').style.display = 'none';
-			document.getElementById('intermediatePanel').style.display = 'block';
-			document.getElementById('scenarioPanel').style.display = 'none';
-			document.getElementById('content').style.display = 'block';
-			document.getElementById('rulesPanel').style.display = 'none';
-			document.getElementById('instructionsPanel').style.display = 'none';
-			document.getElementById('simulationPanel').style.display = 'none';
-			document.getElementById('requirements').style.background = '#62a0cc'
-			document.getElementById('intermediate').style.background = '#166dac'
-			document.getElementById('scenario').style.background = '#62a0cc'
-			document.getElementById('rules').style.background = '#62a0cc'
-			document.getElementById('instructions').style.background = '#62a0cc'
-			document.getElementById('simulation').style.background = '#62a0cc'
-		}
-		else if (tab === 'scenario') {
-			document.getElementById('requirementsPanel').style.display = 'none';
-			document.getElementById('intermediatePanel').style.display = 'none';
-			document.getElementById('scenarioPanel').style.display = 'block';
-			document.getElementById('content').style.display = 'none';
-			document.getElementById('rulesPanel').style.display = 'none';
-			document.getElementById('instructionsPanel').style.display = 'none';
-			document.getElementById('simulationPanel').style.display = 'none';
-			document.getElementById('requirements').style.background = '#62a0cc'
-			document.getElementById('intermediate').style.background = '#62a0cc'
-			document.getElementById('scenario').style.background = '#166dac'
-			document.getElementById('rules').style.background = '#62a0cc'
-			document.getElementById('instructions').style.background = '#62a0cc'
-			document.getElementById('simulation').style.background = '#62a0cc'
-		}
-		else if (tab === 'rules') {
-			document.getElementById('requirementsPanel').style.display = 'none';
-			document.getElementById('intermediatePanel').style.display = 'none';
-			document.getElementById('scenarioPanel').style.display = 'none';
-			document.getElementById('rulesPanel').style.display = 'block';
-			document.getElementById('instructionsPanel').style.display = 'none';
-			document.getElementById('simulationPanel').style.display = 'none';
-			document.getElementById('requirements').style.background = '#62a0cc'
-			document.getElementById('intermediate').style.background = '#62a0cc'
-			document.getElementById('scenario').style.background = '#62a0cc'
-			document.getElementById('rules').style.background = '#166dac'
-			document.getElementById('instructions').style.background = '#62a0cc'
-			document.getElementById('simulation').style.background = '#62a0cc'
-		}
-		else if (tab === 'instructions') {
-			document.getElementById('requirementsPanel').style.display = 'none';
-			document.getElementById('intermediatePanel').style.display = 'none';
-			document.getElementById('scenarioPanel').style.display = 'none';
-			document.getElementById('rulesPanel').style.display = 'none';
-			document.getElementById('instructionsPanel').style.display = 'block';
-			document.getElementById('simulationPanel').style.display = 'none';
-			document.getElementById('requirements').style.background = '#62a0cc'
-			document.getElementById('intermediate').style.background = '#62a0cc'
-			document.getElementById('scenario').style.background = '#62a0cc'
-			document.getElementById('rules').style.background = '#62a0cc'
-			document.getElementById('instructions').style.background = '#166dac'
-			document.getElementById('simulation').style.background = '#62a0cc'
-		}
-		else {
-			document.getElementById('requirementsPanel').style.display = 'none';
-			document.getElementById('intermediatePanel').style.display = 'none';
-			document.getElementById('scenarioPanel').style.display = 'none';
-			document.getElementById('rulesPanel').style.display = 'none';
-			document.getElementById('instructionsPanel').style.display = 'none';
-			document.getElementById('simulationPanel').style.display = 'block';
-			document.getElementById('requirements').style.background = '#62a0cc'
-			document.getElementById('intermediate').style.background = '#62a0cc'
-			document.getElementById('scenario').style.background = '#62a0cc'
-			document.getElementById('rules').style.background = '#62a0cc'
-			document.getElementById('instructions').style.background = '#62a0cc'
-			document.getElementById('simulation').style.background = '#166dac'
-			var vid = document.getElementById('video')
-			// vid.src = "assets/video/demo.mp4"
+		for (var i = 0; i < this.tabs.length; i++) {
+			if (tab === this.tabs[i]) {
+				document.getElementById(tab + 'Panel').style.display = 'block';
+				document.getElementById(tab).style.display = 'block';
+				document.getElementById(tab).style.background = '#166dac'
+				if (tab === 'problemdiagram') document.getElementById('content').style.display = 'block';
+				else document.getElementById('content').style.display = 'none';
+			}
+			else {
+				document.getElementById(this.tabs[i] + 'Panel').style.display = 'none';
+				document.getElementById(this.tabs[i]).style.background = '#62a0cc'
+			}
 		}
 	}
 
@@ -507,9 +438,12 @@ export class MainUIComponent implements OnInit {
 			}
 		}
 		this.generateService.complementRequirements(requirements, this.ontologyFilePath, this.index).subscribe(result => {
-			console.log(result)
 			this.complementedRequirements = result.complementedRequirements;
 			document.getElementById("planing").style.display = 'none';
+			this.pfService.getSrSCD(requirements, this.ontologyFilePath).subscribe(result2 => {
+				this.srSCDPath = result2.srPath;
+				this.showSrSCD();
+			})
 		})
 	}
 
@@ -541,10 +475,34 @@ export class MainUIComponent implements OnInit {
 			this.generateService.transform(allRequirements, this.ontologyFilePath, 'FunctionalRequirements', this.index).subscribe(result2 => {
 				this.functionalRequirements = result2.functionalRequirements;
 				this.ifThenRequirements = result2.ifThenRequirements;
+				var triggerLists: Array<Array<string>>
+				var actionLists: Array<Array<string>>
+				var times: Array<string>
+				var expectations: Array<string>
+				triggerLists = new Array<Array<string>>()
+				actionLists = new Array<Array<string>>()
+				times = new Array<string>()
+				expectations = new Array<string>()
+				for (var i = 0; i < this.ifThenRequirements.length; i++) {
+					var ifThenRequirement = this.ifThenRequirements[i]
+					triggerLists.push(ifThenRequirement.triggerList)
+					actionLists.push(ifThenRequirement.actionList)
+					times.push(ifThenRequirement.time)
+					expectations.push(ifThenRequirement.expectation)
+				}
+				this.change_Menu("devicerequirements")
+				this.pfService.getDrSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath, this.index).subscribe(result => {
+					this.drSCDPath = result.drPath;
+					this.showDrSCD()
+					this.closeDetails();
+				})
 			})
 		})
 	}
 
+	checkErrors(){
+		
+	}
 
 	displayPlaningPanel() {
 		document.getElementById("planing").style.display = 'block';
@@ -566,8 +524,8 @@ export class MainUIComponent implements OnInit {
 				this.ovals = result.ovals
 				this.rects = result.rectsWithoutSensors
 				this.lines = result.linesWithoutSensors
-				document.getElementById("intermediate").style.display = 'block';
-				this.change_Menu("intermediate")
+				document.getElementById("problemdiagram").style.display = 'block';
+				this.change_Menu("problemdiagram")
 				this.showProblemDiagram(this.rects, this.ovals, this.lines)
 				this.problemDiagramFlag = true;
 				this.closeDetails();
@@ -589,8 +547,8 @@ export class MainUIComponent implements OnInit {
 				this.lines = result.linesWithSensors
 				this.rectsWithSensors = result.rectsWithSensors
 				this.linesWithSensors = result.linesWithSensors
-				document.getElementById("intermediate").style.display = 'block';
-				this.change_Menu("intermediate")
+				document.getElementById("problemdiagram").style.display = 'block';
+				this.change_Menu("problemdiagram")
 				this.showProblemDiagram(this.rectsWithSensors, this.ovals, this.linesWithSensors)
 				this.problemDiagramFlag = true;
 				this.closeDetails();
@@ -637,22 +595,59 @@ export class MainUIComponent implements OnInit {
 				this.lines = result.linesWithSensors
 				this.rectsWithSensors = result.rectsWithSensors
 				this.linesWithSensors = result.linesWithSensors
-				document.getElementById("intermediate").style.display = 'block';
-				this.change_Menu("intermediate")
+				this.change_Menu("problemdiagram")
 				this.showProblemDiagram(this.rectsWithSensors, this.ovals, this.linesWithSensors)
 				this.problemDiagramFlag = true;
 				this.closeDetails();
 				this.generateService.transform(allRequirements, this.ontologyFilePath, 'SystemBehaviour', this.index).subscribe(result3 => {
 					this.rules = result3;
-					document.getElementById("rules").style.display = 'block';
-					this.change_Menu('rules')
-					this.closeDetails();
+					document.getElementById("systembehaviours").style.display = 'block';
+					var triggerLists: Array<Array<string>>
+					var actionLists: Array<Array<string>>
+					var times: Array<string>
+					var expectations: Array<string>
+					triggerLists = new Array<Array<string>>()
+					actionLists = new Array<Array<string>>()
+					times = new Array<string>()
+					expectations = new Array<string>()
+					for (var i = 0; i < this.ifThenRequirements.length; i++) {
+						var ifThenRequirement = this.ifThenRequirements[i]
+						triggerLists.push(ifThenRequirement.triggerList)
+						actionLists.push(ifThenRequirement.actionList)
+						times.push(ifThenRequirement.time)
+						expectations.push(ifThenRequirement.expectation)
+					}
+					this.change_Menu('systembehaviours')
+					this.pfService.getSbSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath, this.index).subscribe(result4 => {
+						this.sbSCDPath = result4.sbPath;
+						this.showSbSCD()
+						this.closeDetails();
+					})
 				})
 			})
 		})
 	}
 
-	generateScenarioDiagrams() {
+	generateSrSCD() {
+		var requirements: string = ''
+		for (var i = 0; i < this.requirementTexts.split('\n').length; i++) {
+			var requirement: string = this.requirementTexts.split('\n')[i];
+			if (requirement.trim() !== '') {
+				requirements = requirements + requirement;
+				if (i !== this.requirementTexts.split('\n').length - 1) requirements = requirements + '//'
+			}
+		}
+		this.pfService.getSrSCD(requirements, this.ontologyFilePath).subscribe(result => {
+			console.log(result)
+			this.srSCDPath = result.srPath;
+			this.showSrSCD()
+			document.getElementById("scenario").style.display = 'block';
+			this.change_Menu('scenario')
+			this.closeDetails();
+		})
+	}
+
+	generateDrSCD() {
 		var triggerLists: Array<Array<string>>
 		var actionLists: Array<Array<string>>
 		var times: Array<string>
@@ -668,24 +663,64 @@ export class MainUIComponent implements OnInit {
 			times.push(ifThenRequirement.time)
 			expectations.push(ifThenRequirement.expectation)
 		}
-		this.pfService.getScenarioDiagram(triggerLists, actionLists, times, expectations, this.ontologyFilePath, this.index).subscribe(result => {
+		this.pfService.getDrSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath, this.index).subscribe(result => {
 			console.log(result)
-			this.scenariaDiagramPath = result.path;
-			this.showSCD()
+			this.drSCDPath = result.drPath;
+			this.showDrSCD()
 			document.getElementById("scenario").style.display = 'block';
 			this.change_Menu('scenario')
 			this.closeDetails();
 		})
 	}
 
-	showSCD() {
-		console.log(this.scenariaDiagramPath)
-		var path: string = this.scenariaDiagramPath.trim();
-		var time = (new Date()).getTime();
-		var url = `http://localhost:8081/api/display?fileName=${path}&time=${time}`;
-		// var url = `http://47.52.116.116:8081/api/display?fileName=${path}&time=${time}`;
-		this.imgURL = url;
+	generateSbSCD() {
+		var triggerLists: Array<Array<string>>
+		var actionLists: Array<Array<string>>
+		var times: Array<string>
+		var expectations: Array<string>
+		triggerLists = new Array<Array<string>>()
+		actionLists = new Array<Array<string>>()
+		times = new Array<string>()
+		expectations = new Array<string>()
+		for (var i = 0; i < this.ifThenRequirements.length; i++) {
+			var ifThenRequirement = this.ifThenRequirements[i]
+			triggerLists.push(ifThenRequirement.triggerList)
+			actionLists.push(ifThenRequirement.actionList)
+			times.push(ifThenRequirement.time)
+			expectations.push(ifThenRequirement.expectation)
+		}
+		this.pfService.getSbSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath, this.index).subscribe(result => {
+			console.log(result)
+			this.sbSCDPath = result.sbPath;
+			this.showSbSCD()
+			document.getElementById("scenario").style.display = 'block';
+			this.change_Menu('scenario')
+			this.closeDetails();
+		})
+	}
 
+	showSrSCD() {
+		var path = this.srSCDPath.trim();
+		var time = (new Date()).getTime();
+		var url = `http://localhost:8081/api/display?fileName=${path.trim()}&time=${time}`;
+		// var url = `http://47.52.116.116:8081/api/display?fileName=${path.trim()}&time=${time}`;
+		this.srImgURL = url;
+	}
+
+	showDrSCD() {
+		var path = this.drSCDPath.trim();
+		var time = (new Date()).getTime();
+		var url = `http://localhost:8081/api/display?fileName=${path.trim()}&time=${time}`;
+		// var url = `http://47.52.116.116:8081/api/display?fileName=${path.trim()}&time=${time}`;
+		this.drImgURL = url;
+	}
+
+	showSbSCD() {
+		var path = this.sbSCDPath.trim();
+		var time = (new Date()).getTime();
+		var url = `http://localhost:8081/api/display?fileName=${path.trim()}&time=${time}`;
+		// var url = `http://47.52.116.116:8081/api/display?fileName=${path.trim()}&time=${time}`;
+		this.sbImgURL = url;
 	}
 
 	generateIFTTTRules() {
@@ -731,7 +766,7 @@ export class MainUIComponent implements OnInit {
 		alert('onenet simulation is starting')
 		window.open('https://open.iot.10086.cn/app_editor/#/view?pid=372136&id=90235&is_model=0')
 		this.simulationService.simulation(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
-			
+
 		})
 	}
 

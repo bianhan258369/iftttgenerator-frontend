@@ -1,19 +1,16 @@
 <div class="main">
   <div class="topbar">
     <nav>
-      <div class="name">DSIGS —— Device Schedule Instructions Generator And Simulator</div>
+      <div class="name">DSIGS —— Device Scheduling Instructions Generator And Simulator</div>
     </nav>
   </div>
 
   <div class="tab">
     <ul id="tablabel">
-      <li id="requirements" (click)="change_Menu('requirements')">Requirements</li>
-      <!-- <details id="scenario">
-        <summary>ScenarioDiagrams</summary>
-          <p *ngFor="let path of scenariaDiagramPaths;let i = index" (click)=showSCD(i)>SCD{{i + 1}}</p>
-      </details> -->
-      <li id="intermediate" (click)="change_Menu('intermediate')">ProblemDiagram</li>
-      <li id="rules" (click)="change_Menu('rules')">SystemBehaviours</li>
+      <li id="requirements" (click)="change_Menu('requirements')">ServiceRequirements</li>
+      <li id="devicerequirements" (click)="change_Menu('devicerequirements')">DeviceRequirements</li>
+      <li id="problemdiagram" (click)="change_Menu('problemdiagram')">ProblemDiagram</li>
+      <li id="systembehaviours" (click)="change_Menu('systembehaviours')">SystemBehaviours</li>
       <li id="scenario" (click)="change_Menu('scenario')">ScenarioDiagram</li>
       <li id="instructions" (click)="change_Menu('instructions')">Instructions</li>
       <li id="simulation" (click)="change_Menu('simulation')">Simulation</li>
@@ -45,7 +42,6 @@
         </li>
         <li></li>
         <li></li>
-        <li></li>
         <li style="text-align : center"><b>Examples</b></li>
         <!-- <li>Ac.coldOn <b class="highlight">SHOULD ALWAYS BE ACTIVE</b></li> -->
         <li>Air.temperature <b class="highlight">SHOULD ALWAYS BE ABOVE</b> 0</li>
@@ -57,27 +53,43 @@
             class="highlight">THEN</b> Ac.turnoncold</li>
         <li><b class="highlight">IF</b> Air.temperature>30 <b class="highlight">(FOR 10m)</b> <b
             class="highlight">THEN</b> Ac.coldOn</li>
-            <li><b class="highlight">IF</b> Air.humidity>30 <b class="highlight">(FOR 10m)</b> <b
-              class="highlight">THEN</b> allow ventilating the room</li>
+        <li><b class="highlight">IF</b> Air.humidity>30 <b class="highlight">(FOR 10m)</b> <b class="highlight">THEN</b>
+          allow ventilating the room</li>
       </ul>
     </div>
 
     <b id="input_introduction" class="introduction">Please Enter The Requirements:</b>
     <ngx-monaco-editor id="input_textarea" class="input" [options]="editorOptions" [(ngModel)]="requirementTexts"
       (onInit)="monacoOnInit($event)"></ngx-monaco-editor>
-    <!-- <b id="complemented_introduction" class="introduction">Below Are The Requirements Complemented, Please Modify Them
+    <b id="complemented_introduction" class="introduction">Below Are The Requirements Complemented, Please Modify Them
       If Necessary:</b>
-    <ngx-monaco-editor id="complemented_textarea" class="complemented" [options]="editorOptions" [(ngModel)]="complementedRequirements"
-      (onInit)="monacoOnInit($event)"></ngx-monaco-editor> -->
-      <b id="functional_introduction" class="introduction">Below Are The Synthesized Functional Requirements:</b>
-    <div id="functionalRequirementsPanel" class="functionalRequirementsPanel">
+    <ngx-monaco-editor id="complemented_textarea" class="complemented" [options]="editorOptions"
+      [(ngModel)]="complementedRequirements" (onInit)="monacoOnInit($event)"></ngx-monaco-editor>
+    <!-- <div *ngIf="srSCDPath != null"> -->
+      <b id="scenario_introduction" class="introduction">Service Requirement Scenario Diagram:</b>
+      <div id="srSCDPanel">
+        <a [href]="srImgURL" target="_blank">
+          <img [src]="srImgURL" class="content" id="srcontent" />
+        </a>
+      </div>
+    <!-- </div> -->
+  </div>
+
+  <div id="devicerequirementsPanel">
+    <div id="devicerequirementstext">
       <ul *ngFor="let functionalRequirement of functionalRequirements">
         <li>{{functionalRequirement}}</li>
       </ul>
     </div>
-
+    <div id="drSCDPanel">
+      <a [href]="drImgURL" target="_blank">
+        <img [src]="drImgURL" class="content" id="drcontent" />
+      </a>
+    </div>
   </div>
-  <div id="intermediatePanel">
+
+
+  <div id="problemdiagramPanel">
     <div class="content" id="content"></div>
     <div class="informationPanel" id="informationPanel">
       <ul>
@@ -146,14 +158,22 @@
   </div>
 
   <div id="scenarioPanel">
-    <a [href]="imgURL" target="_blank">
-    <img [src]="imgURL" class="content" id="sccontent"/>
-  </a>
+    <a [href]="sbImgURL" target="_blank">
+      <img [src]="sbImgURL" class="content" id="sccontent" />
+    </a>
   </div>
 
-  <div id="rulesPanel">
-    <div class="divcontent" style="white-space:pre-wrap; height:20px" *ngFor="let rule of rules">
-      {{rule}} </div>
+  <div id="systembehavioursPanel">
+    <div id="systembehaviourstext">
+      <ul *ngFor="let rule of rules">
+        <li>{{rule}}</li>
+      </ul>
+    </div>
+    <div id="sbSCDPanel">
+      <a [href]="sbImgURL" target="_blank">
+        <img [src]="sbImgURL" class="content" id="sbcontent" />
+      </a>
+    </div>
   </div>
   <div id="instructionsPanel">
     <div class="divcontent" style="white-space:pre-wrap; height:20px" *ngFor="let instruction of instructions">
@@ -167,8 +187,9 @@
     <input class="change" type="file" multiple="multiple" (change)="selectedFileOnChanged($event)" />
   </button>
   <button class="button" (click)="displayChooseScenarioPanel()">ChooseScenario</button>
-  <!-- <button class="button" (click)="displayPlaningPanel()">ComplementRequirements</button> -->
-  <button class="button" (click)="displayPlaningPanel()">GenerateFunctionalRequirements</button>
+  <button class="button" (click)="displayPlaningPanel()">ComplementRequirements</button>
+  <button class="button" (click)="generateFunctionalRequirements()">GenerateDeviceRequirements</button>
+  <button class="button" (click)="checkErrors()">CheckErrors</button>
   <!-- <button class="button" (click)="generateScenarioDiagrams()">DisplayPlanning</button> -->
   <!-- <details class="detail">
     <summary>DeriveProblemDiagram</summary>
@@ -176,8 +197,8 @@
     <p (click)="problemDiagramDerivation2()">PDWithSensors</p>
   </details> -->
   <button class="button" (click)="generateSystemBehaviours()">GenerateSystemBehaviours</button>
-  <button class="button" (click)="generateScenarioDiagrams()">EnsureRequirements</button>
-<!--   
+  <!-- <button class="button" (click)="generateSrSCD()">EnsureRequirements</button> -->
+  <!--   
   <details class="detail">
     <summary>CheckInconsistency</summary>
       <p (click)="ruleBasedCheck()">Rule</p>
@@ -189,7 +210,7 @@
     <p (click)="generateScenarioDiagrams()">ScenarioDiagrams</p>
     <p (click)="NuSMVCheck()">NuSMVCheck</p>
   </details> -->
-  
+
   <details class="detail">
     <summary>GenerateDeviceInstructions</summary>
     <p (click)="generateIFTTTRules()">IFTTT</p>
@@ -198,16 +219,17 @@
   </details>
   <button class="button" (click)="generateSimulation()">ShowSimulation</button>
 
-  <div id="planing"> Please Choose Your Preference<br/>
-    <label><input checked="true" type="radio" name="planingRadio" value="Random">Random</label><br/>
-    <label><input type="radio" name="planingRadio" value="SaveEnergy">SaveEnergy</label><br/>
-    <button class="button" (click)="generateFunctionalRequirements()">Confirm</button>
+  <div id="planing"> Please Choose Your Preference<br />
+    <label><input checked="true" type="radio" name="planingRadio" value="Random">Random</label><br />
+    <label><input type="radio" name="planingRadio" value="SaveEnergy">SaveEnergy</label><br />
+    <button class="button" (click)="complementRequirements()">Confirm</button>
     <button class="button" (click)="cancel()">Cancel</button>
   </div>
 
-  <div id="chooseScenario"> Please Choose Your Scenario<br/>
-    <label><input checked="true" type="radio" name="scenarioRadio" value="SmartConferenceRoom">SmartConferenceRoom</label><br/>
-    <label><input type="radio" name="scenarioRadio" value="SmartHome">SmartHome</label><br/>
+  <div id="chooseScenario"> Please Choose Your Scenario<br />
+    <label><input checked="true" type="radio" name="scenarioRadio"
+        value="SmartConferenceRoom">SmartConferenceRoom</label><br />
+    <label><input type="radio" name="scenarioRadio" value="SmartHome">SmartHome</label><br />
     <button class="button" (click)="chooseScenario()">Confirm</button>
     <button class="button" (click)="cancel()">Cancel</button>
   </div>

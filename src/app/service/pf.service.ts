@@ -31,8 +31,29 @@ export class PFService {
     return this.httpClient.get<any>(url);
   }
 
-  getScenarioDiagram(triggerLists: Array<Array<string>>, actionLists: Array<Array<string>>, times:Array<string>, expectations: Array<string>, ontologyPath:string, index) : Observable<any>{
-    var url = this.serviceUrl + 'getSCD';
+  getSrSCD(requirementTexts:string, ontologyPath:string) : Observable<any>{
+    var url = this.serviceUrl + 'getSrSCD?requirementTexts=' + requirementTexts + '&ontologyPath=' + ontologyPath
+    url = decodeURIComponent(url);
+    console.log(url)
+    return this.httpClient.get<any>(url);
+  }
+
+  getDrSCD(triggerLists: Array<Array<string>>, actionLists: Array<Array<string>>, times:Array<string>, expectations: Array<string>, ontologyPath:string, index) : Observable<any>{
+    var url = this.serviceUrl + 'getDrSCD';
+    const body = JSON.stringify({
+      "triggerLists" : triggerLists,
+      "actionLists" : actionLists,
+      "times" : times,
+      "expectations" : expectations,
+      "ontologyPath" : ontologyPath,
+      "index" : index
+    })
+    console.log(body)
+    return this.httpClient.post(url,body,httpOptions)
+  }
+
+  getSbSCD(triggerLists: Array<Array<string>>, actionLists: Array<Array<string>>, times:Array<string>, expectations: Array<string>, ontologyPath:string, index) : Observable<any>{
+    var url = this.serviceUrl + 'getSbSCD';
     const body = JSON.stringify({
       "triggerLists" : triggerLists,
       "actionLists" : actionLists,

@@ -19,7 +19,11 @@
   overflow: visible;
 }
 
-.tab #intermediate {
+.tab #devicerequirements {
+  display: none;
+}
+
+.tab #problemdiagram {
   display: none;
 }
 
@@ -27,7 +31,7 @@
   display: none;
 }
 
-.tab #rules {
+.tab #systembehaviours {
   display: none;
 }
 
@@ -124,7 +128,7 @@ ul {
 }
 
 #requirementsPanel #templates {
-  width: 20%;
+  width: 22%;
   height: 100%;
   display: block;
   border: 1px solid #000;
@@ -134,15 +138,15 @@ ul {
 
 #requirementsPanel #input_introduction {
   margin-top: -700px;
-  margin-left: 20.2%;
+  margin-left: 22.2%;
   display: block;
 }
 
 #requirementsPanel #input_textarea {
   position: relative;
-  margin-left: 20.2%;
+  margin-left: 22.2%;
   width: 40%;
-  height: 97%;
+  height: 60%;
   resize: none;
   display: block;
   border: 1px solid #000;
@@ -150,13 +154,13 @@ ul {
 }
 
 #requirementsPanel #complemented_introduction {
-  margin-left: 20.2%;
+  margin-left: 22.2%;
 }
 
 #requirementsPanel #complemented_textarea {
   position: relative;
   margin-top: 2px;
-  margin-left: 20.2%;
+  margin-left: 22.2%;
   width: 40%;
   height: 33%;
   resize: none;
@@ -165,35 +169,67 @@ ul {
   border-radius: 5px;
 }
 
-#requirementsPanel #functional_introduction {
+#requirementsPanel #scenario_introduction {
   margin-top: -700px;
-  margin-left: 61%;
+  margin-left: 63%;
   display: block;
 }
 
-#requirementsPanel #functionalRequirementsPanel{
+#requirementsPanel #srSCDPanel{
   position: relative;
   margin-top: 2px;
-  margin-left: 61%;
+  margin-left: 63%;
   width: 35%;
   height: 96%;
-  resize: none;
   display: block;
   border: 1px solid #000;
   border-radius: 5px;
+}
+
+#requirementsPanel #srSCDPanel #srcontent{
+  position: relative;
+  /* height: 85%; */
+  display: block;
+  /* overflow: auto; */
+  width: auto;  
+  height: auto;  
+  max-width: 100%;  
+  max-height: 100%; 
+}
+
+#devicerequirementsPanel #devicerequirementstext{
+  position: relative;
+  margin-top: 20px;
   overflow: auto;
+  border: 1px solid #000;
+  width: 48%;
+  height: 680px;
+  display: block;
+  float: left;
 }
 
-#requirementsPanel #functionalRequirementsPanel ul li {
-  font-size: 1vw;
-  height: 7px;
+#devicerequirementsPanel #drSCDPanel{
+  position: relative;
+  margin-top: 20px;
+  border: 1px solid #000;
+  width: 50%;
+  height: 680px;
+  display: block;
+  float: left;
 }
 
-#requirementsPanel #templates ul li {
-  font-size: .75vw;
+#devicerequirementsPanel #drSCDPanel #drcontent {
+  position: relative;
+  /* height: 85%; */
+  display: block;
+  /* overflow: auto; */
+  width: auto;  
+  height: auto;  
+  max-width: 100%;  
+  max-height: 100%; 
 }
 
-#intermediatePanel {
+#problemdiagramPanel {
   position: relative;
   margin-top: 20px;
   width: 98%;
@@ -201,7 +237,7 @@ ul {
   display: block;
 }
 
-#intermediatePanel #content {
+#problemdiagramPanel #content {
   position: relative;
   width: 80%;
   height: 85%;
@@ -210,7 +246,7 @@ ul {
   float: left;
 }
 
-#intermediatePanel #informationPanel {
+#problemdiagramPanel #informationPanel {
   position: relative;
   overflow: auto;
   width: 20%;
@@ -219,7 +255,7 @@ ul {
   float: left;
 }
 
-#intermediatePanel #informationPanel .title {
+#problemdiagramPanel #informationPanel .title {
   position: relative;
   width: 100%;
   background: #36648B;
@@ -268,15 +304,36 @@ ul {
   max-height: 100%; 
 }
 
-#rulesPanel {
+#systembehavioursPanel #systembehaviourstext{
   position: relative;
   margin-top: 20px;
   overflow: auto;
   border: 1px solid #000;
-  border-radius: 5px;
-  width: 98%;
-  height: 700px;
+  width: 48%;
+  height: 680px;
   display: block;
+  float: left;
+}
+
+#systembehavioursPanel #sbSCDPanel{
+  position: relative;
+  margin-top: 20px;
+  border: 1px solid #000;
+  width: 50%;
+  height: 680px;
+  display: block;
+  float: left;
+}
+
+#systembehavioursPanel #sbSCDPanel #sbcontent {
+  position: relative;
+  /* height: 85%; */
+  display: block;
+  /* overflow: auto; */
+  width: auto;  
+  height: auto;  
+  max-width: 100%;  
+  max-height: 100%; 
 }
 
 #instructionsPanel {
