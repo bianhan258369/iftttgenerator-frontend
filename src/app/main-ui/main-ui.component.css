@@ -122,7 +122,7 @@ ul {
   position: relative;
   margin-top: 20px;
   width: 98%;
-  height: 700px;
+  height: 800px;
   resize: none;
   display: block;
 }
@@ -137,7 +137,7 @@ ul {
 }
 
 #requirementsPanel #input_introduction {
-  margin-top: -700px;
+  margin-top: -800px;
   margin-left: 22.2%;
   display: block;
 }
@@ -170,7 +170,7 @@ ul {
 }
 
 #requirementsPanel #scenario_introduction {
-  margin-top: -700px;
+  margin-top: -800px;
   margin-left: 63%;
   display: block;
 }
