@@ -2,18 +2,19 @@
   border-radius: 0;
   align-items: stretch;
   display: flex;
-  width: 100%;
-  background-color: #34495e;
+  width: 98%;
+  background-color: #1874cd;
   position: relative;
   font-size: 2rem;
   font-weight: 400;
   min-height: 4rem;
+  color:white;
 }
 
 .tab {
-  position: absolute;
+  position: relative;
+  height: 20px;
   width: 100%;
-  height: 0px;
   background: white;
   z-index: 3;
   overflow: visible;
@@ -51,13 +52,10 @@ ul {
 
 #tablabel li {
   position: relative;
-  height: 4%;
   padding: 0 12px 0 12px;
   text-align: center;
   list-style-type: none;
-  float: left;
-  display: block;
-
+  display: inline-block;
   list-style-type: none;
   cursor: pointer;
   color: white;
@@ -66,12 +64,12 @@ ul {
   border-radius: 4px;
   overflow: hidden;
   z-index: 1;
-  font-size: 12px;
+  font-size: 16px;
 }
 
 #tablabel li:hover {
   opacity: 0.5;
-  display: block;
+  display: inline-block;
 }
 
 #tablabel li:focus {
@@ -120,67 +118,45 @@ ul {
 
 #requirementsPanel {
   position: relative;
-  margin-top: 20px;
   width: 98%;
-  height: 800px;
+  height: 700px;
   resize: none;
   display: block;
 }
 
 #requirementsPanel #templates {
-  width: 22%;
-  height: 100%;
   display: block;
   border: 1px solid #000;
   border-radius: 5px;
-  display: block;
-}
-
-#requirementsPanel #input_introduction {
-  margin-top: -800px;
-  margin-left: 22.2%;
   display: block;
 }
 
 #requirementsPanel #input_textarea {
   position: relative;
-  margin-left: 22.2%;
-  width: 40%;
-  height: 60%;
+  margin-left: 20px;
+  height: 450px;
   resize: none;
   display: block;
   border: 1px solid #000;
   border-radius: 5px;
-}
-
-#requirementsPanel #complemented_introduction {
-  margin-left: 22.2%;
 }
 
 #requirementsPanel #complemented_textarea {
   position: relative;
   margin-top: 2px;
-  margin-left: 22.2%;
-  width: 40%;
-  height: 33%;
+  margin-left: 20px;
+  height: 210px;
   resize: none;
   display: block;
   border: 1px solid #000;
   border-radius: 5px;
 }
 
-#requirementsPanel #scenario_introduction {
-  margin-top: -800px;
-  margin-left: 63%;
-  display: block;
-}
-
 #requirementsPanel #srSCDPanel{
   position: relative;
   margin-top: 2px;
-  margin-left: 63%;
-  width: 35%;
-  height: 96%;
+  margin-left: 20px;
+  height: 680px;
   display: block;
   border: 1px solid #000;
   border-radius: 5px;
@@ -188,41 +164,68 @@ ul {
 
 #requirementsPanel #srSCDPanel #srcontent{
   position: relative;
-  /* height: 85%; */
   display: block;
-  /* overflow: auto; */
   width: auto;  
   height: auto;  
   max-width: 100%;  
   max-height: 100%; 
 }
 
+#devicerequirementsPanel{
+  position: relative;
+  width: 98%;
+  height: 700px;
+  resize: none;
+  display: block;
+}
+
 #devicerequirementsPanel #devicerequirementstext{
   position: relative;
-  margin-top: 20px;
   overflow: auto;
   border: 1px solid #000;
-  width: 48%;
-  height: 680px;
+  height: 430px;
   display: block;
-  float: left;
+  z-index: 3;
+}
+
+#devicerequirementsPanel #device_textarea {
+  position: relative;
+  height: 430px;
+  resize: none;
+  display: block;
+  border: 1px solid #000;
+  border-radius: 5px;
+}
+
+#devicerequirementsPanel #solvableErrorsPanel {
+  position: relative;
+  height: 230px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  overflow: auto;
+  display: none;
+}
+
+#devicerequirementsPanel #unsolvableErrorsPanel {
+  position: relative;
+  height: 230px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  overflow: auto;
+  display: none;
 }
 
 #devicerequirementsPanel #drSCDPanel{
   position: relative;
-  margin-top: 20px;
+  margin-left: 20px;
   border: 1px solid #000;
-  width: 50%;
   height: 680px;
   display: block;
-  float: left;
 }
 
 #devicerequirementsPanel #drSCDPanel #drcontent {
   position: relative;
-  /* height: 85%; */
   display: block;
-  /* overflow: auto; */
   width: auto;  
   height: auto;  
   max-width: 100%;  
@@ -231,28 +234,24 @@ ul {
 
 #problemdiagramPanel {
   position: relative;
-  margin-top: 20px;
   width: 98%;
   height: 700px;
+  resize: none;
   display: block;
 }
 
 #problemdiagramPanel #content {
   position: relative;
-  width: 80%;
-  height: 85%;
+  height: 680px;
   display: block;
   overflow: auto;
-  float: left;
 }
 
 #problemdiagramPanel #informationPanel {
   position: relative;
   overflow: auto;
-  width: 20%;
-  height: 85%;
+  height: 680px;
   display: block;
-  float: left;
 }
 
 #problemdiagramPanel #informationPanel .title {
@@ -262,67 +261,21 @@ ul {
   cursor: pointer;
 }
 
-.error_introduction {
-  position: relative;
-  display: block;
-  float: left;
-  width: 100%;
-}
-
-.errorsPanel {
-  position: relative;
-  height: 15%;
-  width: 100%;
-  border: 1px solid #000;
-  border-radius: 5px;
-  overflow: auto;
-  display: block;
-  float: left;
-}
-
-.errorsPanel ul li {
-  font-size: 1vw;
-  height: 7px;
-}
-
-#scenarioPanel{
-  position: relative;
-  margin-top: 20px;
-  width: 98%;
-  height: 700px;
-  display: block;
-}
-
-#scenarioPanel #sccontent {
-  position: relative;
-  /* height: 85%; */
-  display: block;
-  /* overflow: auto; */
-  width: auto;  
-  height: auto;  
-  max-width: 100%;  
-  max-height: 100%; 
-}
-
 #systembehavioursPanel #systembehaviourstext{
   position: relative;
-  margin-top: 20px;
   overflow: auto;
   border: 1px solid #000;
-  width: 48%;
   height: 680px;
   display: block;
-  float: left;
 }
 
 #systembehavioursPanel #sbSCDPanel{
   position: relative;
-  margin-top: 20px;
+  margin-left: 20px;
   border: 1px solid #000;
-  width: 50%;
   height: 680px;
   display: block;
-  float: left;
+  width: 94%;
 }
 
 #systembehavioursPanel #sbSCDPanel #sbcontent {
@@ -338,28 +291,12 @@ ul {
 
 #instructionsPanel {
   position: relative;
-  margin-top: 20px;
   overflow: auto;
   border: 1px solid #000;
   border-radius: 5px;
   width: 98%;
-  height: 700px;
+  height: 680px;
   display: block;
-}
-
-#simulationPanel {
-  position: relative;
-  margin-top: 20px;
-  border: 1px solid #000;
-  border-radius: 5px;
-  width: 98%;
-  height: 700px;
-  display: block;
-}
-
-#simulationPanel #video {
-  width: 100%;
-  height: 100%;
 }
 
 .upload {
@@ -385,6 +322,7 @@ ul {
   cursor: pointer;
   float: left;
   font-size: 15px;
+  z-index: 5;
 }
 
 .button:hover{
@@ -396,6 +334,11 @@ ul {
 }
 
 .introduction {
+  color: #36648B;
+  margin-left: 20px;
+}
+
+.introduction_not_margin_left {
   color: #36648B;
 }
 

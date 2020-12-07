@@ -29,6 +29,7 @@
     "monaco-languageclient": "^0.10.2",
     "ng2-file-upload": "^1.4.0",
     "ngx-monaco-editor": "^8.0.0",
+    "purecss": "^2.0.3",
     "reconnecting-websocket": "^4.4.0",
     "rxjs": "~6.4.0",
     "tslib": "^1.9.0",

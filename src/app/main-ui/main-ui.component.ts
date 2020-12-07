@@ -8,9 +8,6 @@ import { Oval } from '../entity/Oval';
 import { Line } from '../entity/Line';
 import { Phenomenon } from '../entity/Phenomenon';
 import { PFService } from '../service/pf.service';
-import { indexOf, result } from 'lodash';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-import { calcPossibleSecurityContexts } from '@angular/compiler/src/template_parser/binding_parser';
 import { SimulationService } from '../service/simulation.service';
 import { IfThenRequirement } from '../entity/IfThenRequirement';
 
@@ -29,8 +26,10 @@ export class MainUIComponent implements OnInit {
 	sbImgURL: string;
 	requirementTexts: string;
 	complementedRequirements: string;
-	functionalRequirements: Array<string>;
-	errors: Array<string>;
+	reverseRequirements: string;
+	functionalRequirements: string;
+	solvableErrors: Array<string>;
+	unsolvableErrors: Array<string>;
 	ruleErrorFlag: boolean;
 	formalismErrorFlag: boolean;
 	problemDiagramFlag: boolean;
@@ -51,15 +50,17 @@ export class MainUIComponent implements OnInit {
 	drSCDPath: string;
 	sbSCDPath: string;
 	languageId = "req";
-	editorOptions = { theme: "reqTheme", language: "req", minimap: { enabled: false } };
+	editorOptions = { theme: "reqTheme", language: "req", minimap: { enabled: false }, automaticLayout: true };
+	// editorOptions = { theme: "reqTheme", language: "req", minimap: { enabled: false },showUnused: false};
 	editor;
 
 	constructor(private generateService: GenerateService, private uploadService: UploadService, private pfService: PFService, private simulationService: SimulationService) { }
 
 	ngOnInit() {
-		this.tabs = new Array<string>("requirements", "devicerequirements", "problemdiagram", "scenario", "systembehaviours", "instructions", "simulation")
+		this.tabs = new Array<string>("requirements", "devicerequirements", "problemdiagram", "systembehaviours", "instructions")
 		this.rules = new Array<string>();
-		this.errors = new Array<string>();
+		this.solvableErrors = new Array<string>();
+		this.unsolvableErrors = new Array<string>();
 		this.rects = new Array<Rect>();
 		this.ovals = new Array<Oval>();
 		this.lines = new Array<Line>();
@@ -405,7 +406,7 @@ export class MainUIComponent implements OnInit {
 		for (var i = 0; i < this.tabs.length; i++) {
 			if (tab === this.tabs[i]) {
 				document.getElementById(tab + 'Panel').style.display = 'block';
-				document.getElementById(tab).style.display = 'block';
+				document.getElementById(tab).style.display = 'inline-block';
 				document.getElementById(tab).style.background = '#166dac'
 				if (tab === 'problemdiagram') document.getElementById('content').style.display = 'block';
 				else document.getElementById('content').style.display = 'none';
@@ -414,6 +415,21 @@ export class MainUIComponent implements OnInit {
 				document.getElementById(this.tabs[i] + 'Panel').style.display = 'none';
 				document.getElementById(this.tabs[i]).style.background = '#62a0cc'
 			}
+		}
+	}
+
+	change_Error_Menu(tab: string) {
+		if (tab == 'solvable') {
+			document.getElementById('solvableErrorsPanel').style.display = 'block';
+			document.getElementById('unsolvableErrorsPanel').style.display = 'none';
+			document.getElementById('solvableErrorsTab').style.background = '#166dac'
+			document.getElementById('unsolvableErrorsTab').style.background = '#62a0cc'
+		}
+		else if (tab == 'unsolvable') {
+			document.getElementById('solvableErrorsPanel').style.display = 'none';
+			document.getElementById('unsolvableErrorsPanel').style.display = 'block';
+			document.getElementById('unsolvableErrorsTab').style.background = '#166dac'
+			document.getElementById('solvableErrorsTab').style.background = '#62a0cc'
 		}
 	}
 
@@ -437,10 +453,18 @@ export class MainUIComponent implements OnInit {
 				if (i !== this.requirementTexts.split('\n').length - 1) requirements = requirements + '//'
 			}
 		}
-		this.generateService.complementRequirements(requirements, this.ontologyFilePath, this.index).subscribe(result => {
+		this.generateService.getComplementedRequirements(this.ontologyFilePath).subscribe(result => {
 			this.complementedRequirements = result.complementedRequirements;
+			var allRequirements: string = this.complementedRequirements.trim().length != 0 ? requirements + "//" : requirements;
+			for (var i = 0; i < this.complementedRequirements.split('\n').length; i++) {
+				var requirement: string = this.complementedRequirements.split('\n')[i];
+				if (requirement.trim() != '') {
+					allRequirements = allRequirements + requirement;
+					if (i != this.complementedRequirements.split('\n').length - 1) allRequirements = allRequirements + '//'
+				}
+			}
 			document.getElementById("planing").style.display = 'none';
-			this.pfService.getSrSCD(requirements, this.ontologyFilePath).subscribe(result2 => {
+			this.pfService.getSrSCD(allRequirements, this.ontologyFilePath).subscribe(result2 => {
 				this.srSCDPath = result2.srPath;
 				this.showSrSCD();
 			})
@@ -451,6 +475,7 @@ export class MainUIComponent implements OnInit {
 		var planing = $("input[name=planingRadio]:checked").val();
 		if (planing === 'Random') this.index = 0;
 		if (planing === 'SaveEnergy') this.index = 1;
+		if (planing === 'BestPerformance') this.index = 2;
 		var requirements: string = ''
 		for (var i = 0; i < this.requirementTexts.split('\n').length; i++) {
 			var requirement: string = this.requirementTexts.split('\n')[i];
@@ -459,11 +484,11 @@ export class MainUIComponent implements OnInit {
 				if (i !== this.requirementTexts.split('\n').length - 1) requirements = requirements + '//'
 			}
 		}
-		this.generateService.complementRequirements(requirements, this.ontologyFilePath, this.index).subscribe(result => {
-			console.log(result)
-			this.complementedRequirements = result.complementedRequirements;
+		this.generateService.getReverseRequirements(requirements, this.ontologyFilePath, this.index).subscribe(result => {
+			this.reverseRequirements = result.reverseRequirements;
 			document.getElementById("planing").style.display = 'none';
-			var requirements = this.requirementTexts + '\n' + this.complementedRequirements;
+			var requirements = this.requirementTexts + '\n' + this.reverseRequirements;
+			// var requirements = this.requirementTexts + '\n' + this.reverseRequirements + '\n' + this.complementedRequirements;
 			var allRequirements: string = ''
 			for (var i = 0; i < requirements.split('\n').length; i++) {
 				var requirement: string = requirements.split('\n')[i];
@@ -472,8 +497,17 @@ export class MainUIComponent implements OnInit {
 					if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
 				}
 			}
-			this.generateService.transform(allRequirements, this.ontologyFilePath, 'FunctionalRequirements', this.index).subscribe(result2 => {
-				this.functionalRequirements = result2.functionalRequirements;
+			var tempComplementedRequirements: string = ''
+			for (var i = 0; i < this.complementedRequirements.split('\n').length; i++) {
+				var tempRequirement: string = this.complementedRequirements.split('\n')[i];
+				if (tempRequirement.trim() !== '') {
+					tempComplementedRequirements = tempComplementedRequirements + tempRequirement;
+					if (i !== this.complementedRequirements.split('\n').length - 1) tempComplementedRequirements = tempComplementedRequirements + '//'
+				}
+			}
+			this.generateService.generateFunctionalRequirements(allRequirements, this.ontologyFilePath, this.index, tempComplementedRequirements).subscribe(result2 => {
+				// this.functionalRequirements = result2.functionalRequirements.concat(this.complementedRequirements.split("\n"));
+				this.functionalRequirements = result2.functionalRequirements.join('\n') + "\n" + this.complementedRequirements;
 				this.ifThenRequirements = result2.ifThenRequirements;
 				var triggerLists: Array<Array<string>>
 				var actionLists: Array<Array<string>>
@@ -491,17 +525,86 @@ export class MainUIComponent implements OnInit {
 					expectations.push(ifThenRequirement.expectation)
 				}
 				this.change_Menu("devicerequirements")
-				this.pfService.getDrSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath, this.index).subscribe(result => {
-					this.drSCDPath = result.drPath;
-					this.showDrSCD()
-					this.closeDetails();
+				var allRequirements = this.functionalRequirements.split('\n').join("//")
+				this.solvableErrors.length = 0
+				this.unsolvableErrors.length = 0
+				this.generateService.check(allRequirements, this.ontologyFilePath, this.index).subscribe(result3 => {
+					this.solvableErrors = result3.solvableErrors
+					this.unsolvableErrors = result3.unsolvableErrors
+					this.change_Error_Menu('solvable');
+					this.pfService.getDrSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath).subscribe(result4 => {
+						this.drSCDPath = result4.drPath;
+						this.showDrSCD()
+						this.closeDetails();
+					})
 				})
 			})
 		})
 	}
 
-	checkErrors(){
-		
+	checkErrors() {
+		var allRequirements = this.functionalRequirements.split('\n').join("//")
+		this.solvableErrors.length = 0
+		this.unsolvableErrors.length = 0
+		this.generateService.check(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
+			this.solvableErrors = result.solvableErrors
+			this.unsolvableErrors = result.unsolvableErrors
+		})
+	}
+
+	solve() {
+		if (this.solvableErrors.length == 1 && this.solvableErrors[0] == "No Solvable Errors") alert("No Solvable Errors To Be Solved!")
+		else {
+			var triggerLists: Array<Array<string>>
+			var actionLists: Array<Array<string>>
+			var times: Array<string>
+			var expectations: Array<string>
+			triggerLists = new Array<Array<string>>()
+			actionLists = new Array<Array<string>>()
+			times = new Array<string>()
+			expectations = new Array<string>()
+			for (var i = 0; i < this.ifThenRequirements.length; i++) {
+				var ifThenRequirement = this.ifThenRequirements[i]
+				triggerLists.push(ifThenRequirement.triggerList)
+				actionLists.push(ifThenRequirement.actionList)
+				times.push(ifThenRequirement.time)
+				expectations.push(ifThenRequirement.expectation)
+			}
+			this.generateService.solve(triggerLists, actionLists, times, expectations).subscribe(result => {
+				if (result.solved == null) {
+					alert("Cannot Be Sloved!")
+				}
+				else {
+					var tempFunctionalRequiremts: string = ''
+					console.log(result.solved)
+					for (var i = 0; i < result.solved.length; i++) {
+						if (i != result.solved.length - 1) tempFunctionalRequiremts = tempFunctionalRequiremts + result.solved[i] + "\n";
+						else tempFunctionalRequiremts = tempFunctionalRequiremts + result.solved[i];
+					}
+					this.functionalRequirements = tempFunctionalRequiremts;
+					this.solvableErrors.length = 0
+					this.solvableErrors.push("No Solvable Errors")
+
+					triggerLists = new Array<Array<string>>()
+					actionLists = new Array<Array<string>>()
+					times = new Array<string>()
+					expectations = new Array<string>()
+					this.ifThenRequirements = result.ifThenRequirements
+					for (var i = 0; i < this.ifThenRequirements.length; i++) {
+						var ifThenRequirement = this.ifThenRequirements[i]
+						triggerLists.push(ifThenRequirement.triggerList)
+						actionLists.push(ifThenRequirement.actionList)
+						times.push(ifThenRequirement.time)
+						expectations.push(ifThenRequirement.expectation)
+					}
+					this.pfService.getDrSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath).subscribe(result2 => {
+						this.drSCDPath = result2.drPath;
+						this.showDrSCD()
+						this.closeDetails();
+					})
+				}
+			})
+		}
 	}
 
 	displayPlaningPanel() {
@@ -512,117 +615,110 @@ export class MainUIComponent implements OnInit {
 		document.getElementById("chooseScenario").style.display = 'block';
 	}
 
-	problemDiagramDerivation() {
-		var allRequirements = this.functionalRequirements.join("//")
-		this.errors.length = 0
-		this.errors.push('No Errors!')
-		this.pfService.getProblemDiagram(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
-			this.generateService.check(allRequirements, this.ontologyFilePath, this.index).subscribe(result2 => {
-				this.errors = result2
-				this.phenomena = result.phenomena;
-				this.referencePhenomena = result.referencePhenomena
-				this.ovals = result.ovals
-				this.rects = result.rectsWithoutSensors
-				this.lines = result.linesWithoutSensors
-				document.getElementById("problemdiagram").style.display = 'block';
-				this.change_Menu("problemdiagram")
-				this.showProblemDiagram(this.rects, this.ovals, this.lines)
-				this.problemDiagramFlag = true;
-				this.closeDetails();
-			})
-		})
-	}
+	// problemDiagramDerivation() {
+	// 	var allRequirements = this.functionalRequirements.join("//")
+	// 	this.pfService.getProblemDiagram(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
+	// 		this.generateService.check(allRequirements, this.ontologyFilePath, this.index).subscribe(result2 => {
+	// 			this.errors = result2
+	// 			this.phenomena = result.phenomena;
+	// 			this.referencePhenomena = result.referencePhenomena
+	// 			this.ovals = result.ovals
+	// 			this.rects = result.rectsWithoutSensors
+	// 			this.lines = result.linesWithoutSensors
+	// 			document.getElementById("problemdiagram").style.display = 'block';
+	// 			this.change_Menu("problemdiagram")
+	// 			this.showProblemDiagram(this.rects, this.ovals, this.lines)
+	// 			this.problemDiagramFlag = true;
+	// 			this.closeDetails();
+	// 		})
+	// 	})
+	// }
 
-	problemDiagramDerivation2() {
-		var allRequirements = this.functionalRequirements.join("//")
-		this.errors.length = 0
-		this.errors.push('No Errors!')
-		this.pfService.getProblemDiagram(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
-			this.generateService.check(allRequirements, this.ontologyFilePath, this.index).subscribe(result2 => {
-				this.errors = result2;
-				this.phenomena = result.phenomena;
-				this.referencePhenomena = result.referencePhenomena
-				this.ovals = result.ovals
-				this.rects = result.rectsWithSensors
-				this.lines = result.linesWithSensors
-				this.rectsWithSensors = result.rectsWithSensors
-				this.linesWithSensors = result.linesWithSensors
-				document.getElementById("problemdiagram").style.display = 'block';
-				this.change_Menu("problemdiagram")
-				this.showProblemDiagram(this.rectsWithSensors, this.ovals, this.linesWithSensors)
-				this.problemDiagramFlag = true;
-				this.closeDetails();
-			})
-		})
-	}
+	// problemDiagramDerivation2() {
+	// 	var allRequirements = this.functionalRequirements.join("//")
+	// 	this.errors.length = 0
+	// 	this.errors.push('No Errors!')
+	// 	this.pfService.getProblemDiagram(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
+	// 		this.generateService.check(allRequirements, this.ontologyFilePath, this.index).subscribe(result2 => {
+	// 			this.errors = result2;
+	// 			this.phenomena = result.phenomena;
+	// 			this.referencePhenomena = result.referencePhenomena
+	// 			this.ovals = result.ovals
+	// 			this.rects = result.rectsWithSensors
+	// 			this.lines = result.linesWithSensors
+	// 			this.rectsWithSensors = result.rectsWithSensors
+	// 			this.linesWithSensors = result.linesWithSensors
+	// 			document.getElementById("problemdiagram").style.display = 'block';
+	// 			this.change_Menu("problemdiagram")
+	// 			this.showProblemDiagram(this.rectsWithSensors, this.ovals, this.linesWithSensors)
+	// 			this.problemDiagramFlag = true;
+	// 			this.closeDetails();
+	// 		})
+	// 	})
+	// }
 
-	formalismBasedCheck() {
-		if (!this.ruleErrorFlag) {
-			alert('Please Solve The Rule Errors First!')
-			this.closeDetails();
-		}
-		else {
-			this.errors.length = 0;
-			var allRequirements = this.functionalRequirements.join("//")
-			this.generateService.z3Check(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
-				console.log(result)
-				if (result.sat === 'sat') {
-					this.errors.length = 0
-					this.errors.push('No Formalism Errors!');
-					this.formalismErrorFlag = true;
-				}
-				else {
-					this.errors.length = 0
-					this.errors.push('unsat');
-					this.formalismErrorFlag = false;
-				}
-				this.closeDetails();
-			})
-		}
-	}
+	// formalismBasedCheck() {
+	// 	if (!this.ruleErrorFlag) {
+	// 		alert('Please Solve The Rule Errors First!')
+	// 		this.closeDetails();
+	// 	}
+	// 	else {
+	// 		this.errors.length = 0;
+	// 		var allRequirements = this.functionalRequirements.join("//")
+	// 		this.generateService.z3Check(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
+	// 			console.log(result)
+	// 			if (result.sat === 'sat') {
+	// 				this.errors.length = 0
+	// 				this.errors.push('No Formalism Errors!');
+	// 				this.formalismErrorFlag = true;
+	// 			}
+	// 			else {
+	// 				this.errors.length = 0
+	// 				this.errors.push('unsat');
+	// 				this.formalismErrorFlag = false;
+	// 			}
+	// 			this.closeDetails();
+	// 		})
+	// 	}
+	// }
 
 	generateSystemBehaviours() {
-		var allRequirements = this.functionalRequirements.join("//")
-		this.errors.length = 0
-		this.errors.push('No Errors!')
+		var allRequirements = this.functionalRequirements.split('\n').join("//")
 		this.pfService.getProblemDiagram(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
-			this.generateService.check(allRequirements, this.ontologyFilePath, this.index).subscribe(result2 => {
-				this.errors = result2;
-				this.phenomena = result.phenomena;
-				this.referencePhenomena = result.referencePhenomena
-				this.ovals = result.ovals
-				this.rects = result.rectsWithSensors
-				this.lines = result.linesWithSensors
-				this.rectsWithSensors = result.rectsWithSensors
-				this.linesWithSensors = result.linesWithSensors
-				this.change_Menu("problemdiagram")
-				this.showProblemDiagram(this.rectsWithSensors, this.ovals, this.linesWithSensors)
-				this.problemDiagramFlag = true;
-				this.closeDetails();
-				this.generateService.transform(allRequirements, this.ontologyFilePath, 'SystemBehaviour', this.index).subscribe(result3 => {
-					this.rules = result3;
-					document.getElementById("systembehaviours").style.display = 'block';
-					var triggerLists: Array<Array<string>>
-					var actionLists: Array<Array<string>>
-					var times: Array<string>
-					var expectations: Array<string>
-					triggerLists = new Array<Array<string>>()
-					actionLists = new Array<Array<string>>()
-					times = new Array<string>()
-					expectations = new Array<string>()
-					for (var i = 0; i < this.ifThenRequirements.length; i++) {
-						var ifThenRequirement = this.ifThenRequirements[i]
-						triggerLists.push(ifThenRequirement.triggerList)
-						actionLists.push(ifThenRequirement.actionList)
-						times.push(ifThenRequirement.time)
-						expectations.push(ifThenRequirement.expectation)
-					}
-					this.change_Menu('systembehaviours')
-					this.pfService.getSbSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath, this.index).subscribe(result4 => {
-						this.sbSCDPath = result4.sbPath;
-						this.showSbSCD()
-						this.closeDetails();
-					})
+			this.phenomena = result.phenomena;
+			this.referencePhenomena = result.referencePhenomena
+			this.ovals = result.ovals
+			this.rects = result.rectsWithSensors
+			this.lines = result.linesWithSensors
+			this.rectsWithSensors = result.rectsWithSensors
+			this.linesWithSensors = result.linesWithSensors
+			this.change_Menu("problemdiagram")
+			this.showProblemDiagram(this.rectsWithSensors, this.ovals, this.linesWithSensors)
+			this.problemDiagramFlag = true;
+			this.closeDetails();
+			this.generateService.transform(allRequirements, this.ontologyFilePath, 'SystemBehaviour', this.index).subscribe(result2 => {
+				this.rules = result2;
+				document.getElementById("systembehaviours").style.display = 'block';
+				var triggerLists: Array<Array<string>>
+				var actionLists: Array<Array<string>>
+				var times: Array<string>
+				var expectations: Array<string>
+				triggerLists = new Array<Array<string>>()
+				actionLists = new Array<Array<string>>()
+				times = new Array<string>()
+				expectations = new Array<string>()
+				for (var i = 0; i < this.ifThenRequirements.length; i++) {
+					var ifThenRequirement = this.ifThenRequirements[i]
+					triggerLists.push(ifThenRequirement.triggerList)
+					actionLists.push(ifThenRequirement.actionList)
+					times.push(ifThenRequirement.time)
+					expectations.push(ifThenRequirement.expectation)
+				}
+				this.change_Menu('systembehaviours')
+				this.pfService.getSbSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath).subscribe(result4 => {
+					this.sbSCDPath = result4.sbPath;
+					this.showSbSCD()
+					this.closeDetails();
 				})
 			})
 		})
@@ -638,7 +734,6 @@ export class MainUIComponent implements OnInit {
 			}
 		}
 		this.pfService.getSrSCD(requirements, this.ontologyFilePath).subscribe(result => {
-			console.log(result)
 			this.srSCDPath = result.srPath;
 			this.showSrSCD()
 			document.getElementById("scenario").style.display = 'block';
@@ -663,8 +758,7 @@ export class MainUIComponent implements OnInit {
 			times.push(ifThenRequirement.time)
 			expectations.push(ifThenRequirement.expectation)
 		}
-		this.pfService.getDrSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath, this.index).subscribe(result => {
-			console.log(result)
+		this.pfService.getDrSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath).subscribe(result => {
 			this.drSCDPath = result.drPath;
 			this.showDrSCD()
 			document.getElementById("scenario").style.display = 'block';
@@ -689,8 +783,7 @@ export class MainUIComponent implements OnInit {
 			times.push(ifThenRequirement.time)
 			expectations.push(ifThenRequirement.expectation)
 		}
-		this.pfService.getSbSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath, this.index).subscribe(result => {
-			console.log(result)
+		this.pfService.getSbSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath).subscribe(result => {
 			this.sbSCDPath = result.sbPath;
 			this.showSbSCD()
 			document.getElementById("scenario").style.display = 'block';
@@ -724,7 +817,7 @@ export class MainUIComponent implements OnInit {
 	}
 
 	generateIFTTTRules() {
-		var allRequirements = this.functionalRequirements.join("//")
+		var allRequirements = this.functionalRequirements.split('\n').join("//")
 		this.generateService.transform(allRequirements, this.ontologyFilePath, 'IFTTT', this.index).subscribe(result => {
 			this.instructions = result;
 			document.getElementById("instructions").style.display = 'block';
@@ -734,7 +827,7 @@ export class MainUIComponent implements OnInit {
 	}
 
 	generateDroolsRules() {
-		var allRequirements = this.functionalRequirements.join("//")
+		var allRequirements = this.functionalRequirements.split('\n').join("//")
 		this.generateService.transform(allRequirements, this.ontologyFilePath, 'Drools', this.index).subscribe(result => {
 			this.instructions = result;
 			document.getElementById("instructions").style.display = 'block';
@@ -744,7 +837,7 @@ export class MainUIComponent implements OnInit {
 	}
 
 	generateOnenetRules() {
-		var allRequirements = this.functionalRequirements.join("//")
+		var allRequirements = this.functionalRequirements.split('\n').join("//")
 		this.generateService.transform(allRequirements, this.ontologyFilePath, 'Onenet', this.index).subscribe(result => {
 			this.instructions = result;
 			document.getElementById("instructions").style.display = 'block';
@@ -762,7 +855,7 @@ export class MainUIComponent implements OnInit {
 	}
 
 	generateSimulation() {
-		var allRequirements = this.functionalRequirements.join("//")
+		var allRequirements = this.functionalRequirements.split('\n').join("//")
 		alert('onenet simulation is starting')
 		window.open('https://open.iot.10086.cn/app_editor/#/view?pid=372136&id=90235&is_model=0')
 		this.simulationService.simulation(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {

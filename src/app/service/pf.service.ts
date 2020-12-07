@@ -38,7 +38,7 @@ export class PFService {
     return this.httpClient.get<any>(url);
   }
 
-  getDrSCD(triggerLists: Array<Array<string>>, actionLists: Array<Array<string>>, times:Array<string>, expectations: Array<string>, ontologyPath:string, index) : Observable<any>{
+  getDrSCD(triggerLists: Array<Array<string>>, actionLists: Array<Array<string>>, times:Array<string>, expectations: Array<string>, ontologyPath:string) : Observable<any>{
     var url = this.serviceUrl + 'getDrSCD';
     const body = JSON.stringify({
       "triggerLists" : triggerLists,
@@ -46,13 +46,12 @@ export class PFService {
       "times" : times,
       "expectations" : expectations,
       "ontologyPath" : ontologyPath,
-      "index" : index
     })
     console.log(body)
     return this.httpClient.post(url,body,httpOptions)
   }
 
-  getSbSCD(triggerLists: Array<Array<string>>, actionLists: Array<Array<string>>, times:Array<string>, expectations: Array<string>, ontologyPath:string, index) : Observable<any>{
+  getSbSCD(triggerLists: Array<Array<string>>, actionLists: Array<Array<string>>, times:Array<string>, expectations: Array<string>, ontologyPath:string) : Observable<any>{
     var url = this.serviceUrl + 'getSbSCD';
     const body = JSON.stringify({
       "triggerLists" : triggerLists,
@@ -60,9 +59,7 @@ export class PFService {
       "times" : times,
       "expectations" : expectations,
       "ontologyPath" : ontologyPath,
-      "index" : index
     })
-    console.log(body)
     return this.httpClient.post(url,body,httpOptions)
   }
 
