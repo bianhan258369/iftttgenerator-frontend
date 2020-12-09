@@ -24,6 +24,9 @@ export class MainUIComponent implements OnInit {
 	srImgURL: string;
 	drImgURL: string;
 	sbImgURL: string;
+	srImgLoadingFlag : boolean;
+	drImgLoadingFlag : boolean;
+	sbImgLoadingFlag : boolean;
 	requirementTexts: string;
 	complementedRequirements: string;
 	reverseRequirements: string;
@@ -70,6 +73,9 @@ export class MainUIComponent implements OnInit {
 		this.referencePhenomena = new Array<Phenomenon>();
 		this.problemDiagramFlag = false;
 		this.ifThenRequirements = new Array<IfThenRequirement>()
+		this.srImgLoadingFlag = false
+		this.drImgLoadingFlag = false
+		this.sbImgLoadingFlag = false
 		this.initPaper();
 		this.change_Menu('requirements')
 	}
@@ -464,8 +470,10 @@ export class MainUIComponent implements OnInit {
 				}
 			}
 			document.getElementById("planing").style.display = 'none';
+			this.srImgLoadingFlag = true;
 			this.pfService.getSrSCD(allRequirements, this.ontologyFilePath).subscribe(result2 => {
 				this.srSCDPath = result2.srPath;
+				this.srImgLoadingFlag = false;
 				this.showSrSCD();
 			})
 		})
@@ -525,6 +533,7 @@ export class MainUIComponent implements OnInit {
 					expectations.push(ifThenRequirement.expectation)
 				}
 				this.change_Menu("devicerequirements")
+				this.drImgLoadingFlag = true;
 				var allRequirements = this.functionalRequirements.split('\n').join("//")
 				this.solvableErrors.length = 0
 				this.unsolvableErrors.length = 0
@@ -534,6 +543,7 @@ export class MainUIComponent implements OnInit {
 					this.change_Error_Menu('solvable');
 					this.pfService.getDrSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath).subscribe(result4 => {
 						this.drSCDPath = result4.drPath;
+						this.drImgLoadingFlag = false;
 						this.showDrSCD()
 						this.closeDetails();
 					})
@@ -575,6 +585,7 @@ export class MainUIComponent implements OnInit {
 					alert("Cannot Be Sloved!")
 				}
 				else {
+					this.drImgLoadingFlag = true;
 					var tempFunctionalRequiremts: string = ''
 					console.log(result.solved)
 					for (var i = 0; i < result.solved.length; i++) {
@@ -599,6 +610,7 @@ export class MainUIComponent implements OnInit {
 					}
 					this.pfService.getDrSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath).subscribe(result2 => {
 						this.drSCDPath = result2.drPath;
+						this.drImgLoadingFlag = false;
 						this.showDrSCD()
 						this.closeDetails();
 					})
@@ -697,6 +709,7 @@ export class MainUIComponent implements OnInit {
 			this.problemDiagramFlag = true;
 			this.closeDetails();
 			this.generateService.transform(allRequirements, this.ontologyFilePath, 'SystemBehaviour', this.index).subscribe(result2 => {
+				this.sbImgLoadingFlag = true;
 				this.rules = result2;
 				document.getElementById("systembehaviours").style.display = 'block';
 				var triggerLists: Array<Array<string>>
@@ -717,6 +730,7 @@ export class MainUIComponent implements OnInit {
 				this.change_Menu('systembehaviours')
 				this.pfService.getSbSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath).subscribe(result4 => {
 					this.sbSCDPath = result4.sbPath;
+					this.sbImgLoadingFlag = false;
 					this.showSbSCD()
 					this.closeDetails();
 				})
@@ -724,73 +738,75 @@ export class MainUIComponent implements OnInit {
 		})
 	}
 
-	generateSrSCD() {
-		var requirements: string = ''
-		for (var i = 0; i < this.requirementTexts.split('\n').length; i++) {
-			var requirement: string = this.requirementTexts.split('\n')[i];
-			if (requirement.trim() !== '') {
-				requirements = requirements + requirement;
-				if (i !== this.requirementTexts.split('\n').length - 1) requirements = requirements + '//'
-			}
-		}
-		this.pfService.getSrSCD(requirements, this.ontologyFilePath).subscribe(result => {
-			this.srSCDPath = result.srPath;
-			this.showSrSCD()
-			document.getElementById("scenario").style.display = 'block';
-			this.change_Menu('scenario')
-			this.closeDetails();
-		})
-	}
+	// generateSrSCD() {
+	// 	var requirements: string = ''
+	// 	for (var i = 0; i < this.requirementTexts.split('\n').length; i++) {
+	// 		var requirement: string = this.requirementTexts.split('\n')[i];
+	// 		if (requirement.trim() !== '') {
+	// 			requirements = requirements + requirement;
+	// 			if (i !== this.requirementTexts.split('\n').length - 1) requirements = requirements + '//'
+	// 		}
+	// 	}
+	// 	this.pfService.getSrSCD(requirements, this.ontologyFilePath).subscribe(result => {
+	// 		this.srSCDPath = result.srPath;
+	// 		this.showSrSCD()
+	// 		document.getElementById("scenario").style.display = 'block';
+	// 		this.change_Menu('scenario')
+	// 		this.closeDetails();
+	// 	})
+	// }
 
-	generateDrSCD() {
-		var triggerLists: Array<Array<string>>
-		var actionLists: Array<Array<string>>
-		var times: Array<string>
-		var expectations: Array<string>
-		triggerLists = new Array<Array<string>>()
-		actionLists = new Array<Array<string>>()
-		times = new Array<string>()
-		expectations = new Array<string>()
-		for (var i = 0; i < this.ifThenRequirements.length; i++) {
-			var ifThenRequirement = this.ifThenRequirements[i]
-			triggerLists.push(ifThenRequirement.triggerList)
-			actionLists.push(ifThenRequirement.actionList)
-			times.push(ifThenRequirement.time)
-			expectations.push(ifThenRequirement.expectation)
-		}
-		this.pfService.getDrSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath).subscribe(result => {
-			this.drSCDPath = result.drPath;
-			this.showDrSCD()
-			document.getElementById("scenario").style.display = 'block';
-			this.change_Menu('scenario')
-			this.closeDetails();
-		})
-	}
+	// generateDrSCD() {
+	// 	this.drImgLoadingFlag = true;
+	// 	var triggerLists: Array<Array<string>>
+	// 	var actionLists: Array<Array<string>>
+	// 	var times: Array<string>
+	// 	var expectations: Array<string>
+	// 	triggerLists = new Array<Array<string>>()
+	// 	actionLists = new Array<Array<string>>()
+	// 	times = new Array<string>()
+	// 	expectations = new Array<string>()
+	// 	for (var i = 0; i < this.ifThenRequirements.length; i++) {
+	// 		var ifThenRequirement = this.ifThenRequirements[i]
+	// 		triggerLists.push(ifThenRequirement.triggerList)
+	// 		actionLists.push(ifThenRequirement.actionList)
+	// 		times.push(ifThenRequirement.time)
+	// 		expectations.push(ifThenRequirement.expectation)
+	// 	}
+	// 	this.pfService.getDrSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath).subscribe(result => {
+	// 		this.drSCDPath = result.drPath;
+	// 		this.drImgLoadingFlag = false;
+	// 		this.showDrSCD()
+	// 		document.getElementById("scenario").style.display = 'block';
+	// 		this.change_Menu('scenario')
+	// 		this.closeDetails();
+	// 	})
+	// }
 
-	generateSbSCD() {
-		var triggerLists: Array<Array<string>>
-		var actionLists: Array<Array<string>>
-		var times: Array<string>
-		var expectations: Array<string>
-		triggerLists = new Array<Array<string>>()
-		actionLists = new Array<Array<string>>()
-		times = new Array<string>()
-		expectations = new Array<string>()
-		for (var i = 0; i < this.ifThenRequirements.length; i++) {
-			var ifThenRequirement = this.ifThenRequirements[i]
-			triggerLists.push(ifThenRequirement.triggerList)
-			actionLists.push(ifThenRequirement.actionList)
-			times.push(ifThenRequirement.time)
-			expectations.push(ifThenRequirement.expectation)
-		}
-		this.pfService.getSbSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath).subscribe(result => {
-			this.sbSCDPath = result.sbPath;
-			this.showSbSCD()
-			document.getElementById("scenario").style.display = 'block';
-			this.change_Menu('scenario')
-			this.closeDetails();
-		})
-	}
+	// generateSbSCD() {
+	// 	var triggerLists: Array<Array<string>>
+	// 	var actionLists: Array<Array<string>>
+	// 	var times: Array<string>
+	// 	var expectations: Array<string>
+	// 	triggerLists = new Array<Array<string>>()
+	// 	actionLists = new Array<Array<string>>()
+	// 	times = new Array<string>()
+	// 	expectations = new Array<string>()
+	// 	for (var i = 0; i < this.ifThenRequirements.length; i++) {
+	// 		var ifThenRequirement = this.ifThenRequirements[i]
+	// 		triggerLists.push(ifThenRequirement.triggerList)
+	// 		actionLists.push(ifThenRequirement.actionList)
+	// 		times.push(ifThenRequirement.time)
+	// 		expectations.push(ifThenRequirement.expectation)
+	// 	}
+	// 	this.pfService.getSbSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath).subscribe(result => {
+	// 		this.sbSCDPath = result.sbPath;
+	// 		this.showSbSCD()
+	// 		document.getElementById("scenario").style.display = 'block';
+	// 		this.change_Menu('scenario')
+	// 		this.closeDetails();
+	// 	})
+	// }
 
 	showSrSCD() {
 		var path = this.srSCDPath.trim();

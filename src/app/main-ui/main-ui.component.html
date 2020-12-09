@@ -75,9 +75,12 @@
     <div class="pure-u-2-5">
       <b id="scenario_introduction" class="introduction">Service Requirement Scenario Diagram:</b>
       <div id="srSCDPanel">
-        <a [href]="srImgURL" target="_blank">
-          <img [src]="srImgURL" class="content" id="srcontent" />
-        </a>
+        <div *ngIf="srImgLoadingFlag; else srDiplay" class="lds-default srLoading"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        <ng-template #srDiplay>
+          <a [href]="srImgURL" target="_blank">
+            <img [src]="srImgURL" class="content" id="srcontent" />
+          </a>
+        </ng-template>
       </div>
     </div>
   </div>
@@ -113,10 +116,14 @@
 
     <div class="pure-u-1-2">
       <b class="introduction">Device Requirement Scenario Diagram:</b>
+      
       <div id="drSCDPanel">
-        <a [href]="drImgURL" target="_blank">
-          <img [src]="drImgURL" class="content" id="drcontent" />
-        </a>
+        <div *ngIf="drImgLoadingFlag; else drDiplay" class="lds-default drLoading"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        <ng-template #drDiplay>
+          <a [href]="drImgURL" target="_blank">
+            <img [src]="drImgURL" class="content" id="drcontent" />
+          </a>
+        </ng-template>
       </div>
     </div>
   </div>
@@ -203,9 +210,12 @@
     <div class="pure-u-1-2">
       <b class="introduction">System Behaviour Scenario Diagram:</b>
       <div id="sbSCDPanel">
-        <a [href]="sbImgURL" target="_blank">
-          <img [src]="sbImgURL" class="content" id="sbcontent" />
-        </a>
+        <div *ngIf="sbImgLoadingFlag; else sbDiplay" class="lds-default sbLoading"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        <ng-template #sbDiplay>
+          <a [href]="sbImgURL" target="_blank">
+            <img [src]="sbImgURL" class="content" id="sbcontent" />
+          </a>
+        </ng-template>
       </div>
     </div>
   </div>
