@@ -38,14 +38,13 @@
           <li><b>'IF-THEN' Requirements：</b></li>
           <li><b class="highlight">IF</b> trigger <b class="highlight">(FOR TIME)</b> <b class="highlight">THEN</b>
             event
-          </li>
+          </li>          
           <li><b class="highlight">IF</b> trigger <b class="highlight">(FOR TIME)</b> <b class="highlight">THEN</b>
             state
           </li>
           <li><b class="highlight">IF</b> trigger <b class="highlight">(FOR TIME)</b> <b class="highlight">THEN</b>
             effect
           </li>
-          <li></li>
           <li style="text-align : center"><b>Examples</b></li>
           <li>Ac.coldOn <b class="highlight">SHOULD ALWAYS BE ACTIVE</b></li>
           <li>Air.temperature <b class="highlight">SHOULD ALWAYS BE ABOVE</b> 0</li>
@@ -67,7 +66,7 @@
       <b id="input_introduction" class="introduction">Please Enter The Requirements:</b>
       <ngx-monaco-editor id="input_textarea" class="input" [options]="editorOptions" [(ngModel)]="requirementTexts"
         (onInit)="monacoOnInit($event)"></ngx-monaco-editor>
-      <b id="complemented_introduction" class="introduction">Below Are The Requirements Complemented, Please Modify Them
+      <b id="complemented_introduction" class="introduction">Here Are The Requirements Complemented, Please Modify Them
         If Necessary:</b>
       <ngx-monaco-editor id="complemented_textarea" class="complemented" [options]="editorOptions"
         [(ngModel)]="complementedRequirements" (onInit)="monacoOnInit($event)"></ngx-monaco-editor>
@@ -199,7 +198,7 @@
 
   <div id="systembehavioursPanel" class="pure-g">
     <div class="pure-u-1-2">
-      <b class="introduction_not_margin_left">System Behaviours:</b>
+      <b class="introduction">System Behaviours:</b>
       <div id="systembehaviourstext">
         <ul *ngFor="let rule of rules">
           <li>{{rule}}</li>

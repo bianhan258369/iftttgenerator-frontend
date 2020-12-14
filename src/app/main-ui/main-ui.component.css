@@ -9,6 +9,7 @@
   font-weight: 400;
   min-height: 4rem;
   color: white;
+  margin-left: 20px;
 }
 
 .tab {
@@ -18,6 +19,7 @@
   background: white;
   z-index: 3;
   overflow: visible;
+  margin-left: 20px;
 }
 
 .tab #devicerequirements {
@@ -96,32 +98,13 @@ ul {
   font-size: 12px;
 }
 
-#scenario summary:hover {
-  opacity: 0.5;
-  display: block;
-  cursor: pointer;
-}
-
-#scenario p:hover {
-  opacity: 0.5;
-  display: block;
-  cursor: pointer;
-}
-
-#scenario ::-webkit-details-marker {
-  display: none;
-}
-
-#scenario ::-moz-list-bullet {
-  font-size: 0;
-}
-
 #requirementsPanel {
   position: relative;
   width: 98%;
   height: 700px;
   resize: none;
   display: block;
+  margin-left: 20px;
 }
 
 #requirementsPanel #templates {
@@ -129,6 +112,12 @@ ul {
   border: 1px solid #000;
   border-radius: 5px;
   display: block;
+  font-size: 14px;
+}
+
+#requirementsPanel #templates ul li {
+  list-style : none;
+  margin: 7.2px 12px;
 }
 
 #requirementsPanel #input_textarea {
@@ -177,6 +166,7 @@ ul {
   height: 700px;
   resize: none;
   display: block;
+  margin-left: 20px;
 }
 
 #devicerequirementsPanel #devicerequirementstext {
@@ -238,6 +228,7 @@ ul {
   height: 700px;
   resize: none;
   display: block;
+  margin-left: 20px;
 }
 
 #problemdiagramPanel #content {
@@ -267,6 +258,7 @@ ul {
   border: 1px solid #000;
   height: 680px;
   display: block;
+  margin-left: 20px;
 }
 
 #systembehavioursPanel #sbSCDPanel {
@@ -297,6 +289,7 @@ ul {
   width: 98%;
   height: 680px;
   display: block;
+  margin-left: 20px;
 }
 
 .upload {
@@ -313,7 +306,7 @@ ul {
 }
 
 .button {
-  margin-left: 10px;
+  margin-left: 20px;
   margin-top: 10px;
   padding: 1px 6px;
   color: rgb(12, 11, 11);
