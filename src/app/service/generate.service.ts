@@ -55,6 +55,12 @@ export class GenerateService {
     return this.httpClient.get<any>(url);
   }  
 
+  getResourceUsed(requirementTexts:string, ontologyPath:string, index) : Observable<any>{
+    var url = this.serviceUrl + 'getResourceUsed?requirementTexts=' + requirementTexts + '&ontologyPath=' + ontologyPath + '&index=' + index
+    url = decodeURIComponent(url);
+    return this.httpClient.get<any>(url);
+  }  
+
   solve(triggerLists: Array<Array<string>>, actionLists: Array<Array<string>>, times:Array<string>, expectations: Array<string>) : Observable<any>{
     var url = this.serviceUrl + 'solve';
     const body = JSON.stringify({

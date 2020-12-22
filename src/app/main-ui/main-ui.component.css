@@ -1,15 +1,19 @@
 .topbar {
   border-radius: 0;
   align-items: stretch;
-  display: flex;
   width: 98%;
   background-color: #1874cd;
   position: relative;
-  font-size: 2rem;
+  font-size: 3rem;
   font-weight: 400;
-  min-height: 4rem;
+  min-height: 6rem;
   color: white;
   margin-left: 20px;
+}
+
+.topbar .name{
+  padding-top: 25px;
+  margin-left: 25px;
 }
 
 .tab {
@@ -20,6 +24,18 @@
   z-index: 3;
   overflow: visible;
   margin-left: 20px;
+  margin-bottom: 15px;
+}
+
+.drTab {
+  position: relative;
+  height: 20px;
+  width: 100%;
+  background: white;
+  z-index: 3;
+  overflow: visible;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 .tab #devicerequirements {
@@ -66,7 +82,7 @@ ul {
   border-radius: 4px;
   overflow: hidden;
   z-index: 1;
-  font-size: 16px;
+  font-size: 20px;
 }
 
 #tablabel li:hover {
@@ -78,36 +94,17 @@ ul {
   background-color: #36648B;
 }
 
-#tablabel details {
-  position: relative;
-  height: 4%;
-  padding: 0 12px 0 12px;
-  text-align: center;
-  list-style-type: none;
-  float: left;
-  display: block;
-
-  list-style-type: none;
-  cursor: pointer;
-  color: white;
-  background: #62a0cc;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  overflow: hidden;
-  z-index: 1;
-  font-size: 12px;
-}
-
 #requirementsPanel {
   position: relative;
   width: 98%;
-  height: 700px;
+  height: 740px;
   resize: none;
   display: block;
   margin-left: 20px;
 }
 
 #requirementsPanel #templates {
+  height: 725px;
   display: block;
   border: 1px solid #000;
   border-radius: 5px;
@@ -120,10 +117,17 @@ ul {
   margin: 7.2px 12px;
 }
 
+#requirementsPanel #templates .title {
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 5px;
+  color: #36648B;
+}
+
 #requirementsPanel #input_textarea {
   position: relative;
   margin-left: 20px;
-  height: 450px;
+  height: 480px;
   resize: none;
   display: block;
   border: 1px solid #000;
@@ -134,7 +138,7 @@ ul {
   position: relative;
   margin-top: 2px;
   margin-left: 20px;
-  height: 210px;
+  height: 220px;
   resize: none;
   display: block;
   border: 1px solid #000;
@@ -145,7 +149,7 @@ ul {
   position: relative;
   margin-top: 2px;
   margin-left: 20px;
-  height: 680px;
+  height: 725px;
   display: block;
   border: 1px solid #000;
   border-radius: 5px;
@@ -163,19 +167,10 @@ ul {
 #devicerequirementsPanel {
   position: relative;
   width: 98%;
-  height: 700px;
+  height: 740px;
   resize: none;
   display: block;
   margin-left: 20px;
-}
-
-#devicerequirementsPanel #devicerequirementstext {
-  position: relative;
-  overflow: auto;
-  border: 1px solid #000;
-  height: 430px;
-  display: block;
-  z-index: 3;
 }
 
 #devicerequirementsPanel #device_textarea {
@@ -189,27 +184,46 @@ ul {
 
 #devicerequirementsPanel #solvableErrorsPanel {
   position: relative;
-  height: 230px;
+  height: 250px;
   border: 1px solid #000;
   border-radius: 5px;
   overflow: auto;
   display: none;
+  white-space: pre-line;
+  font-size: 18px;
 }
 
 #devicerequirementsPanel #unsolvableErrorsPanel {
   position: relative;
-  height: 230px;
+  height: 250px;
   border: 1px solid #000;
   border-radius: 5px;
   overflow: auto;
   display: none;
+  white-space: pre-line;
+  font-size: 18px;
+}
+
+#devicerequirementsPanel #resourcePanel {
+  position: relative;
+  height: 250px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  overflow: auto;
+  display: none;
+  font-size: 18px;
+}
+
+.liClass{
+  margin-left: 20px;
+  list-style: none;
 }
 
 #devicerequirementsPanel #drSCDPanel {
   position: relative;
   margin-left: 20px;
   border: 1px solid #000;
-  height: 680px;
+  height: 730px;
   display: block;
 }
 
@@ -225,7 +239,7 @@ ul {
 #problemdiagramPanel {
   position: relative;
   width: 98%;
-  height: 700px;
+  height: 740px;
   resize: none;
   display: block;
   margin-left: 20px;
@@ -233,7 +247,7 @@ ul {
 
 #problemdiagramPanel #content {
   position: relative;
-  height: 680px;
+  height: 720px;
   display: block;
   overflow: auto;
 }
@@ -241,7 +255,7 @@ ul {
 #problemdiagramPanel #informationPanel {
   position: relative;
   overflow: auto;
-  height: 680px;
+  height: 720px;
   display: block;
 }
 
@@ -256,40 +270,38 @@ ul {
   position: relative;
   overflow: auto;
   border: 1px solid #000;
-  height: 680px;
+  height: 720px;
   display: block;
   margin-left: 20px;
+  font-size: 18px;
 }
 
 #systembehavioursPanel #sbSCDPanel {
   position: relative;
   margin-left: 20px;
   border: 1px solid #000;
-  height: 680px;
+  height: 720px;
   display: block;
   width: 94%;
 }
 
 #systembehavioursPanel #sbSCDPanel #sbcontent {
   position: relative;
-  /* height: 85%; */
   display: block;
-  /* overflow: auto; */
   width: auto;
   height: auto;
   max-width: 100%;
   max-height: 100%;
 }
 
-#instructionsPanel {
+#instructionsPanel #deviceinstructiontext {
   position: relative;
   overflow: auto;
   border: 1px solid #000;
-  border-radius: 5px;
-  width: 98%;
-  height: 680px;
+  height: 720px;
   display: block;
   margin-left: 20px;
+  font-size: 18px;
 }
 
 .upload {
@@ -307,14 +319,14 @@ ul {
 
 .button {
   margin-left: 20px;
-  margin-top: 10px;
+  margin-top: 30px;
   padding: 1px 6px;
   color: rgb(12, 11, 11);
   background: #e0e2e4;
   border: 1px solid #ddd;
   cursor: pointer;
   float: left;
-  font-size: 15px;
+  font-size: 20px;
   z-index: 5;
 }
 
@@ -329,15 +341,17 @@ ul {
 .introduction {
   color: #36648B;
   margin-left: 20px;
+  font-size: 20px;
 }
 
 .introduction_not_margin_left {
   color: #36648B;
+  font-size: 20px;
 }
 
 .detail {
   position: relative;
-  margin-top: 10px;
+  margin-top: 30px;
   margin-left: 10px;
   padding: 1px 6px;
   display: block;
@@ -354,7 +368,7 @@ ul {
 .detail summary {
   text-align: center;
   font-family: Arial;
-  font-size: 15px;
+  font-size: 20px;
 }
 
 .detail summary:hover {

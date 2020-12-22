@@ -19,10 +19,10 @@
 
   <div id="requirementsPanel" class="pure-g">
     <div class="pure-u-1-5">
-      <b id="template_introduction" class="introduction_not_margin_left">Templates And Examples:</b>
+      <b id="template_introduction" class="introduction_not_margin_left">Templates and examples:</b>
       <div id="templates">
         <ul>
-          <li style="text-align : center"><b>Templates</b></li>
+          <li class="title"><b>Templates</b></li>
           <li><b>'ALWAYS' Requirements：</b></li>
           <li>state <b class="highlight">SHOULD ALWAYS BE ACTIVE</b></li>
           <li>attribute <b class="highlight">SHOULD ALWAYS BE ABOVE/BELOW</b> value</li>
@@ -45,7 +45,8 @@
           <li><b class="highlight">IF</b> trigger <b class="highlight">(FOR TIME)</b> <b class="highlight">THEN</b>
             effect
           </li>
-          <li style="text-align : center"><b>Examples</b></li>
+          <li><br></li>
+          <li class="title"><b>Examples</b></li>
           <li>Ac.coldOn <b class="highlight">SHOULD ALWAYS BE ACTIVE</b></li>
           <li>Air.temperature <b class="highlight">SHOULD ALWAYS BE ABOVE</b> 0</li>
           <li>Ac.turnoncold <b class="highlight">SHOULD NEVER HAPPEN</b></li>
@@ -63,16 +64,15 @@
       </div>
     </div>
     <div class="pure-u-2-5">
-      <b id="input_introduction" class="introduction">Please Enter The Requirements:</b>
+      <b id="input_introduction" class="introduction">Please enter the requirements:</b>
       <ngx-monaco-editor id="input_textarea" class="input" [options]="editorOptions" [(ngModel)]="requirementTexts"
         (onInit)="monacoOnInit($event)"></ngx-monaco-editor>
-      <b id="complemented_introduction" class="introduction">Here Are The Requirements Complemented, Please Modify Them
-        If Necessary:</b>
+      <b id="complemented_introduction" class="introduction">Requirements completion</b>
       <ngx-monaco-editor id="complemented_textarea" class="complemented" [options]="editorOptions"
         [(ngModel)]="complementedRequirements" (onInit)="monacoOnInit($event)"></ngx-monaco-editor>
     </div>
     <div class="pure-u-2-5">
-      <b id="scenario_introduction" class="introduction">Service Requirement Scenario Diagram:</b>
+      <b id="scenario_introduction" class="introduction">Service requirement scenario diagram:</b>
       <div id="srSCDPanel">
         <div *ngIf="srImgLoadingFlag; else srDiplay" class="lds-default srLoading"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
         <ng-template #srDiplay>
@@ -86,7 +86,7 @@
 
   <div id="devicerequirementsPanel" class="pure-g">
     <div class="pure-u-1-2">
-      <b id="devicerequirementstext_introduction" class="introduction_not_margin_left">Device Related Requirements:</b>
+      <b id="devicerequirementstext_introduction" class="introduction_not_margin_left">Device related requirements:</b>
       <!-- <div id="devicerequirementstext">
         <ul *ngFor="let functionalRequirement of functionalRequirements">
           <li>{{functionalRequirement}}</li>
@@ -94,27 +94,33 @@
       </div> -->
       <ngx-monaco-editor id="device_textarea" class="input" [options]="editorOptions" [(ngModel)]="functionalRequirements"
         (onInit)="monacoOnInit($event)"></ngx-monaco-editor>
-      <div class="tab">
+      <div class="drTab">
         <ul id="tablabel">
-          <li id="solvableErrorsTab" (click)="change_Error_Menu('solvable')">Solvable Errors</li>
-          <li id="unsolvableErrorsTab" (click)="change_Error_Menu('unsolvable')">Unsolvable Errors</li>
+          <li id="solvableErrorsTab" (click)="change_Error_Menu('solvable')">Resolvable errors</li>
+          <li id="unsolvableErrorsTab" (click)="change_Error_Menu('unsolvable')">Unresolvable errors</li>
+          <!-- <li id="resourceTab" (click)="change_Error_Menu('resource')">Resources used</li> -->
         </ul>
       </div>
       <div id="solvableErrorsPanel" class="errorsPanel">
         <ul *ngFor="let error of solvableErrors">
-          <li>{{error}}</li>
+          <li class="liClass">{{error}}</li>
         </ul>
-        <button id="solveButton" class="button" (click)="solve()">Solve</button>
+        <button id="solveButton" class="button" (click)="solve()">Resolve</button>
       </div>
       <div id="unsolvableErrorsPanel" class="errorsPanel">
         <ul *ngFor="let error of unsolvableErrors">
-          <li>{{error}}</li>
+          <li class="liClass">{{error}}</li>
         </ul>
       </div>
+      <!-- <div id="resourcePanel" class="resourcePanel">
+        <ul *ngFor="let resource of resources">
+          <li>{{resource}}</li>
+        </ul>
+      </div> -->
     </div>
 
     <div class="pure-u-1-2">
-      <b class="introduction">Device Requirement Scenario Diagram:</b>
+      <b class="introduction">Device requirement scenario diagram:</b>
       
       <div id="drSCDPanel">
         <div *ngIf="drImgLoadingFlag; else drDiplay" class="lds-default drLoading"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
@@ -129,17 +135,16 @@
 
   <div id="problemdiagramPanel" class="pure-g">
     <div class="pure-u-4-5">
-      <b class="introduction_not_margin_left">Problem Diagram:</b>
       <div id="content"></div>
     </div>
 
     <div class="pure-u-1-5">
-      <b class="introduction_not_margin_left">Information Panel:</b>
+      <b class="introduction_not_margin_left">Information panel:</b>
       <div class="informationPanel" id="informationPanel">
         <ul>
-          <li *ngIf="!open2;else elseOpen2" (click)="setOpen2()" class="title">&nbsp;+ All Phenomena</li>
+          <li *ngIf="!open2;else elseOpen2" (click)="setOpen2()" class="title">&nbsp;+ All phenomena</li>
           <ng-template #elseOpen2>
-            <li (click)="setOpen2()" class="title">&nbsp;- All Phenomena</li>
+            <li (click)="setOpen2()" class="title">&nbsp;- All phenomena</li>
             <div class="content">
               <table *ngIf="open2" class="content">
                 <tr>
@@ -159,9 +164,9 @@
               </table>
             </div>
           </ng-template>
-          <li *ngIf="!open4;else elseOpen4" (click)="setOpen4()" class="title">&nbsp;+ Reference Phenomena</li>
+          <li *ngIf="!open4;else elseOpen4" (click)="setOpen4()" class="title">&nbsp;+ Reference phenomena</li>
           <ng-template #elseOpen4>
-            <li (click)="setOpen4()" class="title">&nbsp;- Reference Phenomena</li>
+            <li (click)="setOpen4()" class="title">&nbsp;- Reference phenomena</li>
             <div class="content">
               <table *ngIf="open4" class="content">
                 <tr>
@@ -184,9 +189,9 @@
               </table>
             </div>
           </ng-template>
-          <li *ngIf="!open5;else elseOpen5" (click)="setOpen5()" class="title">&nbsp;+ PD Information</li>
+          <li *ngIf="!open5;else elseOpen5" (click)="setOpen5()" class="title">&nbsp;+ PD information</li>
           <ng-template #elseOpen5>
-            <li (click)="setOpen5()" class="title">&nbsp;- PD Information</li>
+            <li (click)="setOpen5()" class="title">&nbsp;- PD information</li>
             <div class="content">
               <table *ngIf="open5" class="content">Information</table>
             </div>
@@ -198,16 +203,16 @@
 
   <div id="systembehavioursPanel" class="pure-g">
     <div class="pure-u-1-2">
-      <b class="introduction">System Behaviours:</b>
+      <b class="introduction">System behaviours:</b>
       <div id="systembehaviourstext">
         <ul *ngFor="let rule of rules">
-          <li>{{rule}}</li>
+          <li class="liClass">{{rule}}</li>
         </ul>
       </div>
     </div>
 
     <div class="pure-u-1-2">
-      <b class="introduction">System Behaviour Scenario Diagram:</b>
+      <b class="introduction">System behaviour scenario diagram:</b>
       <div id="sbSCDPanel">
         <div *ngIf="sbImgLoadingFlag; else sbDiplay" class="lds-default sbLoading"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
         <ng-template #sbDiplay>
@@ -220,16 +225,19 @@
   </div>
 
   <div id="instructionsPanel">
-    <b class="introduction_not_margin_left">Device Scheduling Instructions:</b>
-    <div class="divcontent" style="white-space:pre-wrap; height:20px" *ngFor="let instruction of instructions">
-      {{instruction}} </div>
+    <b class="introduction">Device instructions:</b>
+    <div id="deviceinstructiontext">
+      <ul *ngFor="let instruction of instructions">
+        <li class="liClass">{{instruction}}</li>
+      </ul>
+    </div>
   </div>
 
   <button class="upload button">UploadOntology
     <input class="change" type="file" multiple="multiple" (change)="selectedFileOnChanged($event)" />
   </button>
   <button class="button" (click)="displayChooseScenarioPanel()">ChooseScenario</button>
-  <button class="button" (click)="complementRequirements()">ComplementRequirements</button>
+  <button class="button" (click)="complementRequirements()">CompleteRequirements</button>
   <button class="button" (click)="displayPlaningPanel()">GenerateDeviceRequirements</button>
   <!-- <button class="button" (click)="checkErrors()">CheckErrors</button> -->
   <!-- <button class="button" (click)="generateScenarioDiagrams()">DisplayPlanning</button> -->

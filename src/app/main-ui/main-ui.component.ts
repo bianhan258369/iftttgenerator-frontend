@@ -24,15 +24,16 @@ export class MainUIComponent implements OnInit {
 	srImgURL: string;
 	drImgURL: string;
 	sbImgURL: string;
-	srImgLoadingFlag : boolean;
-	drImgLoadingFlag : boolean;
-	sbImgLoadingFlag : boolean;
+	srImgLoadingFlag: boolean;
+	drImgLoadingFlag: boolean;
+	sbImgLoadingFlag: boolean;
 	requirementTexts: string;
 	complementedRequirements: string;
 	reverseRequirements: string;
 	functionalRequirements: string;
 	solvableErrors: Array<string>;
 	unsolvableErrors: Array<string>;
+	resources: Array<string>;
 	ruleErrorFlag: boolean;
 	formalismErrorFlag: boolean;
 	problemDiagramFlag: boolean;
@@ -53,7 +54,7 @@ export class MainUIComponent implements OnInit {
 	drSCDPath: string;
 	sbSCDPath: string;
 	languageId = "req";
-	editorOptions = { theme: "reqTheme", language: "req", minimap: { enabled: false }, automaticLayout: true };
+	editorOptions = { theme: "reqTheme", language: "req", minimap: { enabled: false }, automaticLayout: true, fontSize:"15px" };
 	// editorOptions = { theme: "reqTheme", language: "req", minimap: { enabled: false },showUnused: false};
 	editor;
 
@@ -64,6 +65,7 @@ export class MainUIComponent implements OnInit {
 		this.rules = new Array<string>();
 		this.solvableErrors = new Array<string>();
 		this.unsolvableErrors = new Array<string>();
+		this.resources = new Array<string>();
 		this.rects = new Array<Rect>();
 		this.ovals = new Array<Oval>();
 		this.lines = new Array<Line>();
@@ -428,15 +430,27 @@ export class MainUIComponent implements OnInit {
 		if (tab == 'solvable') {
 			document.getElementById('solvableErrorsPanel').style.display = 'block';
 			document.getElementById('unsolvableErrorsPanel').style.display = 'none';
+			// document.getElementById('resourcePanel').style.display = 'none';
 			document.getElementById('solvableErrorsTab').style.background = '#166dac'
 			document.getElementById('unsolvableErrorsTab').style.background = '#62a0cc'
+			// document.getElementById('resourceTab').style.background = '#62a0cc'
 		}
 		else if (tab == 'unsolvable') {
 			document.getElementById('solvableErrorsPanel').style.display = 'none';
 			document.getElementById('unsolvableErrorsPanel').style.display = 'block';
+			// document.getElementById('resourcePanel').style.display = 'none';
 			document.getElementById('unsolvableErrorsTab').style.background = '#166dac'
 			document.getElementById('solvableErrorsTab').style.background = '#62a0cc'
+			// document.getElementById('resourceTab').style.background = '#62a0cc'
 		}
+		// else if (tab == 'resource') {
+		// 	document.getElementById('solvableErrorsPanel').style.display = 'none';
+		// 	document.getElementById('unsolvableErrorsPanel').style.display = 'none';
+		// 	document.getElementById('resourcePanel').style.display = 'block';
+		// 	document.getElementById('unsolvableErrorsTab').style.background = '#62a0cc'
+		// 	document.getElementById('solvableErrorsTab').style.background = '#62a0cc'
+		// 	document.getElementById('resourceTab').style.background = '#166dac'
+		// }
 	}
 
 	chooseScenario() {
@@ -550,6 +564,21 @@ export class MainUIComponent implements OnInit {
 				})
 			})
 		})
+
+		// var allRequirements: string = ''
+		// for (var i = 0; i < requirements.split('\n').length; i++) {
+		// 	var requirement: string = requirements.split('\n')[i];
+		// 	if (requirement.trim() !== '') {
+		// 		allRequirements = allRequirements + requirement;
+		// 		if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
+		// 	}
+		// }
+		// this.generateService.getResourceUsed(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
+		// 	this.resources.length = 0;
+		// 	this.resources.push("power : " + result.power + "W");
+		// 	this.resources.push("cooler : " + result.cooler);
+		// 	this.resources.push("heater : " + result.heater);
+		// })
 	}
 
 	checkErrors() {
@@ -563,7 +592,7 @@ export class MainUIComponent implements OnInit {
 	}
 
 	solve() {
-		if (this.solvableErrors.length == 1 && this.solvableErrors[0] == "No Solvable Errors") alert("No Solvable Errors To Be Solved!")
+		if (this.solvableErrors.length == 1 && this.solvableErrors[0] == "No Resolvable Errors") alert("No Resolvable Errors To Be Solved!")
 		else {
 			var triggerLists: Array<Array<string>>
 			var actionLists: Array<Array<string>>
@@ -581,8 +610,8 @@ export class MainUIComponent implements OnInit {
 				expectations.push(ifThenRequirement.expectation)
 			}
 			this.generateService.solve(triggerLists, actionLists, times, expectations).subscribe(result => {
-				if (result.solved == null) {
-					alert("Cannot Be Sloved!")
+				if (result == null) {
+					alert("Cannot Be Resloved!")
 				}
 				else {
 					this.drImgLoadingFlag = true;
@@ -594,7 +623,7 @@ export class MainUIComponent implements OnInit {
 					}
 					this.functionalRequirements = tempFunctionalRequiremts;
 					this.solvableErrors.length = 0
-					this.solvableErrors.push("No Solvable Errors")
+					this.solvableErrors.push("No Resolvable Errors")
 
 					triggerLists = new Array<Array<string>>()
 					actionLists = new Array<Array<string>>()
@@ -818,6 +847,7 @@ export class MainUIComponent implements OnInit {
 
 	showDrSCD() {
 		var path = this.drSCDPath.trim();
+		console.log(path)
 		var time = (new Date()).getTime();
 		var url = `http://localhost:8081/api/display?fileName=${path.trim()}&time=${time}`;
 		// var url = `http://47.52.116.116:8081/api/display?fileName=${path.trim()}&time=${time}`;
