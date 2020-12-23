@@ -430,27 +430,27 @@ export class MainUIComponent implements OnInit {
 		if (tab == 'solvable') {
 			document.getElementById('solvableErrorsPanel').style.display = 'block';
 			document.getElementById('unsolvableErrorsPanel').style.display = 'none';
-			// document.getElementById('resourcePanel').style.display = 'none';
+			document.getElementById('resourcePanel').style.display = 'none';
 			document.getElementById('solvableErrorsTab').style.background = '#166dac'
 			document.getElementById('unsolvableErrorsTab').style.background = '#62a0cc'
-			// document.getElementById('resourceTab').style.background = '#62a0cc'
+			document.getElementById('resourceTab').style.background = '#62a0cc'
 		}
 		else if (tab == 'unsolvable') {
 			document.getElementById('solvableErrorsPanel').style.display = 'none';
 			document.getElementById('unsolvableErrorsPanel').style.display = 'block';
-			// document.getElementById('resourcePanel').style.display = 'none';
+			document.getElementById('resourcePanel').style.display = 'none';
 			document.getElementById('unsolvableErrorsTab').style.background = '#166dac'
 			document.getElementById('solvableErrorsTab').style.background = '#62a0cc'
-			// document.getElementById('resourceTab').style.background = '#62a0cc'
+			document.getElementById('resourceTab').style.background = '#62a0cc'
 		}
-		// else if (tab == 'resource') {
-		// 	document.getElementById('solvableErrorsPanel').style.display = 'none';
-		// 	document.getElementById('unsolvableErrorsPanel').style.display = 'none';
-		// 	document.getElementById('resourcePanel').style.display = 'block';
-		// 	document.getElementById('unsolvableErrorsTab').style.background = '#62a0cc'
-		// 	document.getElementById('solvableErrorsTab').style.background = '#62a0cc'
-		// 	document.getElementById('resourceTab').style.background = '#166dac'
-		// }
+		else if (tab == 'resource') {
+			document.getElementById('solvableErrorsPanel').style.display = 'none';
+			document.getElementById('unsolvableErrorsPanel').style.display = 'none';
+			document.getElementById('resourcePanel').style.display = 'block';
+			document.getElementById('unsolvableErrorsTab').style.background = '#62a0cc'
+			document.getElementById('solvableErrorsTab').style.background = '#62a0cc'
+			document.getElementById('resourceTab').style.background = '#166dac'
+		}
 	}
 
 	chooseScenario() {
@@ -565,20 +565,20 @@ export class MainUIComponent implements OnInit {
 			})
 		})
 
-		// var allRequirements: string = ''
-		// for (var i = 0; i < requirements.split('\n').length; i++) {
-		// 	var requirement: string = requirements.split('\n')[i];
-		// 	if (requirement.trim() !== '') {
-		// 		allRequirements = allRequirements + requirement;
-		// 		if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
-		// 	}
-		// }
-		// this.generateService.getResourceUsed(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
-		// 	this.resources.length = 0;
-		// 	this.resources.push("power : " + result.power + "W");
-		// 	this.resources.push("cooler : " + result.cooler);
-		// 	this.resources.push("heater : " + result.heater);
-		// })
+		var allRequirements: string = ''
+		for (var i = 0; i < requirements.split('\n').length; i++) {
+			var requirement: string = requirements.split('\n')[i];
+			if (requirement.trim() !== '') {
+				allRequirements = allRequirements + requirement;
+				if (i !== requirements.split('\n').length - 1) allRequirements = allRequirements + '//'
+			}
+		}
+		this.generateService.getResourceUsed(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
+			this.resources.length = 0;
+			this.resources.push("power : " + result.power + "W");
+			this.resources.push("cooler : " + result.cooler);
+			this.resources.push("heater : " + result.heater);
+		})
 	}
 
 	checkErrors() {

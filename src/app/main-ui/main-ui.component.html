@@ -87,18 +87,13 @@
   <div id="devicerequirementsPanel" class="pure-g">
     <div class="pure-u-1-2">
       <b id="devicerequirementstext_introduction" class="introduction_not_margin_left">Device related requirements:</b>
-      <!-- <div id="devicerequirementstext">
-        <ul *ngFor="let functionalRequirement of functionalRequirements">
-          <li>{{functionalRequirement}}</li>
-        </ul>
-      </div> -->
       <ngx-monaco-editor id="device_textarea" class="input" [options]="editorOptions" [(ngModel)]="functionalRequirements"
         (onInit)="monacoOnInit($event)"></ngx-monaco-editor>
       <div class="drTab">
         <ul id="tablabel">
           <li id="solvableErrorsTab" (click)="change_Error_Menu('solvable')">Resolvable errors</li>
           <li id="unsolvableErrorsTab" (click)="change_Error_Menu('unsolvable')">Unresolvable errors</li>
-          <!-- <li id="resourceTab" (click)="change_Error_Menu('resource')">Resources used</li> -->
+          <li id="resourceTab" (click)="change_Error_Menu('resource')">Resources used</li>
         </ul>
       </div>
       <div id="solvableErrorsPanel" class="errorsPanel">
@@ -112,11 +107,11 @@
           <li class="liClass">{{error}}</li>
         </ul>
       </div>
-      <!-- <div id="resourcePanel" class="resourcePanel">
+      <div id="resourcePanel" class="resourcePanel">
         <ul *ngFor="let resource of resources">
           <li>{{resource}}</li>
         </ul>
-      </div> -->
+      </div>
     </div>
 
     <div class="pure-u-1-2">
