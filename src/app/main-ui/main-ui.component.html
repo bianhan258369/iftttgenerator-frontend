@@ -47,17 +47,17 @@
           </li>
           <li><br></li>
           <li class="title"><b>Examples</b></li>
-          <li>Ac.coldOn <b class="highlight">SHOULD ALWAYS BE ACTIVE</b></li>
-          <li>Air.temperature <b class="highlight">SHOULD ALWAYS BE ABOVE</b> 0</li>
-          <li>Ac.turnoncold <b class="highlight">SHOULD NEVER HAPPEN</b></li>
-          <li>Air.temperature <b class="highlight">SHOULD NEVER BE BELOW</b> 0</li>
-          <li>[Ac.coldOn,Window.wopen,...] <b class="highlight">SHOULD NEVER OCCUR TOGETHER</b></li>
-          <li><b class="highlight">PREFERRED</b> Air.temperature <b class="highlight">IS</b> 25</li>
-          <li><b class="highlight">IF</b> Air.temperature>30 <b class="highlight">(FOR 10m)</b> <b
-              class="highlight">THEN</b> Ac.turnoncold</li>
-          <li><b class="highlight">IF</b> Air.temperature>30 <b class="highlight">(FOR 10m)</b> <b
-              class="highlight">THEN</b> Ac.coldOn</li>
-          <li><b class="highlight">IF</b> Air.humidity>30 <b class="highlight">(FOR 10m)</b> <b
+          <li>ac.coldon <b class="highlight">SHOULD ALWAYS BE ACTIVE</b></li>
+          <li>air.temperature <b class="highlight">SHOULD ALWAYS BE ABOVE</b> 0</li>
+          <li>ac.turnoncold <b class="highlight">SHOULD NEVER HAPPEN</b></li>
+          <li>air.temperature <b class="highlight">SHOULD NEVER BE BELOW</b> 0</li>
+          <li>[ac.coldon,window.wopen,...] <b class="highlight">SHOULD NEVER OCCUR TOGETHER</b></li>
+          <li><b class="highlight">PREFERRED</b> air.temperature <b class="highlight">IS</b> 25</li>
+          <li><b class="highlight">IF</b> air.temperature>30 <b class="highlight">(FOR 10m)</b> <b
+              class="highlight">THEN</b> ac.turnoncold</li>
+          <li><b class="highlight">IF</b> air.temperature>30 <b class="highlight">(FOR 10m)</b> <b
+              class="highlight">THEN</b> ac.coldon</li>
+          <li><b class="highlight">IF</b> air.humidity>30 <b class="highlight">(FOR 10m)</b> <b
               class="highlight">THEN</b>
             allow ventilating the room</li>
         </ul>
