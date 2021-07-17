@@ -109,7 +109,7 @@ ul {
   border: 1px solid #000;
   border-radius: 5px;
   display: block;
-  font-size: 14px;
+  font-size: 10px;
 }
 
 #requirementsPanel #templates ul li {
@@ -175,7 +175,7 @@ ul {
 
 #devicerequirementsPanel #device_textarea {
   position: relative;
-  height: 430px;
+  height: 700px;
   resize: none;
   display: block;
   border: 1px solid #000;
@@ -418,6 +418,27 @@ ul {
   background-color: white;
   display: none;
 }
+
+#designateAreas {
+  position: absolute;
+  width: 600px;
+  height: 350px;
+  top: 35%;
+  left: 45%;
+  border: 1px solid #000;
+  border-radius: 5px;
+  z-index: 5;
+  background-color: white;
+  overflow:scroll;
+  display: none;
+}
+
+#designateAreas #designateIntroduction{
+  text-align:center;
+  font-size: larger;
+  font-weight: bold;
+}
+
 
 /* loader */
 .lds-default {

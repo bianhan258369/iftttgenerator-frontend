@@ -10,6 +10,7 @@ import { Phenomenon } from '../entity/Phenomenon';
 import { PFService } from '../service/pf.service';
 import { SimulationService } from '../service/simulation.service';
 import { IfThenRequirement } from '../entity/IfThenRequirement';
+import { HaService } from '../service/ha.service';
 
 
 @Component({
@@ -31,6 +32,7 @@ export class MainUIComponent implements OnInit {
 	complementedRequirements: string;
 	reverseRequirements: string;
 	functionalRequirements: string;
+	originalFunctionalRequirements: string
 	solvableErrors: Array<string>;
 	unsolvableErrors: Array<string>;
 	resources: Array<string>;
@@ -53,12 +55,13 @@ export class MainUIComponent implements OnInit {
 	srSCDPath: string;
 	drSCDPath: string;
 	sbSCDPath: string;
+	entityIds: Array<string>;
 	languageId = "req";
 	editorOptions = { theme: "reqTheme", language: "req", minimap: { enabled: false }, automaticLayout: true, fontSize:"15px" };
 	// editorOptions = { theme: "reqTheme", language: "req", minimap: { enabled: false },showUnused: false};
 	editor;
 
-	constructor(private generateService: GenerateService, private uploadService: UploadService, private pfService: PFService, private simulationService: SimulationService) { }
+	constructor(private generateService: GenerateService, private uploadService: UploadService, private pfService: PFService, private simulationService: SimulationService, private haService: HaService) { }
 
 	ngOnInit() {
 		this.tabs = new Array<string>("requirements", "devicerequirements", "problemdiagram", "systembehaviours", "instructions")
@@ -78,6 +81,7 @@ export class MainUIComponent implements OnInit {
 		this.srImgLoadingFlag = false
 		this.drImgLoadingFlag = false
 		this.sbImgLoadingFlag = false
+		this.entityIds = new Array<string>()
 		this.initPaper();
 		this.change_Menu('requirements')
 	}
@@ -458,6 +462,10 @@ export class MainUIComponent implements OnInit {
 		this.generateService.chooseScenario(scenario.toString()).subscribe(result => {
 			this.ontologyFilePath = result.path
 			this.cancel()
+			this.haService.getEntityIds().subscribe(result => {
+				this.entityIds = result
+				this.displayDesignateAreasPanel()
+			})
 		})
 	}
 
@@ -529,6 +537,7 @@ export class MainUIComponent implements OnInit {
 			}
 			this.generateService.generateFunctionalRequirements(allRequirements, this.ontologyFilePath, this.index, tempComplementedRequirements).subscribe(result2 => {
 				// this.functionalRequirements = result2.functionalRequirements.concat(this.complementedRequirements.split("\n"));
+				this.originalFunctionalRequirements = result2.functionalRequirementsWithAreas.join('\n')
 				this.functionalRequirements = result2.functionalRequirements.join('\n') + "\n" + this.complementedRequirements;
 				this.ifThenRequirements = result2.ifThenRequirements;
 				var triggerLists: Array<Array<string>>
@@ -548,20 +557,20 @@ export class MainUIComponent implements OnInit {
 				}
 				this.change_Menu("devicerequirements")
 				this.drImgLoadingFlag = true;
-				var allRequirements = this.functionalRequirements.split('\n').join("//")
-				this.solvableErrors.length = 0
-				this.unsolvableErrors.length = 0
-				this.generateService.check(allRequirements, this.ontologyFilePath, this.index).subscribe(result3 => {
-					this.solvableErrors = result3.solvableErrors
-					this.unsolvableErrors = result3.unsolvableErrors
-					this.change_Error_Menu('solvable');
-					this.pfService.getDrSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath).subscribe(result4 => {
-						this.drSCDPath = result4.drPath;
-						this.drImgLoadingFlag = false;
-						this.showDrSCD()
-						this.closeDetails();
-					})
+				// var allRequirements = this.functionalRequirements.split('\n').join("//")
+				// this.solvableErrors.length = 0
+				// this.unsolvableErrors.length = 0
+				// this.generateService.check(allRequirements, this.ontologyFilePath, this.index).subscribe(result3 => {
+				// 	this.solvableErrors = result3.solvableErrors
+				// 	this.unsolvableErrors = result3.unsolvableErrors
+				// 	this.change_Error_Menu('solvable');
+				this.pfService.getDrSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath).subscribe(result4 => {
+					this.drSCDPath = result4.drPath;
+					this.drImgLoadingFlag = false;
+					this.showDrSCD()
+					this.closeDetails();
 				})
+				// })
 			})
 		})
 
@@ -654,6 +663,10 @@ export class MainUIComponent implements OnInit {
 
 	displayChooseScenarioPanel() {
 		document.getElementById("chooseScenario").style.display = 'block';
+	}
+
+	displayDesignateAreasPanel() {
+		document.getElementById("designateAreas").style.display = 'block';
 	}
 
 	// problemDiagramDerivation() {
@@ -916,5 +929,40 @@ export class MainUIComponent implements OnInit {
 	cancel() {
 		document.getElementById("planing").style.display = 'none';
 		document.getElementById("chooseScenario").style.display = 'none';
+		document.getElementById("designateAreas").style.display = 'none';
 	}
+
+	getEntityIds(){
+		this.haService.getEntityIds().subscribe(result => {
+			this.entityIds = result
+		})
+	}
+
+	writePersonalDeviceTable(){
+		var entityAreas = "{"
+		for(var i = 0;i < this.entityIds.length;i++){
+			var entityId = this.entityIds[i]
+			var area_input = document.getElementById(entityId)
+			var area = $(area_input).val()
+			var json = "\"" + entityId + "\":\"" + area + "\""
+			entityAreas = entityAreas + json + ","
+		}
+		entityAreas = entityAreas.substr(0, entityAreas.length - 1) + "}"
+		this.haService.writePersonalDeviceTable(entityAreas).subscribe(result => {
+			this.cancel()
+		})
+	}
+
+
+	runHA(){
+		var allRequirements = this.originalFunctionalRequirements.split('\n').join("//")
+		alert('The automation is running! Please wait for seconds.')
+		this.haService.writeAutomations(allRequirements, this.ontologyFilePath, this.index).subscribe(result => {
+
+		})
+	}
+
+
+
+
 }

@@ -78,4 +78,6 @@ export class GenerateService {
     url = decodeURIComponent(url);
     return this.httpClient.get<any>(url);
   }  
+
+  
 }

@@ -89,14 +89,14 @@
       <b id="devicerequirementstext_introduction" class="introduction_not_margin_left">Device related requirements:</b>
       <ngx-monaco-editor id="device_textarea" class="input" [options]="editorOptions" [(ngModel)]="functionalRequirements"
         (onInit)="monacoOnInit($event)"></ngx-monaco-editor>
-      <div class="drTab">
+      <!-- <div class="drTab">
         <ul id="tablabel">
           <li id="solvableErrorsTab" (click)="change_Error_Menu('solvable')">Resolvable errors</li>
           <li id="unsolvableErrorsTab" (click)="change_Error_Menu('unsolvable')">Unresolvable errors</li>
           <li id="resourceTab" (click)="change_Error_Menu('resource')">Resources used</li>
         </ul>
-      </div>
-      <div id="solvableErrorsPanel" class="errorsPanel">
+      </div> -->
+      <!-- <div id="solvableErrorsPanel" class="errorsPanel">
         <ul *ngFor="let error of solvableErrors">
           <li class="liClass">{{error}}</li>
         </ul>
@@ -111,7 +111,7 @@
         <ul *ngFor="let resource of resources">
           <li>{{resource}}</li>
         </ul>
-      </div>
+      </div> -->
     </div>
 
     <div class="pure-u-1-2">
@@ -262,7 +262,9 @@
     <p (click)="generateDroolsRules()">Drools</p>
     <p (click)="generateOnenetRules()">Onenet</p>
   </details>
-  <button class="button" (click)="generateSimulation()">ShowSimulation</button>
+
+  <button class="button" (click)="runHA()">Run</button>
+  <!-- <button class="button" (click)="generateSimulation()">ShowSimulation</button> -->
 
   <div id="planing"> Please Choose Your Preference<br />
     <label><input checked="true" type="radio" name="planingRadio" value="Random">Random</label><br />
@@ -277,6 +279,20 @@
         value="SmartConferenceRoom">SmartConferenceRoom</label><br />
     <label><input type="radio" name="scenarioRadio" value="SmartHome">SmartHome</label><br />
     <button class="button" (click)="chooseScenario()">Confirm</button>
+    <button class="button" (click)="cancel()">Cancel</button>
+  </div>
+
+  <div id="designateAreas">
+    <div id="designateIntroduction">Please Designate The Areas of Devices</div>
+    <br/>
+    <div class="pure-u-3-5" id="designateIntroduction">Device</div>
+    <div class="pure-u-2-5" id="designateIntroduction">Area</div>
+    <br/>
+    <ul *ngFor="let entityId of entityIds">
+      <div class="pure-u-3-5" id="entityID">{{entityId}}</div>
+      <div class="pure-u-2-5"><input type="text" id={{entityId}} name={{entityId}}></div>
+    </ul>
+    <button class="button" (click)="writePersonalDeviceTable()">Confirm</button>
     <button class="button" (click)="cancel()">Cancel</button>
   </div>
   <!-- <button class="button" (click)="downloadOntology()">DownloadOntology</button> -->
