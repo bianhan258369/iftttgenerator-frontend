@@ -36,8 +36,8 @@ export class MainUIComponent implements OnInit {
 	solvableErrors: Array<string>;
 	unsolvableErrors: Array<string>;
 	resources: Array<string>;
-	ruleErrorFlag: boolean;
-	formalismErrorFlag: boolean;
+	// ruleErrorFlag: boolean;
+	// formalismErrorFlag: boolean;
 	problemDiagramFlag: boolean;
 	rules: Array<string>;
 	instructions: Array<string>;
@@ -149,7 +149,7 @@ export class MainUIComponent implements OnInit {
 		for (let i = 0; i < rects.length; i++) {
 			let rect = new joint.shapes.standard.Rectangle({
 				position: { x: rects[i].x1, y: rects[i].y1 },
-				size: { width: rects[i].x2 + 150, height: rects[i].y2 },
+				size: { width: rects[i].x2 + 100, height: rects[i].y2 },
 				attrs: { body: { stroke: '#000000', fill: 'none', strokeWidth: 1 }, label: { text: rects[i].text.replace("&#x000A", '\n'), fill: '#000000' } }
 			});
 			rectGraphList[i] = rect;
@@ -197,7 +197,7 @@ export class MainUIComponent implements OnInit {
 		for (let i = 0; i < ovals.length; i++) {
 			let oval = new joint.shapes.standard.Ellipse({
 				position: { x: ovals[i].x1, y: ovals[i].y1 },
-				size: { width: ovals[i].x2 + 150, height: ovals[i].y2 },
+				size: { width: ovals[i].x2 + 100, height: ovals[i].y2 },
 				attrs: { body: { fill: 'none', strokeWidth: 1, strokeDasharray: '10,5' }, label: { text: ovals[i].text, fill: '#000000' } }
 			});
 			ovalGraphList[i] = oval;
@@ -434,26 +434,18 @@ export class MainUIComponent implements OnInit {
 		if (tab == 'solvable') {
 			document.getElementById('solvableErrorsPanel').style.display = 'block';
 			document.getElementById('unsolvableErrorsPanel').style.display = 'none';
-			document.getElementById('resourcePanel').style.display = 'none';
+			// document.getElementById('resourcePanel').style.display = 'none';
 			document.getElementById('solvableErrorsTab').style.background = '#166dac'
 			document.getElementById('unsolvableErrorsTab').style.background = '#62a0cc'
-			document.getElementById('resourceTab').style.background = '#62a0cc'
+			// document.getElementById('resourceTab').style.background = '#62a0cc'
 		}
 		else if (tab == 'unsolvable') {
 			document.getElementById('solvableErrorsPanel').style.display = 'none';
 			document.getElementById('unsolvableErrorsPanel').style.display = 'block';
-			document.getElementById('resourcePanel').style.display = 'none';
+			// document.getElementById('resourcePanel').style.display = 'none';
 			document.getElementById('unsolvableErrorsTab').style.background = '#166dac'
 			document.getElementById('solvableErrorsTab').style.background = '#62a0cc'
-			document.getElementById('resourceTab').style.background = '#62a0cc'
-		}
-		else if (tab == 'resource') {
-			document.getElementById('solvableErrorsPanel').style.display = 'none';
-			document.getElementById('unsolvableErrorsPanel').style.display = 'none';
-			document.getElementById('resourcePanel').style.display = 'block';
-			document.getElementById('unsolvableErrorsTab').style.background = '#62a0cc'
-			document.getElementById('solvableErrorsTab').style.background = '#62a0cc'
-			document.getElementById('resourceTab').style.background = '#166dac'
+			// document.getElementById('resourceTab').style.background = '#62a0cc'
 		}
 	}
 
@@ -464,7 +456,7 @@ export class MainUIComponent implements OnInit {
 			this.cancel()
 			this.haService.getEntityIds().subscribe(result => {
 				this.entityIds = result
-				this.displayDesignateAreasPanel()
+				// this.displayDesignateAreasPanel()
 			})
 		})
 	}
@@ -536,6 +528,7 @@ export class MainUIComponent implements OnInit {
 				}
 			}
 			this.generateService.generateFunctionalRequirements(allRequirements, this.ontologyFilePath, this.index, tempComplementedRequirements).subscribe(result2 => {
+				console.log(result2)
 				// this.functionalRequirements = result2.functionalRequirements.concat(this.complementedRequirements.split("\n"));
 				this.originalFunctionalRequirements = result2.functionalRequirementsWithAreas.join('\n')
 				this.functionalRequirements = result2.functionalRequirements.join('\n') + "\n" + this.complementedRequirements;
@@ -569,6 +562,7 @@ export class MainUIComponent implements OnInit {
 					this.drImgLoadingFlag = false;
 					this.showDrSCD()
 					this.closeDetails();
+					this.change_Error_Menu('unsolvable');
 				})
 				// })
 			})
@@ -649,6 +643,7 @@ export class MainUIComponent implements OnInit {
 					this.pfService.getDrSCD(triggerLists, actionLists, times, expectations, this.ontologyFilePath).subscribe(result2 => {
 						this.drSCDPath = result2.drPath;
 						this.drImgLoadingFlag = false;
+						this.change_Menu('devicerequirements')
 						this.showDrSCD()
 						this.closeDetails();
 					})

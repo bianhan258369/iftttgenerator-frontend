@@ -27,7 +27,7 @@
   margin-bottom: 15px;
 }
 
-.drTab {
+.sbTab {
   position: relative;
   height: 20px;
   width: 100%;
@@ -127,7 +127,7 @@ ul {
 #requirementsPanel #input_textarea {
   position: relative;
   margin-left: 20px;
-  height: 480px;
+  height: 400px;
   resize: none;
   display: block;
   border: 1px solid #000;
@@ -138,7 +138,7 @@ ul {
   position: relative;
   margin-top: 2px;
   margin-left: 20px;
-  height: 220px;
+  height: 300px;
   resize: none;
   display: block;
   border: 1px solid #000;
@@ -175,48 +175,18 @@ ul {
 
 #devicerequirementsPanel #device_textarea {
   position: relative;
-  height: 700px;
+  height: 730px;
   resize: none;
   display: block;
   border: 1px solid #000;
   border-radius: 5px;
 }
 
-#devicerequirementsPanel #solvableErrorsPanel {
-  position: relative;
-  height: 250px;
-  border: 1px solid #000;
-  border-radius: 5px;
-  overflow: auto;
-  display: none;
-  white-space: pre-line;
-  font-size: 18px;
-}
-
-#devicerequirementsPanel #unsolvableErrorsPanel {
-  position: relative;
-  height: 250px;
-  border: 1px solid #000;
-  border-radius: 5px;
-  overflow: auto;
-  display: none;
-  white-space: pre-line;
-  font-size: 18px;
-}
-
-#devicerequirementsPanel #resourcePanel {
-  position: relative;
-  height: 250px;
-  border: 1px solid #000;
-  border-radius: 5px;
-  overflow: auto;
-  display: none;
-  font-size: 18px;
-}
-
 .liClass{
-  margin-left: 20px;
   list-style: none;
+  /* margin: -10px 20px; */
+  margin: 0 20px;
+
 }
 
 #devicerequirementsPanel #drSCDPanel {
@@ -270,9 +240,41 @@ ul {
   position: relative;
   overflow: auto;
   border: 1px solid #000;
-  height: 720px;
+  height: 470px;
   display: block;
   margin-left: 20px;
+  font-size: 18px;
+}
+
+#systembehavioursPanel #solvableErrorsPanel {
+  position: relative;
+  height: 230px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  overflow: auto;
+  display: none;
+  white-space: pre-line;
+  font-size: 18px;
+}
+
+#systembehavioursPanel #unsolvableErrorsPanel {
+  position: relative;
+  height: 230px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  overflow: auto;
+  display: none;
+  white-space: pre-line;
+  font-size: 18px;
+}
+
+#systembehavioursPanel #resourcePanel {
+  position: relative;
+  height: 230px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  overflow: auto;
+  display: none;
   font-size: 18px;
 }
 
@@ -298,7 +300,9 @@ ul {
   position: relative;
   overflow: auto;
   border: 1px solid #000;
-  height: 720px;
+  /* height: 220px;
+  width: 600px; */
+  height: 730px;
   display: block;
   margin-left: 20px;
   font-size: 18px;

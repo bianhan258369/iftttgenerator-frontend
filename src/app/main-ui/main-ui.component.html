@@ -2,12 +2,13 @@
   <div class="topbar">
     <nav>
       <div class="name">DSIGS —— Device Scheduling Instructions Generator And Simulator</div>
+      <!-- <div class="name">DSIG —— Device Scheduling Instructions Generator</div> -->
     </nav>
   </div>
 
   <div class="tab">
     <ul id="tablabel">
-      <li id="requirements" (click)="change_Menu('requirements')">ServiceRequirements</li>
+      <li id="requirements" (click)="change_Menu('requirements')">Intentions</li>
       <li id="devicerequirements" (click)="change_Menu('devicerequirements')">DeviceRequirements</li>
       <li id="problemdiagram" (click)="change_Menu('problemdiagram')">ProblemDiagram</li>
       <li id="systembehaviours" (click)="change_Menu('systembehaviours')">SystemBehaviours</li>
@@ -21,28 +22,70 @@
     <div class="pure-u-1-5">
       <b id="template_introduction" class="introduction_not_margin_left">Templates and examples:</b>
       <div id="templates">
-        <ul>
+        <!-- <ul>
           <li class="title"><b>Templates</b></li>
-          <li><b>'ALWAYS' Requirements：</b></li>
-          <li>state <b class="highlight">SHOULD ALWAYS BE ACTIVE</b></li>
-          <li>attribute <b class="highlight">SHOULD ALWAYS BE ABOVE/BELOW</b> value</li>
+          <li><b>'SHOULD' Requirements：</b></li>
+          <li>state <b class="highlight">SHOULD BE ACTIVE</b></li>
+          <li>effect <b class="highlight">SHOULD HOLD</b></li>
+          <li>attribute <b class="highlight">SHOULD BE ABOVE/BELOW</b> value</li>
           <li></li>
-          <li><b>'NEVER' Requirements：</b></li>
-          <li>event <b class="highlight">SHOULD NEVER HAPPEN</b></li>
-          <li>attribute <b class="highlight">SHOULD NEVER BE ABOVE/BELOW</b> value</li>
-          <li>[state1,state2,...] <b class="highlight">SHOULD NEVER OCCUR TOGETHER</b></li>
+          <li><b>'SHOULD NOT' Requirements：</b></li>
+          <li>event <b class="highlight">SHOULD NOT HAPPEN</b></li>
+          <li>attribute <b class="highlight">SHOULD NOT BE ABOVE/BELOW</b> value</li>
+          <li>[state1,state2,...] <b class="highlight">SHOULD NOT OCCUR TOGETHER</b></li>
           <li></li>
           <li><b>'PREFERRED' Requirements：</b></li>
           <li><b class="highlight">PREFERRED</b> attribute <b class="highlight">IS</b> value</li>
           <li></li>
           <li><b>'IF-THEN' Requirements：</b></li>
-          <li><b class="highlight">IF</b> trigger <b class="highlight">(FOR TIME)</b> <b class="highlight">THEN</b>
+          <li><b class="highlight">IF</b> trigger <b class="highlight">(FOR t)</b> <b class="highlight">THEN</b>
             event
           </li>          
-          <li><b class="highlight">IF</b> trigger <b class="highlight">(FOR TIME)</b> <b class="highlight">THEN</b>
+          <li><b class="highlight">IF</b> trigger <b class="highlight">(FOR t1)</b> <b class="highlight">THEN</b>
+            state <b class="highlight">(FOR t2)</b>
+          </li>
+          <li><b class="highlight">IF</b> trigger <b class="highlight">THEN</b>
+            effect
+          </li>
+          <li><br></li>
+          <li class="title"><b>Examples</b></li>
+          <li>ac.coldon <b class="highlight">SHOULD ALWAYS BE ACTIVE</b></li>
+          <li>air.temperature <b class="highlight">SHOULD ALWAYS BE ABOVE</b> 0</li>
+          <li>ac.turnoncold <b class="highlight">SHOULD NEVER HAPPEN</b></li>
+          <li>air.temperature <b class="highlight">SHOULD NEVER BE BELOW</b> 0</li>
+          <li>[ac.coldon,window.wopen,...] <b class="highlight">SHOULD NEVER OCCUR TOGETHER</b></li>
+          <li><b class="highlight">PREFERRED</b> air.temperature <b class="highlight">IS</b> 25</li>
+          <li><b class="highlight">IF</b> air.temperature>30 <b class="highlight">(FOR 10m)</b> <b
+              class="highlight">THEN</b> ac.turnoncold</li>
+          <li><b class="highlight">IF</b> air.temperature>30 <b class="highlight">(FOR 10m)</b> <b
+              class="highlight">THEN</b> ac.coldon</li>
+          <li><b class="highlight">IF</b> air.humidity>30 <b class="highlight">(FOR 10m)</b> <b
+              class="highlight">THEN</b>
+            allow ventilating the room</li>
+        </ul> -->
+        <ul>
+          <li class="title"><b>Templates</b></li>
+          <li><b>'ALWAYS' Template:</b></li>
+          <li>state <b class="highlight">SHOULD ALWAYS BE ACTIVE</b></li>
+          <li>effect <b class="highlight">SHOULD ALWAYS HOLD</b></li>
+          <li>attribute <b class="highlight">SHOULD ALWAYS BE ABOVE/BELOW</b> value</li>
+          <li></li>
+          <li><b>'NEVER' Template:</b></li>
+          <li>event <b class="highlight">SHOULD NEVER HAPPEN</b></li>
+          <li>attribute <b class="highlight">SHOULD NEVER BE ABOVE/BELOW</b> value</li>
+          <li>[state1,state2,...] <b class="highlight">SHOULD NEVER OCCUR TOGETHER</b></li>
+          <li></li>
+          <li><b>'PREFERRED' Template:</b></li>
+          <li><b class="highlight">PREFERRED</b> attribute <b class="highlight">IS</b> value</li>
+          <li></li>
+          <li><b>'IF-THEN' Template:</b></li>
+          <li><b class="highlight">IF</b> trigger <b class="highlight">THEN</b>
+            event
+          </li>          
+          <li><b class="highlight">IF</b> trigger <b class="highlight">THEN</b>
             state
           </li>
-          <li><b class="highlight">IF</b> trigger <b class="highlight">(FOR TIME)</b> <b class="highlight">THEN</b>
+          <li><b class="highlight">IF</b> trigger <b class="highlight">THEN</b>
             effect
           </li>
           <li><br></li>
@@ -64,15 +107,15 @@
       </div>
     </div>
     <div class="pure-u-2-5">
-      <b id="input_introduction" class="introduction">Please enter the requirements:</b>
+      <b id="input_introduction" class="introduction">Please enter the intentions:</b>
       <ngx-monaco-editor id="input_textarea" class="input" [options]="editorOptions" [(ngModel)]="requirementTexts"
         (onInit)="monacoOnInit($event)"></ngx-monaco-editor>
-      <b id="complemented_introduction" class="introduction">Requirements completion</b>
+      <b id="complemented_introduction" class="introduction">Intention completion</b>
       <ngx-monaco-editor id="complemented_textarea" class="complemented" [options]="editorOptions"
         [(ngModel)]="complementedRequirements" (onInit)="monacoOnInit($event)"></ngx-monaco-editor>
     </div>
     <div class="pure-u-2-5">
-      <b id="scenario_introduction" class="introduction">Service requirement scenario diagram:</b>
+      <b id="scenario_introduction" class="introduction">Scenario graph:</b>
       <div id="srSCDPanel">
         <div *ngIf="srImgLoadingFlag; else srDiplay" class="lds-default srLoading"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
         <ng-template #srDiplay>
@@ -89,31 +132,7 @@
       <b id="devicerequirementstext_introduction" class="introduction_not_margin_left">Device related requirements:</b>
       <ngx-monaco-editor id="device_textarea" class="input" [options]="editorOptions" [(ngModel)]="functionalRequirements"
         (onInit)="monacoOnInit($event)"></ngx-monaco-editor>
-      <!-- <div class="drTab">
-        <ul id="tablabel">
-          <li id="solvableErrorsTab" (click)="change_Error_Menu('solvable')">Resolvable errors</li>
-          <li id="unsolvableErrorsTab" (click)="change_Error_Menu('unsolvable')">Unresolvable errors</li>
-          <li id="resourceTab" (click)="change_Error_Menu('resource')">Resources used</li>
-        </ul>
-      </div> -->
-      <!-- <div id="solvableErrorsPanel" class="errorsPanel">
-        <ul *ngFor="let error of solvableErrors">
-          <li class="liClass">{{error}}</li>
-        </ul>
-        <button id="solveButton" class="button" (click)="solve()">Resolve</button>
-      </div>
-      <div id="unsolvableErrorsPanel" class="errorsPanel">
-        <ul *ngFor="let error of unsolvableErrors">
-          <li class="liClass">{{error}}</li>
-        </ul>
-      </div>
-      <div id="resourcePanel" class="resourcePanel">
-        <ul *ngFor="let resource of resources">
-          <li>{{resource}}</li>
-        </ul>
-      </div> -->
     </div>
-
     <div class="pure-u-1-2">
       <b class="introduction">Device requirement scenario diagram:</b>
       
@@ -200,10 +219,33 @@
     <div class="pure-u-1-2">
       <b class="introduction">System behaviours:</b>
       <div id="systembehaviourstext">
-        <ul *ngFor="let rule of rules">
-          <li class="liClass">{{rule}}</li>
+        <ul *ngFor="let rule of rules;let i=index">
+          <li class="liClass">{{i+1}} : {{rule}}</li>
         </ul>
       </div>
+      <div class="sbTab">
+        <ul id="tablabel">
+          <li id="unsolvableErrorsTab" (click)="change_Error_Menu('unsolvable')">Unresolvable errors</li>
+          <li id="solvableErrorsTab" (click)="change_Error_Menu('solvable')">Resolvable errors</li>
+          <!-- <li id="resourceTab" (click)="change_Error_Menu('resource')">Resources used</li> -->
+        </ul>
+      </div>
+      <div id="solvableErrorsPanel" class="errorsPanel">
+        <ul *ngFor="let error of solvableErrors">
+          <li class="liClass">{{error}}</li>
+        </ul>
+        <button id="solveButton" class="button" (click)="solve()">Resolve</button>
+      </div>
+      <div id="unsolvableErrorsPanel" class="errorsPanel">
+        <ul *ngFor="let error of unsolvableErrors">
+          <li class="liClass">{{error}}</li>
+        </ul>
+      </div>
+      <!-- <div id="resourcePanel" class="resourcePanel">
+        <ul *ngFor="let resource of resources">
+          <li>{{resource}}</li>
+        </ul>
+      </div> -->
     </div>
 
     <div class="pure-u-1-2">
@@ -220,7 +262,7 @@
   </div>
 
   <div id="instructionsPanel">
-    <b class="introduction">Device instructions:</b>
+    <b class="introduction">Device scheduling instructions:</b>
     <div id="deviceinstructiontext">
       <ul *ngFor="let instruction of instructions">
         <li class="liClass">{{instruction}}</li>
@@ -232,9 +274,8 @@
     <input class="change" type="file" multiple="multiple" (change)="selectedFileOnChanged($event)" />
   </button>
   <button class="button" (click)="displayChooseScenarioPanel()">ChooseScenario</button>
-  <button class="button" (click)="complementRequirements()">CompleteRequirements</button>
-  <button class="button" (click)="displayPlaningPanel()">GenerateDeviceRequirements</button>
-  <!-- <button class="button" (click)="checkErrors()">CheckErrors</button> -->
+  <button class="button" (click)="complementRequirements()">CompleteIntentions</button>
+  <button class="button" (click)="displayPlaningPanel()">GenerateIfThenPlans</button>
   <!-- <button class="button" (click)="generateScenarioDiagrams()">DisplayPlanning</button> -->
   <!-- <details class="detail">
     <summary>DeriveProblemDiagram</summary>
@@ -242,9 +283,10 @@
     <p (click)="problemDiagramDerivation2()">PDWithSensors</p>
   </details> -->
   <button class="button" (click)="generateSystemBehaviours()">GenerateSystemBehaviours</button>
+  <button class="button" (click)="checkErrors()">CheckErrors</button>
   <!-- <button class="button" (click)="generateSrSCD()">EnsureRequirements</button> -->
-  <!--   
-  <details class="detail">
+    
+  <!-- <details class="detail">
     <summary>CheckInconsistency</summary>
       <p (click)="ruleBasedCheck()">Rule</p>
       <p (click)="formalismBasedCheck()">Formalism</p>
@@ -275,14 +317,13 @@
   </div>
 
   <div id="chooseScenario"> Please Choose Your Scenario<br />
-    <label><input checked="true" type="radio" name="scenarioRadio"
-        value="SmartConferenceRoom">SmartConferenceRoom</label><br />
-    <label><input type="radio" name="scenarioRadio" value="SmartHome">SmartHome</label><br />
+    <label><input checked="true" type="radio" name="scenarioRadio" value="SmartHome">SmartHome</label><br />
+    <label><input type="radio" name="scenarioRadio" value="SmartConferenceRoom">SmartConferenceRoom</label><br />
     <button class="button" (click)="chooseScenario()">Confirm</button>
     <button class="button" (click)="cancel()">Cancel</button>
   </div>
 
-  <div id="designateAreas">
+  <!-- <div id="designateAreas">
     <div id="designateIntroduction">Please Designate The Areas of Devices</div>
     <br/>
     <div class="pure-u-3-5" id="designateIntroduction">Device</div>
@@ -294,6 +335,6 @@
     </ul>
     <button class="button" (click)="writePersonalDeviceTable()">Confirm</button>
     <button class="button" (click)="cancel()">Cancel</button>
-  </div>
+  </div> -->
   <!-- <button class="button" (click)="downloadOntology()">DownloadOntology</button> -->
 </div>
